@@ -51,6 +51,7 @@ a:hover {
 .widgets-bread-crumb {
   height: 40px;
   line-height: 40px;
+  overflow: hidden;
 }
 
 .widgets-bread-crumb li {

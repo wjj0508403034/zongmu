@@ -272,7 +272,7 @@
       </div>
       <div widgets-table columns="table.columns" batch="{{enableBatch}}" dataset="table.dataset" page-data="table.pageData" empty-text="任务大厅暂时还没有任务，请稍后再来。">
         <div head-template column-index="0">
-          <div widgets-checkbox on-checked="$parent.$parent.onSelectedAll()" on-unchecked="$parent.$parent.onUnSelectedAll()"></div>
+          <div widgets-checkbox ng-model="$parent.$parent.$parent.$parent.selectAll" on-checked="$parent.$parent.onSelectedAll()" on-unchecked="$parent.$parent.onUnSelectedAll()"></div>
         </div>
         <div cell-template column-index="0">
           <div widgets-checkbox ng-model="rowData.isSelected" ng-disabled="rowData.status !== 'NEW'"></div>

@@ -78,13 +78,10 @@ zongmu.config(["applicationProvider", "navProvider", "pageProvider", "footbarPro
     function setFootbarConfig() {
       footbarProvider.setUsefulLinks([{
         text: "关于系统",
-        href: "/"
+        href: "http://www.zongmutech.com/"
       }, {
-        text: "联系我们",
-        href: "/"
-      }, {
-        text: "帮助",
-        href: "/"
+        text: "联系我们(QQ:123456;Tel:12345678)",
+        href: "#foot"
       }]);
       footbarProvider.setCopyRight("2014-2016");
       footbarProvider.setCompanyName("纵目科技有限公司");

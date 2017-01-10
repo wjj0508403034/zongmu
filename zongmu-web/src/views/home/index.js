@@ -148,6 +148,7 @@ zongmu.controller("taskCenterController", ['$scope', 'taskService', 'dialog', 'e
 
     function initView() {
       $scope.setTitle("任务大厅");
+      $scope.selectAll = false;
       $scope.expandSearch = false;
       $scope.s = {};
       $scope.taskTypes = enumService.getTaskTypes();
@@ -322,6 +323,7 @@ zongmu.controller("taskCenterController", ['$scope', 'taskService', 'dialog', 'e
 
       taskService.queryTasks(index, $scope.queryParams.getData()).then(function(result) {
         $scope.hideLoading();
+        $scope.selectAll = false;
         $scope.table.dataset = result.content;
         $scope.table.pageData = {
           totalPage: result.totalPages,

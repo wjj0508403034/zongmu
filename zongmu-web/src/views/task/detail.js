@@ -1,9 +1,9 @@
 'use strict';
 
-zongmu.controller("taskItemDetailController", ['$q', '$scope', 'taskService', 'taskRecordService', 'reviewRecordService', 'dialog', "markUtil",
-  function($q, $scope, taskService, taskRecordService, reviewRecordService, dialog, markUtil) {
+zongmu.controller("taskItemDetailController", ['$q', '$scope', 'taskService', 'taskRecordService', 'reviewRecordService', 'dialog', "markUtil", "appEnv",
+  function ($q, $scope, taskService, taskRecordService, reviewRecordService, dialog, markUtil, appEnv) {
     var taskItemNo = $.url().param("taskItemNo");
-
+    $scope.isAliYun = appEnv === "aliyun";
     initView() && initData();
 
     function initView() {
@@ -52,12 +52,12 @@ zongmu.controller("taskItemDetailController", ['$q', '$scope', 'taskService', 't
       return true;
     }
 
-    $scope.onContinueMarkButtonClick = function() {
+    $scope.onContinueMarkButtonClick = function () {
       gotoNextPage();
     };
 
     function gotoNextPage() {
-      if($scope.task.taskRecordNo) {
+      if ($scope.task.taskRecordNo) {
         var pageName = markUtil.getMarkPageUrl($scope.task.assetType, $scope.task.taskType, $scope.task.taskRecordNo);
         window.location.href = `../mark/${pageName}`;
         //      if($scope.task.taskType === "VIDEO") {
@@ -83,9 +83,9 @@ zongmu.controller("taskItemDetailController", ['$q', '$scope', 'taskService', 't
       }
     }
 
-    $scope.onAcceptTaskClick = function() {
+    $scope.onAcceptTaskClick = function () {
       taskService.acceptTask(taskItemNo)
-        .then(function(data) {
+        .then(function (data) {
           var pageName = markUtil.getMarkPageUrl(data.assetType, data.taskType, data.taskRecordNo);
           window.location.href = `../mark/${pageName}`;
           //var pageName = markUtil.getMarkPage(data);
@@ -94,11 +94,11 @@ zongmu.controller("taskItemDetailController", ['$q', '$scope', 'taskService', 't
     };
 
     function initData() {
-      if(!taskItemNo) {
+      if (!taskItemNo) {
         dialog.showError("参数错误");
       } else {
         taskService.getTaskDetail(taskItemNo)
-          .then(function(task) {
+          .then(function (task) {
             $scope.task = task;
           });
       }

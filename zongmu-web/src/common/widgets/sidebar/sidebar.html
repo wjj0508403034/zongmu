@@ -6,7 +6,7 @@
     </div>
     <ul>
       <li ng-repeat="item in group.items" ng-class="group.name === currentGroup && item.name === currentItem ? 'active':''" ng-if="item.visibility !== false" name="{{item.name}}" curr="{{currentItem}}" groupName="{{group.name}}">
-        <a ng-href="{{item.href}}">{{item.text}}</a>
+        <a title="{{item.text}}" ng-href="{{item.href}}">{{item.text}}</a>
       </li>
     </ul>
   </div>

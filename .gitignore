@@ -9,3 +9,4 @@ zongmu-service/.settings
 zongmu-service/target
 zongmu-web/node_modules
 zongmu-web/dist
+zongmu-web/.vscode

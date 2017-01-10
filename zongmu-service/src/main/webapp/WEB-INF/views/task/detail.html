@@ -73,6 +73,10 @@
             <label class="key">标记类型</label>
             <div class="value">{{task.shapeType | shapeType}}</div>
           </div>
+          <div class="property" ng-hide="task.shapeType === 'RECT'">
+            <label class="key">标记形状</label>
+            <div class="value">{{task.sideCount}}边形</div>
+          </div>
           <div class="property">
             <label class="key">创建时间</label>
             <div class="value">{{task.createTime | joda | date:'yyyy-MM-dd HH:mm'}}</div>
@@ -89,7 +93,7 @@
             <label class="key">任务状态</label>
             <div class="value">{{task.status | taskItemStatus}}</div>
           </div>
-          <div class="property" ng-if="role === 'ADMIN'">
+          <div class="property" ng-if="!isAliYun && role === 'ADMIN'">
             <label class="key">FTP</label>
             <div class="value">
               <a target="_blank" ng-href="ftp://{{task.ftpFolder}}">ftp://{{task.ftpFolder}}</a>
