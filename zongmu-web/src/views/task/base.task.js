@@ -54,15 +54,20 @@ zongmu.controller("baseTaskController", ["$scope", "breadCrumb", "serviceUrl", "
     initView();
 
     function initData() {
+      $scope.algorithmMap = {};
       algorithmService.getAlgorithms()
         .then(function(data) {
           data.forEach(function(it) {
+            $scope.algorithmMap[it.id] = it;
             $scope.sidebar[1].items.push({
               name: it.id + "",
-              text: it.name + "路测数据统计",
+              text: it.name,
               href: serviceUrl + "page/task/bsd.html?reportId=" + it.id
             });
-          })
+          });
+          if( $scope.algorithmMap.callback){
+            $scope.algorithmMap.callback($scope.algorithmMap);
+          }
         });
     }
 

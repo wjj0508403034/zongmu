@@ -100,4 +100,5 @@
 .widgets-svg-bar .property .value {
   width: 100%;
   display: block;
+  font-size: 10px;
 }

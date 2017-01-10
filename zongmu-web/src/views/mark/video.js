@@ -268,7 +268,8 @@ zongmu.controller("markVideoController", ['$q', '$scope', 'dialog', 'taskRecordS
       taskRecordService.reviewPass(taskRecordNo)
         .then(function() {
           dialog.showInfo("保存成功").then(function() {
-            initData();
+            window.location.reload();
+            //initData();
           });
         });
     };
@@ -283,7 +284,8 @@ zongmu.controller("markVideoController", ['$q', '$scope', 'dialog', 'taskRecordS
           }
         },
         onConfirm: function() {
-          initData();
+          window.location.reload();
+          //initData();
         }
       });
     };

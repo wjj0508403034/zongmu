@@ -70,6 +70,10 @@
             <div class="value">{{task.taskType | taskType}}</div>
           </div>
           <div class="property">
+            <label class="key">标记类型</label>
+            <div class="value">{{task.shapeType | shapeType}}</div>
+          </div>
+          <div class="property">
             <label class="key">创建时间</label>
             <div class="value">{{task.createTime | joda | date:'yyyy-MM-dd HH:mm'}}</div>
           </div>

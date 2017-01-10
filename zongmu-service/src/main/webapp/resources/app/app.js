@@ -2,7 +2,7 @@
 
 var zongmu = angular.module("zongmu", ["huoyun-ui", "ngDialog"]);
 zongmu.constant("serviceUrl", "/service/");
-zongmu.constant("mediaServiceUrl", "http://192.168.100.31:8083/");
+zongmu.constant("mediaServiceUrl", "http://localhost:8083/");
 //"aliyun"
 zongmu.constant("appEnv", "");
 
@@ -2195,6 +2195,15 @@ zongmu.factory('formatService', function() {
   };
 });
 'use strict';
+
+zongmu.controller("helpController", ["$scope", function($scope) {
+  initView();
+
+  function initView() {
+    $scope.setTitle("帮助中心");
+  }
+}]);
+'use strict';
 /*
  * 首页 - 任务中心
  */
@@ -2612,15 +2621,6 @@ zongmu.controller("taskCenterController", ['$scope', 'taskService', 'dialog', 'e
     }
   }
 ]);
-'use strict';
-
-zongmu.controller("helpController", ["$scope", function($scope) {
-  initView();
-
-  function initView() {
-    $scope.setTitle("帮助中心");
-  }
-}]);
 'use strict';
 
 zongmu.controller("attrsDialogController", ['$scope', 'dialog', 'tagService',
@@ -4442,7 +4442,8 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       taskRecordService.reviewPass(taskRecordNo)
         .then(function() {
           dialog.showInfo("保存成功").then(function() {
-            initData();
+            window.location.reload();
+            //initData();
           });
         });
     };
@@ -4457,7 +4458,8 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
           }
         },
         onConfirm: function() {
-          initData();
+          window.location.reload();
+          //initData();
         }
       });
     };
@@ -4785,7 +4787,8 @@ zongmu.controller("markVideoController", ['$q', '$scope', 'dialog', 'taskRecordS
       taskRecordService.reviewPass(taskRecordNo)
         .then(function() {
           dialog.showInfo("保存成功").then(function() {
-            initData();
+            window.location.reload();
+            //initData();
           });
         });
     };
@@ -4800,7 +4803,8 @@ zongmu.controller("markVideoController", ['$q', '$scope', 'dialog', 'taskRecordS
           }
         },
         onConfirm: function() {
-          initData();
+          window.location.reload();
+          //initData();
         }
       });
     };
@@ -4889,2780 +4893,6 @@ zongmu.controller("viewTagUpdateDialogController", ['$scope', 'dialog', 'assetSe
           });
         });
     };
-  }
-]);
-'use strict';
-
-zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService",
-  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService) {
-    var assetNo = $.url().param("assetNo");
-
-    initView() && initData();
-
-    $scope.onSearchButtonClick = function() {
-      $scope.expandButton = !$scope.expandButton;
-    };
-
-    function initView() {
-      $scope.expandButton = true;
-      breadCrumbProvider.setHistories([{
-        text: "上传记录",
-        href: "assets.html"
-      }, {
-        text: "记录详情",
-        href: "#"
-      }]);
-
-      $scope.taskColumns = [{
-        name: "taskName",
-        text: "任务名称"
-      }, {
-        name: "taskType",
-        text: "类型"
-      }, {
-        name: "priority",
-        text: "优先级"
-      }, {
-        name: "showHome",
-        text: "是否在任务大厅显示"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      $scope.fileColumns = [{
-        name: "assetFileNo",
-        text: "No."
-      }, {
-        name: "fileName",
-        text: "文件名"
-      }, {
-        name: "fileSize",
-        text: "文件大小"
-      }, {
-        name: "assetFileStatus",
-        text: "状态"
-      }];
-
-      if(!assetNo) {
-        dialog.showError("参数错误");
-        return false;
-      }
-      return true;
-    }
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...");
-      $q.all([assetService.getAsset(assetNo), taskService.getTasksByAssetNo(assetNo)])
-        .then(function(res) {
-          $scope.asset = res[0];
-          if($scope.asset.viewTags) {
-            $scope.asset.viewTags.forEach(function(it) {
-              it.viewTag.items.forEach(function(item) {
-                if(item.id === it.assetViewTagItemId) {
-                  it.viewTagItem = item;
-                }
-              })
-            });
-          }
-          $scope.tasks = res[1];
-          $scope.hideLoading();
-          refresh();
-        });
-    }
-
-    function refresh() {
-      var items = ($scope.asset.assetFiles || []).filter(function(it) {
-        return it.assetFileStatus === "FTPUPLOADING" || it.assetFileStatus === "COMPRESSING" || it.assetFileStatus === "UPLOADSUCCESS";
-      });
-
-      if(items.length > 0) {
-        $timeout(function() {
-          getAssetData();
-        }, 2000);
-      }
-    }
-
-    function getAssetData() {
-      assetService.getAsset(assetNo)
-        .then(function(asset) {
-          $scope.asset = asset;
-          if($scope.asset.viewTags) {
-            $scope.asset.viewTags.forEach(function(it) {
-              it.viewTag.items.forEach(function(item) {
-                if(item.id === it.assetViewTagItemId) {
-                  it.viewTagItem = item;
-                }
-              })
-            });
-          }
-          refresh();
-        });
-    }
-
-    $scope.onCompressButtonClick = function() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在保存，请稍等...");
-      assetService.compress(assetNo)
-        .then(function() {
-          $scope.hideLoading();
-          dialog.showInfo("开始压缩")
-            .then(function() {
-              initData();
-            });
-        });
-    }
-
-    $scope.onNewTaskButtonClick = function() {
-      if(assetNo) {
-        window.location.href = "asset.new.html?assetNo=" + assetNo;
-      } else {
-        dialog.showError("参数错误");
-      }
-    };
-
-    $scope.onSetTagButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: 'asset.tag.dialog.html',
-        controller: "assetTagUpdateController",
-        params: {
-          asset: $scope.asset
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onUpdateAssetViewTagButtonClick = function() {
-
-      dialog.showCustom({
-        templateUrl: 'asset.view.tag.update.dialog.html',
-        controller: "assetViewTagUpdateDialogController",
-        params: {
-          asset: $scope.asset
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(rowData) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条记录吗？",
-        onConfirm: function() {
-          $scope.showLoading();
-          $scope.setLoadingText("正在删除任务和任务相关数据，请稍后...");
-          taskService.deleteTask(rowData.taskNo)
-            .then(function() {
-              $scope.hideLoading();
-              initData();
-            });
-        }
-      });
-    };
-
-    $scope.onExportButtonClick = function(rowData) {
-      $scope.showLoading();
-      $scope.setLoadingText("正在导出数据，请稍后...");
-      exportService.exportTask(assetNo, rowData.taskNo)
-        .then(function(data) {
-          $scope.hideLoading();
-          if(data.taskItems.length > 0) {
-            dialog.showCustom({
-              templateUrl: 'export.failed.dialog.html',
-              controller: "exportFailedDialogController",
-              params: {
-                taskItems: data.taskItems
-              },
-              onConfirm: function() {
-              }
-            });
-          } else {
-            dialog.showInfo("导出成功");
-          }
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("newTaskController", ["$scope", "assetService", "dialog", "enumService", "taskService",
-  "breadCrumb", "$q", "algorithmService", "viewTagService",
-  function($scope, assetService, dialog, enumService, taskService, breadCrumbProvider, $q, algorithmService, viewTagService) {
-    var assetNo = $.url().param("assetNo");
-    var asset = null;
-    initView() && initData();
-
-    $scope.onCancelButtonClick = function() {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确定要放弃修改？",
-        onConfirm: function() {
-          history.back();
-        }
-      });
-    };
-
-    $scope.onSaveButtonClick = function() {
-      var data = $scope.data;
-
-      if(!data.taskName) {
-        dialog.showInfo("请填写任务名称");
-        return;
-      }
-
-      if(!data.taskType) {
-        dialog.showInfo("请选择任务类型");
-        return;
-      }
-
-      if(!data.algorithmId) {
-        dialog.showInfo("请选择算法类型");
-        return;
-      }
-
-      if(data.taskType === 'VIDEO') {
-
-        if(!data.timeInterval || data.timeInterval < 30) {
-          dialog.showInfo("请设置视频切割的时间间隔，间隔必须大于等于30秒");
-          return;
-        }
-
-      } else {
-        if(!data.shapeType) {
-          dialog.showInfo("请选择标注形状");
-          return;
-        }
-
-        if(data.shapeType === 'POLYLINE') {
-          if(!data.sideCount || data.sideCount < 3 || data.sideCount >= 10) {
-            dialog.showInfo("请填写多边形边数，边数必须大于等于3且小于等于10.");
-            return;
-          }
-        }
-        if($scope.asset.assetType !== "PICTURE") {
-          if(!data.timeInterval || data.timeInterval < 3) {
-            dialog.showInfo("请设置图片提取的时间间隔，间隔必须大于等于3秒");
-            return;
-          }
-        }
-
-      }
-
-      if(!data.point) {
-        dialog.showInfo("请设置奖励金币，并且金币不能为0。");
-        return;
-      }
-
-      if(data.point <= 0) {
-        dialog.showInfo("金币必须大于0。");
-        return;
-      }
-
-      data.viewTags = getSelectedViewTagItems();
-
-      $scope.showLoading();
-      taskService.createTask(data)
-        .then(function(res) {
-          $scope.hideLoading();
-          dialog.showInfo("保存成功！").then(function() {
-            window.location.href = "asset.detail.html?assetNo=" + assetNo;
-          });
-        })
-    };
-
-    function initView() {
-      if(!assetNo) {
-        dialog.showError("参数不正确");
-        return false;
-      }
-
-      breadCrumbProvider.setHistories([{
-        text: "上传记录",
-        href: "assets.html"
-      }, {
-        text: "记录详情",
-        href: "asset.detail.html?assetNo=" + assetNo
-      }, {
-        text: "新建任务",
-        href: "#"
-      }]);
-
-      $scope.taskTypes = enumService.getTaskTypes();
-      $scope.shapeTypes = enumService.getShapeTypes();
-      $scope.videoShapeTypes = enumService.getVideoShapeTypes();
-      $scope.taskPriorities = enumService.getTaskPriorities();
-      $scope.selection = {};
-      return true;
-    }
-
-    function initData() {
-      $scope.data = {
-        assetNo: assetNo,
-        taskType: "VIDEO",
-        shapeType: "RECT",
-        assetTags: [],
-        priority: 2
-      };
-
-      $scope.viewTags = [];
-
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...");
-      $q.all([assetService.getAsset(assetNo), algorithmService.getAlgorithms()])
-        .then(function(res) {
-          $scope.hideLoading();
-          $scope.asset = res[0];
-          $scope.algorithms = res[1];
-          if($scope.algorithms.length > 0) {
-            $scope.data.algorithmId = $scope.algorithms[0].id;
-          }
-          if($scope.asset.assetType === "PICTURE") {
-            $scope.data.taskType = "PICTURE";
-          }
-
-          if($scope.asset.viewTags) {
-            $scope.asset.viewTags.forEach(function(it) {
-              it.viewTag.items.forEach(function(item) {
-                if(item.id === it.assetViewTagItemId) {
-                  it.viewTagItem = item;
-                }
-              })
-            });
-          }
-        });
-    }
-
-    function initViewTags() {
-      $scope.viewTagsMap = {};
-      $scope.viewTags.forEach(function(it) {
-        it.items.forEach(function(item) {
-          if(item.default) {
-            $scope.viewTagsMap[it.id] = item.id;
-          }
-        });
-
-        if(!$scope.viewTagsMap[it.id] && it.items.length > 0) {
-          $scope.viewTagsMap[it.id] = it.items[0].id;
-        }
-      });
-    }
-
-    function getSelectedViewTagItems() {
-
-      var viewTags = [];
-
-      Object.keys($scope.viewTagsMap).forEach(function(key) {
-        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
-          viewTags.push({
-            viewTagId: key,
-            viewTagItemId: $scope.viewTagsMap[key]
-          });
-        }
-      });
-
-      return viewTags;
-    }
-
-    $scope.$watch("data.algorithmId", function() {
-      if($scope.data.algorithmId) {
-        $scope.showLoading();
-        $scope.setLoadingText("正在加载数据，请稍后...");
-        viewTagService.getViewTags($scope.data.algorithmId)
-          .then(function(res) {
-            $scope.hideLoading();
-            $scope.viewTags = res;
-            initViewTags();
-          });
-      }
-    });
-  }
-]);
-'use strict';
-
-zongmu.controller("assetTagUpdateController", ['$scope', 'dialog', 'assetService', 'taskService',
-  function($scope, dialog, assetService, taskService) {
-    var params = $scope.ngDialogData;
-    var weatherTagId = null;
-    var roadTagId = null;
-    init();
-
-    function init() {
-      if(params.asset) {
-        weatherTagId = params.asset.weatherTagId;
-        roadTagId = params.asset.roadTagId;
-      }
-
-      if(params.taskItem) {
-        weatherTagId = params.taskItem.weatherTagId;
-        roadTagId = params.taskItem.roadTagId;
-      }
-
-      assetService.getAssetTags()
-        .then(function(tags) {
-          initTags(tags);
-        });
-    }
-
-    function initTags(tags) {
-      $scope.weatherTags = [];
-      $scope.roadTags = [];
-      tags.forEach(function(it) {
-        if(it.category === 'ROAD') {
-          if(roadTagId === it.id) {
-            $scope.roadTag = it;
-          }
-          $scope.roadTags.push(it);
-        } else if(it.category === 'WEATHER') {
-          if(weatherTagId === it.id) {
-            $scope.weatherTag = it;
-          }
-          $scope.weatherTags.push(it);
-        }
-      });
-    }
-
-    $scope.onSaveButtonClick = function() {
-      if(params.asset) {
-        assetService.updateAssetTags(params.asset.assetNo, {
-            weatherTagId: $scope.weatherTag.id,
-            roadTagId: $scope.roadTag.id
-          })
-          .then(function() {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      } else if(params.taskItem) {
-        taskService.updateAssetTaskTags(params.taskItem.taskItemNo, {
-            weatherTagId: $scope.weatherTag.id,
-            roadTagId: $scope.roadTag.id
-          })
-          .then(function() {
-            $scope.closeThisDialog({
-              key: 'ok',
-              result: {
-                roadTag: $scope.roadTag,
-                weatherTag: $scope.weatherTag
-              }
-            });
-          });
-      }
-
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("assetUploadController", ["$scope", "$log", "assetService", "serviceUrl",
-  "$timeout", 'Upload', "dialog", "enumService", "$q", "breadCrumb", "assetViewTagService",
-  function($scope, $log, assetService, serviceUrl, $timeout, $upload, dialog, enumService, $q, breadCrumbProvider, assetViewTagService) {
-
-    initView() && initData();
-
-    function initView() {
-      breadCrumbProvider.setHistories([{
-        text: "上传记录",
-        href: "assets.html"
-      }, {
-        text: "新建上传",
-        href: "#"
-      }]);
-      $scope.uploading = false;
-      $scope.assetType = "SINGLE";
-      $scope.videoTypes = enumService.getUploadTypes();
-      return true;
-    }
-
-    function initData() {
-      $scope.selection = {};
-      assetViewTagService.getAll()
-        .then(function(tags) {
-          $scope.viewTags = tags;
-          $scope.viewTagsMap = {};
-          $scope.viewTags.forEach(function(it) {
-            it.items.forEach(function(item) {
-              if(item.default) {
-                $scope.viewTagsMap[it.id] = item.id;
-              }
-            });
-
-            if(!$scope.viewTagsMap[it.id] && it.items.length > 0) {
-              $scope.viewTagsMap[it.id] = it.items[0].id;
-            }
-          });
-          //initTags(tags);
-        });
-    }
-
-    function initTags(tags) {
-      $scope.weatherTags = [];
-      $scope.roadTags = [];
-      $scope.weatherTag = null;
-      $scope.roadTag = null;
-      tags.forEach(function(it) {
-        if(it.category === 'ROAD') {
-          $scope.roadTags.push(it);
-          if(it.default) {
-            $scope.roadTag = it.id;
-          }
-        } else if(it.category === 'WEATHER') {
-          $scope.weatherTags.push(it);
-          if(it.default) {
-            $scope.weatherTag = it.id;
-          }
-        }
-      });
-
-      if($scope.weatherTag === null && $scope.weatherTags.length > 0) {
-        $scope.weatherTag = $scope.weatherTags[0].id;
-      }
-
-      if($scope.roadTag === null && $scope.roadTags.length > 0) {
-        $scope.roadTag = $scope.roadTags[0].id;
-      }
-    }
-
-    function getFileExt(fileName) {
-      var parts = fileName.split(".");
-      if(parts.length > 1) {
-        return parts[parts.length - 1].toLowerCase();
-      }
-    }
-
-    $scope.onUploadButtonClicked = function(files, file1, file2, file3, file4) {
-      if(!$scope.name) {
-        dialog.showError("请输入名称！");
-        return;
-      }
-      var assetType = $scope.assetType;
-      if(assetType === "PICTURE") {
-        if(!files || files.length === 0) {
-          dialog.showError("请选择上传的图片！");
-          return;
-        }
-
-        var checkResult = true;
-        files.forEach(function(it) {
-          if(["image/jpeg", "image/png", "image/png", "image/bmp"].indexOf(it.type) === -1) {
-            dialog.showError(`${it.name}不是正确的图片,请上传正确的图片格式的图片!`);
-            checkResult = false;
-            return;
-          }
-        })
-
-        if(!checkResult) {
-          return;
-        }
-
-        if(!$scope.recordTime) {
-          dialog.showError("请设置视频录制时间！");
-          return;
-        }
-
-        if($scope.recordTime > new Date()) {
-          dialog.showError("视频录制时间不应该晚于当前时间！");
-          return;
-        }
-
-        uploadPics(files);
-        return;
-      }
-
-      if(!file1) {
-        dialog.showError("请选择上传的文件1！");
-        return;
-      }
-
-      if(getFileExt(file1.name) !== "avi") {
-        dialog.showError("视频格式必须是AVI格式！");
-        return;
-      }
-
-      if(assetType === 'FOUR') {
-        if(!file2) {
-          dialog.showError("请选择上传的文件2！");
-          return;
-        }
-        if(!file3) {
-          dialog.showError("请选择上传的文件3！");
-          return;
-        }
-        if(!file4) {
-          dialog.showError("请选择上传的文件4！");
-          return;
-        }
-
-        var fourVideoNames = ["front.avi", "left.avi", "rear.avi", "right.avi"];
-        var videoNameIndex = fourVideoNames.indexOf(file1.name.toLowerCase());
-        if(videoNameIndex === -1) {
-          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
-          return;
-        }
-
-        fourVideoNames.splice(videoNameIndex, 1);
-
-        videoNameIndex = fourVideoNames.indexOf(file2.name.toLowerCase());
-        if(videoNameIndex === -1) {
-          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
-          return;
-        }
-
-        fourVideoNames.splice(videoNameIndex, 1);
-
-        videoNameIndex = fourVideoNames.indexOf(file3.name.toLowerCase());
-        if(videoNameIndex === -1) {
-          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
-          return;
-        }
-
-        fourVideoNames.splice(videoNameIndex, 1);
-
-        videoNameIndex = fourVideoNames.indexOf(file4.name.toLowerCase());
-        if(videoNameIndex === -1) {
-          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
-          return;
-        }
-      }
-
-      if(!$scope.recordTime) {
-        dialog.showError("请设置视频录制时间！");
-        return;
-      }
-
-      if($scope.recordTime > new Date()) {
-        dialog.showError("视频录制时间不应该晚于当前时间！");
-        return;
-      }
-
-      var viewTags = [];
-
-      Object.keys($scope.viewTagsMap).forEach(function(key) {
-        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
-          viewTags.push({
-            assetViewTagId: key,
-            assetViewTagItemId: $scope.viewTagsMap[key]
-          });
-        }
-      });
-
-      $scope.uploading = true;
-      $scope.showLoading();
-      assetService.createAsset({
-        name: $scope.name,
-        assetType: assetType,
-        recordTime: $scope.recordTime,
-        memo: $scope.memo,
-        weatherTagId: $scope.weatherTag,
-        roadTagId: $scope.roadTag,
-        viewTags: viewTags
-      }).then(function(data) {
-
-        if($scope.assetType === 'FOUR') {
-          $q.all([uploadFile(data.assetNo, file1), uploadFile(data.assetNo, file2), uploadFile(data.assetNo, file3), uploadFile(data.assetNo, file4)])
-            .then(function(results) {
-              var res = results.filter(function(it) {
-                return it;
-              });
-
-              if(res.length === 4) {
-                uploadFinish(true);
-              } else {
-                uploadFinish(false);
-              }
-
-            });
-        } else {
-          uploadFile(data.assetNo, file1).then(function(res) {
-            uploadFinish(res);
-          });
-        }
-      });
-    };
-
-    function uploadPics(files) {
-      var viewTags = [];
-      Object.keys($scope.viewTagsMap).forEach(function(key) {
-        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
-          viewTags.push({
-            assetViewTagId: key,
-            assetViewTagItemId: $scope.viewTagsMap[key]
-          });
-        }
-      });
-      $scope.showLoading();
-      assetService.createAsset({
-        name: $scope.name,
-        assetType: $scope.assetType,
-        recordTime: $scope.recordTime,
-        weatherTagId: $scope.weatherTag,
-        roadTagId: $scope.roadTag,
-        memo: $scope.memo,
-        viewTags: viewTags
-      }).then(function(data) {
-        $q.all(files.map(function(it) {
-          return uploadFile(data.assetNo, it);
-        })).then(function() {
-          uploadFinish(true);
-        });
-      });
-    }
-
-    function uploadFile1(assetNo, file1, file2, file3, file4) {
-      uploadFile(assetNo, file1)
-        .then(function(res) {
-          if($scope.assetType === 'SINGLE') {
-            uploadFinish(res);
-          } else {
-            if(res) {
-              $scope.message = "第一个文件上传成功，正在上传第二个文件...";
-              uploadFile2(assetNo, file2, file3, file4)
-            }
-          }
-        });
-    }
-
-    function uploadFile2(assetNo, file2, file3, file4) {
-      uploadFile(assetNo, file2)
-        .then(function(res) {
-          if(res) {
-            uploadFile3(assetNo, file3, file4);
-          }
-        });
-    }
-
-    function uploadFile3(assetNo, file3, file4) {
-      uploadFile(assetNo, file3)
-        .then(function(res) {
-          if(res) {
-            uploadFile4(assetNo, file4);
-          }
-        });
-    }
-
-    function uploadFile4(assetNo, file4) {
-      uploadFile(assetNo, file4)
-        .then(function(res) {
-          uploadFinish(res);
-        });
-    }
-
-    function uploadFinish(res) {
-      $scope.hideLoading();
-      if(res) {
-        dialog.showInfo("上传成功！")
-          .then(function() {
-            window.location.href = "assets.html";
-          });
-      } else {
-        dialog.showInfo("上传失败！")
-          .then(function() {
-            window.location.href = "assets.html";
-          });
-      }
-
-    }
-
-    function uploadFile(assetNo, file) {
-      var dtd = $q.defer();
-      var url = serviceUrl + 'assets/' + assetNo + '/upload';
-      $log.info("Start to uploading file " + file.name + " ...");
-      file.upload = $upload.upload({
-        url: url,
-        data: {
-          file: file
-        },
-      });
-
-      file.upload.then(function(response) {
-        $log.info("Upload file " + file.name + " success.");
-        dtd.resolve(true);
-      }, function(response) {
-        $log.info("Upload file " + file.name + " failed.");
-        //dialog.showInfo("上传失败！")
-        dtd.resolve(false);
-        /*if (response.status > 0)
-          $scope.errorMsg = response.status + ': ' + response.data;*/
-      }, function(evt) {
-        // Math.min is to fix IE which reports 200% sometimes
-        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-        console.log(file.progress);
-        $log.info("Upload file " + file.name + " progress " + file.progress);
-        //$scope.$apply();
-      });
-
-      return dtd.promise;
-    }
-
-    $scope.onCancelClicked = function() {
-      window.history.back();
-    }
-
-  }
-]);
-'use strict';
-
-zongmu.controller("assetViewTagUpdateDialogController", ['$scope', 'dialog', 'assetService', 'assetViewTagService',
-  function($scope, dialog, assetService, assetViewTagService) {
-    var params = $scope.ngDialogData;
-
-    init();
-
-    function init() {
-
-      assetViewTagService.getAll()
-        .then(function(tags) {
-          $scope.viewTags = tags;
-          $scope.viewTagsMap = {};
-          params.asset.viewTags.forEach(function(it) {
-            $scope.viewTagsMap[it.assetViewTagId] = it.assetViewTagItemId;
-          });
-        });
-    }
-
-    function getSelected() {
-      var viewTags = [];
-
-      Object.keys($scope.viewTagsMap).forEach(function(key) {
-        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
-          viewTags.push({
-            assetViewTagId: key,
-            assetViewTagItemId: $scope.viewTagsMap[key]
-          });
-        }
-      });
-
-      return viewTags;
-    }
-
-    $scope.onSaveButtonClick = function() {
-      assetService.updateAssetViewTags(params.asset.assetNo, {
-          "items": getSelected()
-        })
-        .then(function() {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("assetController", ["$scope", "assetService", "breadCrumb", "enumService", "dialog",
-  "algorithmService", "assetViewTagService", "viewTagService",
-  function($scope, assetService, breadCrumbProvider, enumService, dialog, algorithmService, assetViewTagService, viewTagService) {
-    var pageIndex = $.url().param("pageIndex");
-    $scope.taskStatus = enumService.getTaskStatus();
-    $scope.assetTypes = enumService.getUploadTypes();
-    $scope.assetButtonExpand = false;
-    $scope.taskViewButtonExpand = false;
-
-    function QueryParams() {
-      this.taskName = null;
-      this.taskItemNo = null;
-      this.assetName = null;
-      this.assetNo = null;
-      this.uploadDate = {
-        from: null,
-        to: null
-      };
-      this.videoLength = {
-        op: null,
-        value: null
-      };
-
-      this.taskFinishDate = {
-        from: null,
-        to: null
-      };
-
-      this.videoRecordDate = {
-        from: null,
-        to: null
-      };
-
-      init();
-
-      function init() {
-        $scope.assetTypes.forEach(function(it) {
-          it.checked = false;
-        });
-
-        ($scope.algorithms || []).forEach(function(it) {
-          it.checked = false;
-        });
-
-        $scope.taskStatus.forEach(function(it) {
-          it.checked = false;
-        });
-
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-
-        ($scope.taskViewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-      }
-
-      this.getData = function() {
-
-        this.assetTypes = [];
-        $scope.assetTypes.forEach(function(it) {
-          if(it.checked) {
-            this.assetTypes.push(it.name);
-          }
-        }.bind(this));
-
-        this.algorithmIds = [];
-        ($scope.algorithms || []).forEach(function(it) {
-          if(it.checked) {
-            this.algorithmIds.push(it.id);
-          }
-        }.bind(this));
-
-        this.taskItemStatus = [];
-        $scope.taskStatus.forEach(function(it) {
-          if(it.checked) {
-            this.taskItemStatus.push(it.name);
-          }
-        }.bind(this));
-
-        this.assetViewTagItemIds = [];
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            if(item.checked) {
-              this.assetViewTagItemIds.push(item.id);
-            }
-          }.bind(this));
-        }.bind(this));
-
-        this.viewTagItemIds = [];
-        ($scope.taskViewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            if(item.checked) {
-              this.viewTagItemIds.push(item.id);
-            }
-          }.bind(this));
-        }.bind(this));
-
-        return this;
-      };
-    }
-
-    $scope.queryParams = new QueryParams();
-
-    algorithmService.getAlgorithms()
-      .then(function(data) {
-        $scope.algorithms = data;
-      });
-
-    assetViewTagService.getAll()
-      .then(function(tags) {
-        $scope.viewTags = tags;
-      });
-
-    viewTagService.getAllViewTags()
-      .then(function(viewTags) {
-        $scope.taskViewTags = viewTags;
-      });
-
-    initView() && initData();
-    getAssetTags();
-
-    function initView() {
-
-      $scope.s = {};
-      breadCrumbProvider.setHistories([{
-        text: "上传记录",
-        href: "assets.html"
-      }]);
-      $scope.columns = [{
-        name: "name",
-        text: "名称"
-      }, {
-        name: "assetType",
-        text: "类型"
-      }, {
-        name: "recordTime",
-        text: "录制时间"
-      }, {
-        name: "recordLength",
-        text: "录制时长"
-      }, {
-        name: "pictureCount",
-        text: "图片张数"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-      $scope.ops = enumService.getOps();
-
-      return true;
-    }
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载，请稍后...");
-      assetService.queryAssets(pageIndex, $scope.queryParams.getData())
-        .then(function(pageData) {
-          $scope.hideLoading();
-          $scope.dataset = pageData.content;
-          $scope.pageData = {
-            totalPage: pageData.totalPages,
-            pageIndex: pageData.number
-          };
-        });
-    }
-
-    function getAssetTags() {
-      assetService.getAssetTags()
-        .then(function(tags) {
-          $scope.tags = tags;
-        })
-    }
-
-    $scope.onExpandButtonClick = function() {
-      $scope.expandSearch = !$scope.expandSearch;
-    };
-
-    $scope.onClearSearchButtonClick = function() {
-      $scope.queryParams = new QueryParams();
-    };
-
-    $scope.onSearchButtonClick = function() {
-      initData()
-        //    var filter = "";
-        //
-        //    if($scope.s.assetType) {
-        //      filter += "assetType eq " + $scope.s.assetType + ";";
-        //    }
-        //
-        //    if($scope.s.uploadTimeOp && $scope.s.uploadTime) {
-        //      filter += "createTime " + $scope.s.uploadTimeOp + " " + $scope.s.uploadTime.toISOString() + ";";
-        //    }
-        //
-        //    if($scope.s.recordTimeOp && $scope.s.recordTime) {
-        //      filter += "uploadTime " + $scope.s.recordTimeOp + " " + $scope.s.recordTime.toISOString() + ";";
-        //    }
-        //
-        //    if($scope.s.recordLengthOp && $scope.s.recordLength) {
-        //      filter += "recordLength " + $scope.s.recordLengthOp + " " + $scope.s.recordLength + ";";
-        //    }
-        //
-        //    var tags = [];
-        //    ($scope.tags || []).forEach(function(it) {
-        //      if(it.isSelected) {
-        //        tags.push(it.id);
-        //      }
-        //    });
-        //
-        //    if(tags.length > 0) {
-        //      filter += "tags in " + JSON.stringify(tags) + ";";
-        //    }
-        //
-        //    $scope.showLoading();
-        //    $scope.setLoadingText("正在搜索，请稍后...");
-        //    assetService.getAssets(pageIndex, filter)
-        //      .then(function(pageData) {
-        //        $scope.hideLoading();
-        //        $scope.dataset = pageData.content;
-        //        $scope.pageData = {
-        //          totalPage: pageData.totalPages,
-        //          pageIndex: pageData.number
-        //        };
-        //      });
-    };
-
-    $scope.$on("tableIndexChanged", function(paginationScope, index) {
-      pageIndex = index;
-      initData();
-      //window.location.href = "assets.html?pageIndex=" + pageIndex;
-    });
-
-    $scope.onUploadButtonClick = function() {
-      window.location.href = "asset.upload.html";
-    };
-
-    $scope.onNewTaskButtonClick = function(rowData) {
-      window.location.href = "asset.new.html?assetNo=" + rowData.assetNo;
-    };
-
-    $scope.onDeleteButtonClick = function(rowData) {
-
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条记录吗？",
-        onConfirm: function() {
-          $scope.showLoading();
-          $scope.setLoadingText("正在删除视频和视频相关数据，请稍后...");
-          assetService.deleteAsset(rowData.assetNo)
-            .then(function() {
-              $scope.hideLoading();
-              initData();
-            });
-        }
-      });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("baseTaskController", ["$scope", "breadCrumb", "serviceUrl", "algorithmService", "appEnv",
-
-  function($scope, breadCrumbProvider, serviceUrl, algorithmService, appEnv) {
-
-    $scope.setTitle("我的任务");
-
-    $scope.sidebar = [{
-      name: "task-management",
-      text: "任务管理",
-      icon: "tasks",
-      items: [{
-        name: "task-record",
-        text: "任务记录",
-        href: serviceUrl + "page/task/index.html"
-      }, {
-        name: "upload-task-record",
-        text: "上传记录",
-        href: serviceUrl + "page/task/assets.html"
-      }, {
-        name: "review-task-record",
-        text: "审核记录",
-        href: serviceUrl + "page/task/reviews.html"
-      }]
-    }, {
-      name: "report",
-      text: "信息统计",
-      icon: "dashboard",
-      items: []
-    }, {
-      name: "user-profile",
-      text: "个人中心",
-      icon: "user",
-      items: [{
-        name: "user-profile",
-        text: "个人信息",
-        href: serviceUrl + "page/user/profile.html"
-      }, {
-        name: "user-point",
-        text: "会员积分",
-        href: serviceUrl + "page/user/point.html"
-      }, {
-        name: "user-secret",
-        text: "安全中心",
-        href: serviceUrl + "page/user/resetpassword.html"
-      }, {
-        name: "point-approve-list",
-        text: "提现申请记录",
-        href: serviceUrl + "page/user/point.request.list.html"
-      }]
-    }];
-
-    initView();
-
-    function initData() {
-      algorithmService.getAlgorithms()
-        .then(function(data) {
-          data.forEach(function(it) {
-            $scope.sidebar[1].items.push({
-              name: it.id + "",
-              text: it.name + "路测数据统计",
-              href: serviceUrl + "page/task/bsd.html?reportId=" + it.id
-            });
-          })
-        });
-    }
-
-    function initView() {
-      var role = Cookies.get("role");
-      if(role === "NORMAL") {
-        hideGroups(["report"]);
-        hideGroupItems(["upload-task-record", "review-task-record", "point-approve-list"]);
-      } else if(role === "REVIEW") {
-        hideGroups(["report"]);
-        hideGroupItems(["upload-task-record", "point-approve-list"]);
-      } else if(role === "FINANCE") {
-        hideGroups(["report"]);
-        hideGroupItems(["upload-task-record", "review-task-record"]);
-      } else if(role === "UPLOAD") {
-        hideGroups(["report"]);
-        var arrs = ["point-approve-list", "review-task-record"];
-        if(appEnv === "aliyun"){
-          arrs.push("upload-task-record")
-        }
-        hideGroupItems(arrs);
-      } else if(role === "ADMIN") {
-        if(appEnv === "aliyun") {
-          hideGroupItems(["upload-task-record"]);
-        }
-        initData();
-      } else if(role === "SUPER") {
-        hideGroupItems(["upload-task-record", "point-approve-list", "review-task-record"]);
-        initData();
-      }
-    }
-
-    $scope.hideSideItems = function(names) {
-      hideGroupItems(names);
-    }
-
-    $scope.hideSideGroups = function(groups) {
-      hideGroups(groups);
-    };
-
-    function hideGroups(groups) {
-      $scope.sidebar.forEach(function(group) {
-        if(groups.indexOf(group.name) !== -1) {
-          group.visibility = false;
-        } else {
-          delete group.visibility;
-        }
-      });
-    }
-
-    function hideGroupItems(names) {
-      $scope.sidebar.forEach(function(group) {
-        group.items.forEach(function(it) {
-          if(names.indexOf(it.name) !== -1) {
-            it.visibility = false;
-          } else {
-            delete it.visibility;
-          }
-        });
-      });
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("bsdReportController", ["$scope", "breadCrumb", "reportService", "dialog", "enumService", "assetViewTagService", "nullUtils", "viewTagService",
-  function($scope, breadCrumbProvider, reportService, dialog, enumService, assetViewTagService, nullUtils, viewTagService) {
-    var reportId = $.url().param("reportId");
-    $scope.assetButtonExpand = false;
-    $scope.taskViewButtonExpand = false;
-    $scope.taskStatus = [{
-      name: "Accept",
-      text: "接受"
-    }, {
-      name: "New",
-      text: "未接受"
-    }, {
-      name: "Pass",
-      text: "审核通过"
-    }, {
-      name: "Reject",
-      text: "未审核通过"
-    }];
-    $scope.queryParams = new QueryParams();
-    initView() && initData();
-    $scope.onButtonClick = function() {
-      if($scope.from === undefined || $scope.from === null) {
-        dialog.showError("开始时间段不能为空！");
-        return;
-      }
-
-      if(!$scope.to === undefined || $scope.to === null) {
-        dialog.showError("结束时间段不能为空！");
-        return;
-      }
-
-      if($scope.from >= $scope.to) {
-        dialog.showError("开始时间不能大于结束时间！");
-        return;
-      }
-
-      initData();
-    };
-
-    function QueryParams() {
-      this.taskName = null;
-      this.taskItemNo = null;
-      this.assetName = null;
-      this.assetNo = null;
-      this.uploadDate = {
-        from: null,
-        to: null
-      };
-      this.taskDate = {
-        from: null,
-        to: null
-      };
-      this.recordLength = {
-        op: null,
-        value: null
-      };
-
-      this.taskFinishDate = {
-        from: null,
-        to: null
-      };
-
-      this.assetRecordDate = {
-        from: null,
-        to: null
-      };
-
-      init();
-
-      function init() {
-        $scope.taskStatus.forEach(function(it) {
-          it.checked = false;
-        });
-
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-
-        ($scope.taskViewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-      }
-
-      this.getData = function() {
-        this.taskItemStatus = [];
-        $scope.taskStatus.forEach(function(it) {
-          if(it.checked) {
-            this.taskItemStatus.push(it.name);
-          }
-        }.bind(this));
-
-        this.assetViewItemIds = [];
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            if(item.checked) {
-              this.assetViewItemIds.push(item.id);
-            }
-          }.bind(this));
-        }.bind(this));
-
-        this.viewTagItemMap = getTaskViewItemIds();
-
-        return this;
-      };
-    }
-
-    $scope.onClearSearchButtonClick = function() {
-      $scope.queryParams = new QueryParams();
-    };
-
-    function searching() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在查询，请稍等...");
-      reportService.search(reportId, $scope.queryParams.getData())
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.tables = [];
-
-          data.tables.forEach(function(it) {
-            $scope.tables.push(initTable(it));
-          });
-          var sumTab = maxTable(data.tables);
-          if(sumTab) {
-            $scope.tables.push(sumTab);
-          }
-
-          console.log(data.tables);
-
-        });
-    }
-
-    function initView() {
-      if(!reportId) {
-        dialog.showError("参数错误！");
-        return false;
-      }
-
-      $scope.reportId = reportId + "";
-      breadCrumbProvider.setHistories([{
-        text: "路测视频统计",
-        href: "bsd.html"
-      }]);
-      $scope.hours = enumService.getHours();
-      $scope.from = 7;
-      $scope.to = 11;
-      $scope.viewTags = [];
-      $scope.taskViewTags = [];
-      $scope.expandSearch = false;
-      $scope.ops = enumService.getOps();
-
-      assetViewTagService.getAll()
-        .then(function(tags) {
-          $scope.viewTags = tags;
-        });
-
-      viewTagService.getViewTags(reportId)
-        .then(function(viewTags) {
-          $scope.taskViewTags = viewTags;
-        });
-      return true;
-    }
-
-    $scope.onExpandButtonClick = function() {
-      $scope.expandSearch = !$scope.expandSearch;
-    };
-
-    function getTaskViewItemIds() {
-      var map = {};
-      $scope.taskViewTags.forEach(function(it) {
-        map[it.id] = [];
-        it.items.forEach(function(item) {
-          if(item.checked) {
-            map[it.id].push(item.id);
-          }
-        });
-
-        if(map[it.id].length === 0) {
-          delete map[it.id];
-        }
-      });
-
-      return map;
-    };
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在查询，请稍等...");
-      var ids = [];
-      $scope.viewTags.forEach(function(it) {
-        it.items.forEach(function(item) {
-          if(item.checked) {
-            ids.push(item.id);
-          }
-        });
-      });
-
-      searching();
-
-      //    reportService.getNewBsdReport(reportId, ids.join(","))
-      //      .then(function(data) {
-      //        $scope.hideLoading();
-      //        $scope.tables = [];
-      //
-      //        data.tables.forEach(function(it) {
-      //          $scope.tables.push(initTable(it));
-      //        });
-      //        var sumTab = sumTable(data.tables);
-      //        if(sumTab) {
-      //          $scope.tables.push(sumTab);
-      //        }
-      //
-      //        console.log(data.tables);
-      //
-      //      });
-      //    reportService.getBsdReport(reportId, $scope.from, $scope.to)
-      //      .then(function(data) {
-      //        $scope.hideLoading();
-      //        data.videoTable.rows.forEach(function(row) {
-      //          Object.keys(row.data).forEach(function(key) {
-      //            if(row.data[key]) {
-      //              row.data[key] = (row.data[key] / 60).toFixed(2);
-      //            } else {
-      //              row.data[key] = 0;
-      //            }
-      //          });
-      //        });
-      //        $scope.videoTable = initTable(data.videoTable);
-      //        $scope.picTable = initTable(data.pictureTable);
-      //      });
-    }
-
-    function sumTable(tables) {
-      var table = {
-        name: "总计",
-        headers: [{
-          "name": "pic",
-          "text": "图片"
-        }, {
-          "name": "video",
-          "text": "视频"
-        }],
-        rows: []
-      };
-
-      var table = {
-        columns: [{
-          name: "text",
-          text: "总计\\类型"
-        }, {
-          "name": "pic",
-          "text": "图片"
-        }, {
-          "name": "video",
-          "text": "视频"
-        }],
-        dataset: [],
-        name: "总计"
-      };
-
-      var sumPic = 0;
-      var sumVideo = 0;
-      tables.forEach(function(it, index) {
-        it.rows.forEach(function(row, rowIndex) {
-          Object.keys(row.data).forEach(function(key) {
-            if(rowIndex === 0) {
-              sumVideo += row.data[key];
-            }
-            if(rowIndex === 1) {
-              sumPic += row.data[key];
-            }
-          });
-        });
-
-        //      if(index === 0) {
-        //        table = $.extend(true, {}, it);
-        //      } else {
-        //        it.rows.forEach(function(row, rowIndex) {
-        //          var sumRow = table.rows[rowIndex];
-        //          Object.keys(row.data).forEach(function(key) {
-        //            sumRow.data[key] = sumRow.data[key] + row.data[key];
-        //          });
-        //
-        //          table.rows[rowIndex] = sumRow;
-        //        });
-        //      }
-      });
-      table.dataset.push({
-        "text": "总计",
-        "pic": sumPic,
-        "video": calc(sumVideo)
-      });
-
-      return table;
-    }
-
-    function initTable(tableData) {
-
-      var columns = [{
-        name: "text",
-        text: "类型\\场景属性"
-      }].concat(tableData.headers);
-
-      var dataset = tableData.rows.map(function(it, index) {
-        var row = {
-          text: it.text
-        };
-        if(index === 0) {
-          it.data1 = {};
-          Object.keys(it.data).forEach(function(key) {
-            it.data1[key] = calc(it.data[key]);
-          });
-          $.extend(true, row, it.data1);
-        } else {
-          $.extend(true, row, it.data);
-        }
-
-        return row;
-      });
-
-      return {
-        columns: columns,
-        dataset: dataset,
-        name: tableData.name
-      };
-    }
-
-    function calc(val) {
-      if(val === 0) {
-        return val;
-      }
-
-      if(val < 60) {
-        return `${val}秒`;
-      }
-
-      var sec = val % 60;
-      var min = null;
-      if(sec === 0) {
-        min = val / 60;
-      } else {
-        min = ((val - sec) / 60) % 60;
-      }
-      if(val < 60 * 60) {
-        return `${min}分 ${sec}秒`;
-      }
-
-      var hour = (val - min * 60 - sec) / 3600;
-      return `${hour}时${min}分 ${sec}秒`;
-    }
-
-    function maxTable(tables) {
-      var table = {
-        columns: [{
-          name: "text",
-          text: "总计\\类型"
-        }, {
-          "name": "pic",
-          "text": "图片"
-        }, {
-          "name": "video",
-          "text": "视频"
-        }],
-        dataset: [],
-        name: "总计"
-      };
-
-      var maxVideo = 0;
-      var maxPicture = 0;
-
-      tables.forEach(function(it, index) {
-        it.rows.forEach(function(row, rowIndex) {
-          Object.keys(row.data).forEach(function(key) {
-            if(rowIndex === 0) {
-              if(maxVideo < row.data[key]) {
-                maxVideo = row.data[key];
-              }
-            }
-            if(rowIndex === 1) {
-              if(maxPicture < row.data[key]) {
-                maxPicture = row.data[key];
-              }
-            }
-          });
-        });
-      });
-
-      table.dataset.push({
-        "text": "总计",
-        "pic": maxPicture,
-        "video": calc(maxVideo)
-      });
-
-      return table;
-    }
-
-  }
-]);
-'use strict';
-
-zongmu.controller("chooseTagsController", ['$scope', 'dialog', 'assetService', 'taskService',
-  function($scope, dialog, assetService, taskService) {
-    var params = $scope.ngDialogData;
-    initData();
-
-    function initData() {
-      var map = {};
-      angular.forEach(params.selectedTags || [], function(it, index) {
-        map[it.id] = it;
-      });
-
-      assetService.getAssetTags()
-        .then(function(tags) {
-          $scope.tags = tags;
-          angular.forEach($scope.tags, function(it, index) {
-            it.isSelected = map[it.id] !== undefined;
-          });
-        });
-    }
-
-    $scope.$watch("allSelected", function() {
-      angular.forEach($scope.tags, function(it, index) {
-        it.isSelected = $scope.allSelected;
-      });
-    });
-
-    $scope.onOkClick = function() {
-      var selectedTags = [];
-      angular.forEach($scope.tags, function(it, index) {
-        if(it.isSelected) {
-          selectedTags.push(it.id);
-        }
-      });
-
-      if(params.type === "task") {
-        taskService.updateAssetTags(params.taskNo, selectedTags)
-          .then(function() {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      } else {
-        assetService.updateAssetTags(params.assetNo, selectedTags)
-          .then(function() {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      }
-    };
-
-  }
-]);
-'use strict';
-
-zongmu.controller("taskItemDetailController", ['$q', '$scope', 'taskService', 'taskRecordService', 'reviewRecordService', 'dialog', "markUtil",
-  function($q, $scope, taskService, taskRecordService, reviewRecordService, dialog, markUtil) {
-    var taskItemNo = $.url().param("taskItemNo");
-
-    initView() && initData();
-
-    function initView() {
-      $scope.setTitle("任务详细信息");
-
-      $scope.taskRecordColumns = [{
-        name: "taskRecordNo",
-        text: "标注记录号"
-      }, {
-        name: "userName",
-        text: "标注者"
-      }, {
-        name: "startTime",
-        text: "开始时间"
-      }, {
-        name: "endTime",
-        text: "结束时间"
-      }, {
-        name: "status",
-        text: "状态"
-      }, {
-        name: "point",
-        text: "奖励"
-      }];
-
-      $scope.reviewRecordColumns = [{
-        name: "reviewRecordNo",
-        text: "审核记录号"
-      }, {
-        name: "userName",
-        text: "审核者"
-      }, {
-        name: "startTime",
-        text: "开始时间"
-      }, {
-        name: "endTime",
-        text: "结束时间"
-      }, {
-        name: "status",
-        text: "状态"
-      }];
-
-      var role = Cookies.get("role");
-      $scope.role = role;
-      $scope.canReview = ["NORMAL", "FINANCE"].indexOf(role) === -1;
-      return true;
-    }
-
-    $scope.onContinueMarkButtonClick = function() {
-      gotoNextPage();
-    };
-
-    function gotoNextPage() {
-      if($scope.task.taskRecordNo) {
-        var pageName = markUtil.getMarkPageUrl($scope.task.assetType, $scope.task.taskType, $scope.task.taskRecordNo);
-        window.location.href = `../mark/${pageName}`;
-        //      if($scope.task.taskType === "VIDEO") {
-        //        if($scope.task.taskItemFiles.length === 4) {
-        //          window.location.href = "../mark/video.four.html?taskRecordNo=" + $scope.task.taskRecordNo;
-        //        } else {
-        //          if($scope.task.assetType === "PICTURE") {
-        //            window.location.href = "../mark/pic.html?taskRecordNo=" + $scope.task.taskRecordNo;
-        //          } else {
-        //            window.location.href = "../mark/video.html?taskRecordNo=" + $scope.task.taskRecordNo;
-        //          }
-        //        }
-        //      } else {
-        //        if($scope.task.taskItemFiles.length === 4) {
-        //          window.location.href = "../mark/pic.four.html?taskRecordNo=" + $scope.task.taskRecordNo;
-        //        } else {
-        //          window.location.href = "../mark/pic.html?taskRecordNo=" + $scope.task.taskRecordNo;
-        //        }
-        //
-        //      }
-      } else {
-        dialog.showError("参数错误");
-      }
-    }
-
-    $scope.onAcceptTaskClick = function() {
-      taskService.acceptTask(taskItemNo)
-        .then(function(data) {
-          var pageName = markUtil.getMarkPageUrl(data.assetType, data.taskType, data.taskRecordNo);
-          window.location.href = `../mark/${pageName}`;
-          //var pageName = markUtil.getMarkPage(data);
-          //window.location.href = "../mark/" + pageName + "?taskRecordNo=" + data.taskRecordNo;
-        });
-    };
-
-    function initData() {
-      if(!taskItemNo) {
-        dialog.showError("参数错误");
-      } else {
-        taskService.getTaskDetail(taskItemNo)
-          .then(function(task) {
-            $scope.task = task;
-          });
-      }
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("exportFailedDialogController", ['$scope','dialog',
-  function($scope, dialog) {    
-
-    $scope.taskItems = $scope.ngDialogData.taskItems;
-
-  }
-]);
-'use strict';
-
-zongmu.controller("myTasksController", ["$scope", "taskRecordService", "breadCrumb", "dialog", "enumService",
-  "algorithmService", "assetViewTagService", "viewTagService", "markUtil",
-  function($scope, taskRecordService, breadCrumbProvider, dialog, enumService,
-    algorithmService, assetViewTagService, viewTagService, markUtil) {
-    var pageIndex = $.url().param("pageIndex") || 0;
-    var tabIndex = 0;
-
-    $scope.assetTypes = enumService.getUploadTypes();
-    $scope.ops = enumService.getOps();
-    $scope.assetButtonExpand = false;
-    $scope.taskViewButtonExpand = false;
-    $scope.taskStatus = [{
-      name: "INPROGRESS",
-      text: "标注进行中"
-    }, {
-      name: "WAITTING",
-      text: "等待审核"
-    }, {
-      name: "REVIEWING",
-      text: "正在进行审核"
-    }, {
-      name: "ACCEPTED",
-      text: "审核通过"
-    }, {
-      name: "REJECTED",
-      text: "审核失败"
-    }];
-
-    $scope.onExpandButtonClick = function() {
-      $scope.expandSearch = !$scope.expandSearch;
-    };
-
-    $scope.canView = function(rowData) {
-      var role = Cookies.get("role");
-      if(role === "ADMIN") {
-        return true;
-      } else {
-        if(["WAITTING", "ACCEPTED"].indexOf(rowData.status) !== -1) {
-          return false;
-        }
-
-        return true;
-      }
-    };
-
-    function QueryParams() {
-      this.taskName = null;
-      this.taskItemNo = null;
-      this.assetName = null;
-      this.assetNo = null;
-      this.uploadDate = {
-        from: null,
-        to: null
-      };
-      this.videoLength = {
-        op: null,
-        value: null
-      };
-
-      this.taskFinishDate = {
-        from: null,
-        to: null
-      };
-
-      this.videoRecordDate = {
-        from: null,
-        to: null
-      };
-
-      init();
-
-      function init() {
-        $scope.assetTypes.forEach(function(it) {
-          it.checked = false;
-        });
-
-        ($scope.algorithms || []).forEach(function(it) {
-          it.checked = false;
-        });
-
-        $scope.taskStatus.forEach(function(it) {
-          it.checked = false;
-        });
-
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-
-        ($scope.taskViewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-      }
-
-      this.getData = function() {
-
-        this.assetTypes = [];
-        $scope.assetTypes.forEach(function(it) {
-          if(it.checked) {
-            this.assetTypes.push(it.name);
-          }
-        }.bind(this));
-
-        this.algorithmIds = [];
-        ($scope.algorithms || []).forEach(function(it) {
-          if(it.checked) {
-            this.algorithmIds.push(it.id);
-          }
-        }.bind(this));
-
-        this.taskRecordStatus = [];
-        $scope.taskStatus.forEach(function(it) {
-          if(it.checked) {
-            this.taskRecordStatus.push(it.name);
-          }
-        }.bind(this));
-
-        this.assetViewTagItemIds = [];
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            if(item.checked) {
-              this.assetViewTagItemIds.push(item.id);
-            }
-          }.bind(this));
-        }.bind(this));
-
-        this.viewTagItemIds = [];
-        ($scope.taskViewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            if(item.checked) {
-              this.viewTagItemIds.push(item.id);
-            }
-          }.bind(this));
-        }.bind(this));
-
-        return this;
-      };
-    }
-
-    $scope.queryParams = new QueryParams();
-    initView() && initData();
-
-    function initView() {
-      breadCrumbProvider.setHistories([{
-        text: "任务记录",
-        href: "index.html"
-      }]);
-
-      $scope.tabs = [{
-        name: "all",
-        text: "全部",
-        active: true
-      }, {
-        name: "INPROGRESS",
-        text: "标注进行中"
-      }, {
-        name: "WAITTING",
-        text: "等待审核"
-      }, {
-        name: "REVIEWING",
-        text: "正在进行审核"
-      }, {
-        name: "ACCEPTED",
-        text: "审核通过"
-      }, {
-        name: "REJECTED",
-        text: "审核失败"
-      }];
-
-      $scope.columns = [{
-        name: "taskItemNo",
-        text: "任务名称"
-      }, {
-        name: "taskType",
-        text: "任务类型"
-      }, {
-        name: "point",
-        text: "金币"
-      }, {
-        name: "status",
-        text: "状态"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-      return true;
-    }
-
-    algorithmService.getAlgorithms()
-      .then(function(data) {
-        $scope.algorithms = data;
-      });
-
-    assetViewTagService.getAll()
-      .then(function(tags) {
-        $scope.viewTags = tags;
-      });
-
-    viewTagService.getAllViewTags()
-      .then(function(viewTags) {
-        $scope.taskViewTags = viewTags;
-      });
-
-    $scope.$on("onTabChanged", function(tabScope, item, index) {
-      pageIndex = 0;
-      tabIndex = index;
-      initData();
-    });
-
-    $scope.onClearSearchButtonClick = function() {
-      $scope.queryParams = new QueryParams();
-    };
-
-    $scope.onSearchButtonClick = function() {
-      initData();
-    };
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...");
-      taskRecordService.search(pageIndex, $scope.queryParams.getData())
-        .then(function(result) {
-          $scope.hideLoading();
-          $scope.tasks = result.content;
-          $scope.pageData = {
-            totalPage: result.totalPages,
-            pageIndex: result.number
-          };
-        });
-      //    taskRecordService.getMyTaskRecords(pageIndex, tabIndex)
-      //      .then(function(result) {
-      //        $scope.hideLoading();
-      //        $scope.tasks = result.content;
-      //        $scope.pageData = {
-      //          totalPage: result.totalPages,
-      //          pageIndex: result.number
-      //        };
-      //      });
-    }
-
-    $scope.$on("tableIndexChanged", function(paginationScope, index) {
-      pageIndex = index;
-      initData();
-      //window.location.href = "index.html?pageIndex=" + pageIndex;
-    });
-
-    $scope.onCancelButtonClicked = function(taskRecord) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确定要放弃任务么？",
-        onConfirm: function() {
-          $scope.showLoading();
-          $scope.setLoadingText("正在取消任务，请稍后...");
-          taskRecordService.cancelTask(taskRecord.taskRecordNo)
-            .then(function() {
-              $scope.hideLoading();
-              window.location.href = "../home/index.html";
-            });
-        }
-      });
-
-    };
-
-    $scope.onViewButtonClicked = function(taskRecord) {
-      var pageName = markUtil.getMarkPageUrl(taskRecord.assetType, taskRecord.taskType, taskRecord.taskRecordNo);;
-      window.location.href = `../mark/${pageName}`;
-      //    if(taskRecord.assetType === "FOUR") {
-      //      pageName = "video.four.html";
-      //    } else if(taskRecord.assetType === "SINGLE") {
-      //      pageName = taskRecord.taskType === 'PICTURE' ? "pic.html" : "video.html";
-      //    } else if(taskRecord.assetType === "PICTURE") {
-      //      pageName = "pic.html";
-      //    }
-      //
-      //    if(pageName) {
-      //      window.location.href = "../mark/" + pageName + "?taskRecordNo=" + taskRecord.taskRecordNo;
-      //    }
-    }
-
-  }
-]);
-'use strict';
-
-zongmu.controller("reviewDetailController", ["$q", "$scope", "reviewRecordService", "dialog", "breadCrumb", "rejectReasonService", "taskRecordService",
-  function($q, $scope, reviewRecordService, dialog, breadCrumbProvider, rejectReasonService, taskRecordService) {
-    var reviewRecordNo = $.url().param("reviewRecordNo");
-
-    initView() && initData();
-
-    function initView() {
-      var role = Cookies.get("role");
-      $scope.role = role;
-      breadCrumbProvider.setHistories([{
-        text: "审核记录",
-        href: "reviews.html"
-      }, {
-        text: "记录详情",
-        href: "#"
-      }]);
-
-      if(!reviewRecordNo) {
-        dialog.showError("参数错误");
-        return false;
-      }
-      return true;
-    }
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...");
-      reviewRecordService.getReviewRecord(reviewRecordNo)
-        .then(function(review) {
-          $scope.review = review;
-          if(review.status === "FAILED" && review.reasonId) {
-            getReason(review.reasonId)
-          } else {
-            $scope.hideLoading();
-          }
-        });
-    }
-
-    function getReason(reasonId) {
-      rejectReasonService.getReason(reasonId)
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.reason = data;
-        });
-    }
-
-    $scope.onReviewPassButtonClick = function() {
-      taskRecordService.reviewPass($scope.review.taskRecordNo)
-        .then(function() {
-          initData();
-        });
-    };
-
-    $scope.onReviewFailedButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: 'reviews.failed.dialog.html',
-        controller: "reviewFailedDialogController",
-        params: {
-          reviewRecord: $scope.review
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-  }
-]);
-'use strict';
-
-zongmu.controller("reviewFailedDialogController", ['$scope', 'dialog', 'taskRecordService', 'rejectReasonService', 'reviewRecordService',
-  function($scope, dialog, taskRecordService, rejectReasonService, reviewRecordService) {
-    var params = $scope.ngDialogData;
-
-    init();
-
-    $scope.onOkClick = function() {
-      if(!$scope.data.reason) {
-        dialog.showError("请选择原因！");
-        return;
-      }
-      var data = {
-        reasonId: $scope.data.reason.id,
-        memo: $scope.data.memo
-      };
-
-      if(params.batch) {
-        data.reviewRecordNos = params.reviewRecordNos;
-        reviewRecordService.batchReviewFailed(data)
-          .then(function(res) {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      } else {
-        taskRecordService.reviewFail(params.reviewRecord.taskRecordNo, data)
-          .then(function() {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      }
-
-    };
-
-    function init() {
-      $scope.data = {};
-      rejectReasonService.getReasons()
-        .then(function(data) {
-          $scope.reasons = data;
-          $scope.reasons.forEach(function(it) {
-            if(it.default) {
-              $scope.data.reason = it;
-            }
-          });
-          if(!$scope.data.reason && $scope.reasons.length > 0) {
-            $scope.data.reason = $scope.reasons[0];
-          }
-        });
-    }
-
-  }
-]);
-'use strict';
-
-zongmu.controller("reviewRecordsController", ["$scope", "reviewRecordService",
-  "dialog", "breadCrumb", "taskRecordService", "markUtil", "algorithmService",
-  "assetViewTagService", "viewTagService", "enumService", "rejectReasonService",
-  function($scope, reviewRecordService, dialog, breadCrumbProvider, taskRecordService,
-    markUtil, algorithmService, assetViewTagService, viewTagService, enumService, rejectReasonService) {
-    var pageIndex = $.url().param("pageIndex") || 0;
-    var tabIndex = 0;
-    $scope.assetTypes = enumService.getUploadTypes();
-    $scope.taskStatus = enumService.getReviewTaskStatus();
-    $scope.ops = enumService.getOps();
-    $scope.assetButtonExpand = false;
-    $scope.taskViewButtonExpand = false;
-
-    function QueryParams() {
-      this.taskName = null;
-      this.taskItemNo = null;
-      this.assetName = null;
-      this.assetNo = null;
-      this.userName = null;
-      this.uploadDate = {
-        from: null,
-        to: null
-      };
-      this.videoLength = {
-        op: null,
-        value: null
-      };
-
-      this.taskFinishDate = {
-        from: null,
-        to: null
-      };
-
-      this.videoRecordDate = {
-        from: null,
-        to: null
-      };
-
-      init();
-
-      function init() {
-        $scope.assetTypes.forEach(function(it) {
-          it.checked = false;
-        });
-
-        ($scope.algorithms || []).forEach(function(it) {
-          it.checked = false;
-        });
-
-        $scope.taskStatus.forEach(function(it) {
-          it.checked = false;
-        });
-
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-
-        ($scope.taskViewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            item.checked = false;
-          });
-        });
-
-        ($scope.reasons || []).forEach(function(it) {
-          it.checked = false;
-        }.bind(this));
-      }
-
-      this.getData = function() {
-
-        this.assetTypes = [];
-        $scope.assetTypes.forEach(function(it) {
-          if(it.checked) {
-            this.assetTypes.push(it.name);
-          }
-        }.bind(this));
-
-        this.algorithmIds = [];
-        ($scope.algorithms || []).forEach(function(it) {
-          if(it.checked) {
-            this.algorithmIds.push(it.id);
-          }
-        }.bind(this));
-
-        this.status = [];
-        $scope.taskStatus.forEach(function(it) {
-          if(it.checked) {
-            this.status.push(it.name);
-          }
-        }.bind(this));
-
-        this.assetViewTagItemIds = [];
-        ($scope.viewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            if(item.checked) {
-              this.assetViewTagItemIds.push(item.id);
-            }
-          }.bind(this));
-        }.bind(this));
-
-        this.viewTagItemIds = [];
-        ($scope.taskViewTags || []).forEach(function(it) {
-          it.items.forEach(function(item) {
-            if(item.checked) {
-              this.viewTagItemIds.push(item.id);
-            }
-          }.bind(this));
-        }.bind(this));
-
-        this.reasonIds = [];
-        ($scope.reasons || []).forEach(function(it) {
-          if(it.checked) {
-            this.reasonIds.push(it.id);
-          }
-        }.bind(this));
-
-        return this;
-      };
-    }
-
-    $scope.queryParams = new QueryParams();
-
-    initView() && initData();
-
-    function initView() {
-      breadCrumbProvider.setHistories([{
-        text: "审核记录",
-        href: "reviews.html"
-      }]);
-      $scope.tabs = [{
-        name: "all",
-        text: "全部",
-        active: true
-      }, {
-        name: "WAITTING",
-        text: "待审核"
-      }, {
-        name: "INPROGRESS",
-        text: "审核中"
-      }, {
-        name: "PASS",
-        text: "审核通过"
-      }, {
-        name: "FAILED",
-        text: "审核失败"
-      }];
-
-      $scope.columns = [{
-        name: "op-first",
-        text: ""
-      }, {
-        name: "reviewRecordNo",
-        text: "No."
-      }, {
-        name: "taskRecordNo",
-        text: "任务编号"
-      }, {
-        name: "subtotal",
-        text: "审核失败次数"
-      }, {
-        name: "status",
-        text: "状态"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-      return true;
-    }
-
-    rejectReasonService.getReasons()
-      .then(function(data) {
-        $scope.reasons = data;
-      });
-
-    algorithmService.getAlgorithms()
-      .then(function(data) {
-        $scope.algorithms = data;
-      });
-
-    assetViewTagService.getAll()
-      .then(function(tags) {
-        $scope.viewTags = tags;
-      });
-
-    viewTagService.getAllViewTags()
-      .then(function(viewTags) {
-        $scope.taskViewTags = viewTags;
-      });
-
-    $scope.onExpandButtonClick = function() {
-      $scope.expandSearch = !$scope.expandSearch;
-    };
-
-    $scope.onClearSearchButtonClick = function() {
-      $scope.queryParams = new QueryParams();
-    };
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载，请稍后...");
-      reviewRecordService.queryReviewRecords(pageIndex, $scope.queryParams.getData())
-        .then(function(result) {
-          $scope.hideLoading();
-          $scope.tasks = result.content;
-          $scope.pageData = {
-            totalPage: result.totalPages,
-            pageIndex: result.number
-          };
-        });
-    }
-
-    $scope.onClearSearchButtonClick = function() {
-      $scope.queryParams = new QueryParams();
-    };
-
-    $scope.onSearchButtonClick = function() {
-      initData();
-    };
-
-    $scope.$on("onTabChanged", function(tabScope, item, index) {
-      pageIndex = 0;
-      tabIndex = index;
-      initData();
-    });
-
-    $scope.$on("tableIndexChanged", function(paginationScope, index) {
-      pageIndex = index;
-      initData();
-    });
-
-    $scope.onStartReviewButtonClick = function(reviewRecord) {
-      reviewRecordService.startReview(reviewRecord.reviewRecordNo)
-        .then(function() {
-          var pageName = markUtil.getMarkPageUrl(reviewRecord.taskRecord.assetType, reviewRecord.taskRecord.taskType, reviewRecord.taskRecord.taskRecordNo);;
-          window.location.href = `../mark/${pageName}`;
-          //
-          //        var pageName = null;
-          //        if(reviewRecord.taskRecord.assetType === "FOUR") {
-          //          pageName = "video.four.html";
-          //        } else if(reviewRecord.taskRecord.assetType === "SINGLE") {
-          //          pageName = reviewRecord.taskRecord.taskType === 'PICTURE' ? "pic.html" : "video.html";
-          //        } else if(reviewRecord.taskRecord.assetType === "PICTURE") {
-          //          pageName = "pic.html";
-          //        }
-          //
-          //        if(pageName) {
-          //          window.location.href = "../mark/" + pageName + "?taskRecordNo=" + reviewRecord.taskRecord.taskRecordNo;
-          //        }
-        });
-    };
-
-    $scope.onViewButtonClick = function(reviewRecord) {
-      var pageName = markUtil.getMarkPage(reviewRecord.taskRecord);
-      if(pageName) {
-        window.location.href = "../mark/" + pageName + "?status=1&taskRecordNo=" + reviewRecord.taskRecord.taskRecordNo;
-      }
-    };
-
-    $scope.onNewTaskButtonClick = function(reviewRecord) {
-      reviewRecordService.newTask(reviewRecord.reviewRecordNo)
-        .then(function() {
-          dialog.showInfo("任务发布成功！")
-            .then(function() {
-              initData();
-            });
-        });
-    };
-
-    $scope.onBatchReviewButtonClick = function() {
-      $scope.enableBatch = true;
-    };
-
-    $scope.onSubmitBatchReviewPassButtonClick = function() {
-      var reviewRecordNos = getBatchItems();
-
-      if(reviewRecordNos.length === 0) {
-        dialog.showError("请选择审核记录!");
-        return;
-      }
-
-      $scope.showLoading();
-      $scope.setLoadingText("正在保存，请稍后...");
-      reviewRecordService.batchReviewPass(reviewRecordNos)
-        .then(function(data) {
-          $scope.enableBatch = false;
-          $scope.hideLoading();
-          dialog.showInfo("批量操作成功！")
-            .then(function() {
-              initData();
-            });
-        });
-    };
-
-    $scope.onSubmitBatchReviewFailedButtonClick = function() {
-      var reviewRecordNos = getBatchItems();
-
-      if(reviewRecordNos.length === 0) {
-        dialog.showError("请选择审核记录!");
-        return;
-      }
-
-      dialog.showCustom({
-        templateUrl: 'reviews.failed.dialog.html',
-        controller: "reviewFailedDialogController",
-        params: {
-          reviewRecordNos: reviewRecordNos,
-          batch: true
-        },
-        onConfirm: function() {
-          $scope.enableBatch = false;
-          dialog.showInfo("批量操作成功！")
-            .then(function() {
-              initData();
-            });
-        }
-      });
-    };
-
-    function getBatchItems() {
-      var reviewRecordNos = [];
-      $scope.tasks.forEach(function(it) {
-        if(it.isSelected) {
-          reviewRecordNos.push(it.reviewRecordNo);
-        }
-      });
-
-      return reviewRecordNos;
-    }
-
-    $scope.onCancelBatchReviewButtonClick = function() {
-      $scope.enableBatch = false;
-    };
-
-    $scope.onSelectedAll = function() {
-      setSelectedAll(true);
-    };
-
-    $scope.onUnSelectedAll = function() {
-      setSelectedAll(false);
-    };
-
-    $scope.onReviewFailedButtonClick = function(reviewRecord) {
-      dialog.showCustom({
-        templateUrl: 'reviews.failed.dialog.html',
-        controller: "reviewFailedDialogController",
-        params: {
-          reviewRecord: reviewRecord
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onReviewPassButtonClick = function(reviewRecord) {
-      taskRecordService.reviewPass(reviewRecord.taskRecordNo)
-        .then(function() {
-          initData();
-        });
-    };
-
-    function setSelectedAll(isSelected) {
-      if($scope.tasks && $scope.tasks.length > 0) {
-        $scope.tasks.forEach(function(it) {
-          it.isSelected = isSelected;
-        });
-      }
-    }
-
-    //  $scope.onSearchButtonClick = function() {
-    //    $scope.expandSearch = !$scope.expandSearch;
-    //  };
-
-  }
-]);
-'use strict';
-
-zongmu.controller("taskDetailController", ["$q", "$scope", "taskService", "dialog", "breadCrumb", "$timeout",
-  function($q, $scope, taskService, dialog, breadCrumbProvider, $timeout) {
-    var taskNo = $.url().param("taskNo");
-    var pageIndex = $.url().param("pageIndex");
-
-    initView() && initData();
-
-    function initView() {
-      $scope.taskColumns = [{
-        name: "taskItemNo",
-        text: "No."
-      }, {
-        name: "taskType",
-        text: "类型"
-      }, {
-        name: "status",
-        text: "状态"
-      }];
-
-      if(!taskNo) {
-        dialog.showError("参数错误");
-        return false;
-      }
-      return true;
-    }
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...")
-      taskService.getTask(taskNo, pageIndex)
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.task = data;
-          $scope.pageData = {
-            totalPage: data.taskItems.totalPages,
-            pageIndex: data.taskItems.number
-          };
-          initTags();
-          initNavPath();
-          refresh();
-        });
-    }
-
-    function refresh() {
-      var items = ($scope.task.taskItems.content || []).filter(function(it) {
-        return it.status === "CUTTING";
-      });
-
-      if(items.length > 0) {
-        $timeout(function() {
-          getTask();
-        }, 2000);
-      }
-    }
-
-    function getTask() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...")
-      taskService.getTask(taskNo, pageIndex)
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.task = data;
-          $scope.pageData = {
-            totalPage: data.taskItems.totalPages,
-            pageIndex: data.taskItems.number
-          };
-
-          initTags();
-          refresh();
-        });
-    }
-
-    function initTags() {
-      if($scope.task.assetViewTags) {
-        $scope.task.assetViewTags.forEach(function(it) {
-          it.viewTag.items.forEach(function(item) {
-            if(item.id === it.assetViewTagItemId) {
-              it.viewTagItem = item;
-            }
-          })
-        });
-      }
-
-      if($scope.task.viewTags) {
-        $scope.task.viewTags.forEach(function(it) {
-          it.viewTag.items.forEach(function(item) {
-            if(item.id === it.viewTagItemId) {
-              it.viewTagItem = item;
-            }
-          })
-        });
-      }
-    }
-
-    function initNavPath() {
-      breadCrumbProvider.setHistories([{
-        text: "上传记录",
-        href: "assets.html"
-      }, {
-        text: "记录详情",
-        href: "asset.detail.html?assetNo=" + $scope.task.assetNo
-      }, {
-        text: "任务详情",
-        href: "#"
-      }]);
-    }
-
-    $scope.$on("tableIndexChanged", function(paginationScope, pageIndex) {
-      window.location.href = "task.detail.html?taskNo=" + taskNo + "&pageIndex=" + pageIndex;
-    });
-
-    $scope.onSetTopButtonClick = function(top) {
-      taskService.setTop(taskNo, top).then(function() {
-        initData();
-      });
-    }
-
-    $scope.onSetShowButtonClick = function(show) {
-      taskService.setShow(taskNo, show).then(function() {
-        initData();
-      });
-    }
-
-    $scope.onSetPriorityButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: 'task.priority.dialog.html',
-        controller: "chooseTaskPriorityController",
-        params: {
-          task: $scope.task
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("chooseTaskPriorityController", ['$scope', 'dialog', 'taskService', 'enumService',
-  function($scope, dialog, taskService, enumService) {
-    var params = $scope.ngDialogData;
-    $scope.task = params.task;
-    $scope.taskPriority = $scope.task.priority;
-    $scope.taskPriorities = enumService.getTaskPriorities();
-    $scope.onOkClick = function() {
-      taskService.setPriority($scope.task.taskNo, $scope.taskPriority)
-        .then(function() {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
-
   }
 ]);
 'use strict';
@@ -9526,6 +6756,2792 @@ zongmu.controller("NewViewTagItemCreateController", ["$scope", "viewTagService",
           });
         });
     };
+  }
+]);
+'use strict';
+
+zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService",
+  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService) {
+    var assetNo = $.url().param("assetNo");
+
+    initView() && initData();
+
+    $scope.onSearchButtonClick = function() {
+      $scope.expandButton = !$scope.expandButton;
+    };
+
+    function initView() {
+      $scope.expandButton = true;
+      breadCrumbProvider.setHistories([{
+        text: "上传记录",
+        href: "assets.html"
+      }, {
+        text: "记录详情",
+        href: "#"
+      }]);
+
+      $scope.taskColumns = [{
+        name: "taskName",
+        text: "任务名称"
+      }, {
+        name: "taskType",
+        text: "类型"
+      }, {
+        name: "priority",
+        text: "优先级"
+      }, {
+        name: "showHome",
+        text: "是否在任务大厅显示"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      $scope.fileColumns = [{
+        name: "assetFileNo",
+        text: "No."
+      }, {
+        name: "fileName",
+        text: "文件名"
+      }, {
+        name: "fileSize",
+        text: "文件大小"
+      }, {
+        name: "assetFileStatus",
+        text: "状态"
+      }];
+
+      if(!assetNo) {
+        dialog.showError("参数错误");
+        return false;
+      }
+      return true;
+    }
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...");
+      $q.all([assetService.getAsset(assetNo), taskService.getTasksByAssetNo(assetNo)])
+        .then(function(res) {
+          $scope.asset = res[0];
+          if($scope.asset.viewTags) {
+            $scope.asset.viewTags.forEach(function(it) {
+              it.viewTag.items.forEach(function(item) {
+                if(item.id === it.assetViewTagItemId) {
+                  it.viewTagItem = item;
+                }
+              })
+            });
+          }
+          $scope.tasks = res[1];
+          $scope.hideLoading();
+          refresh();
+        });
+    }
+
+    function refresh() {
+      var items = ($scope.asset.assetFiles || []).filter(function(it) {
+        return it.assetFileStatus === "FTPUPLOADING" || it.assetFileStatus === "COMPRESSING" || it.assetFileStatus === "UPLOADSUCCESS";
+      });
+
+      if(items.length > 0) {
+        $timeout(function() {
+          getAssetData();
+        }, 2000);
+      }
+    }
+
+    function getAssetData() {
+      assetService.getAsset(assetNo)
+        .then(function(asset) {
+          $scope.asset = asset;
+          if($scope.asset.viewTags) {
+            $scope.asset.viewTags.forEach(function(it) {
+              it.viewTag.items.forEach(function(item) {
+                if(item.id === it.assetViewTagItemId) {
+                  it.viewTagItem = item;
+                }
+              })
+            });
+          }
+          refresh();
+        });
+    }
+
+    $scope.onCompressButtonClick = function() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在保存，请稍等...");
+      assetService.compress(assetNo)
+        .then(function() {
+          $scope.hideLoading();
+          dialog.showInfo("开始压缩")
+            .then(function() {
+              initData();
+            });
+        });
+    }
+
+    $scope.onNewTaskButtonClick = function() {
+      if(assetNo) {
+        window.location.href = "asset.new.html?assetNo=" + assetNo;
+      } else {
+        dialog.showError("参数错误");
+      }
+    };
+
+    $scope.onSetTagButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: 'asset.tag.dialog.html',
+        controller: "assetTagUpdateController",
+        params: {
+          asset: $scope.asset
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onUpdateAssetViewTagButtonClick = function() {
+
+      dialog.showCustom({
+        templateUrl: 'asset.view.tag.update.dialog.html',
+        controller: "assetViewTagUpdateDialogController",
+        params: {
+          asset: $scope.asset
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(rowData) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条记录吗？",
+        onConfirm: function() {
+          $scope.showLoading();
+          $scope.setLoadingText("正在删除任务和任务相关数据，请稍后...");
+          taskService.deleteTask(rowData.taskNo)
+            .then(function() {
+              $scope.hideLoading();
+              initData();
+            });
+        }
+      });
+    };
+
+    $scope.onExportButtonClick = function(rowData) {
+      $scope.showLoading();
+      $scope.setLoadingText("正在导出数据，请稍后...");
+      exportService.exportTask(assetNo, rowData.taskNo)
+        .then(function(data) {
+          $scope.hideLoading();
+          if(data.taskItems.length > 0) {
+            dialog.showCustom({
+              templateUrl: 'export.failed.dialog.html',
+              controller: "exportFailedDialogController",
+              params: {
+                taskItems: data.taskItems
+              },
+              onConfirm: function() {
+              }
+            });
+          } else {
+            dialog.showInfo("导出成功");
+          }
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("newTaskController", ["$scope", "assetService", "dialog", "enumService", "taskService",
+  "breadCrumb", "$q", "algorithmService", "viewTagService",
+  function($scope, assetService, dialog, enumService, taskService, breadCrumbProvider, $q, algorithmService, viewTagService) {
+    var assetNo = $.url().param("assetNo");
+    var asset = null;
+    initView() && initData();
+
+    $scope.onCancelButtonClick = function() {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确定要放弃修改？",
+        onConfirm: function() {
+          history.back();
+        }
+      });
+    };
+
+    $scope.onSaveButtonClick = function() {
+      var data = $scope.data;
+
+      if(!data.taskName) {
+        dialog.showInfo("请填写任务名称");
+        return;
+      }
+
+      if(!data.taskType) {
+        dialog.showInfo("请选择任务类型");
+        return;
+      }
+
+      if(!data.algorithmId) {
+        dialog.showInfo("请选择算法类型");
+        return;
+      }
+
+      if(data.taskType === 'VIDEO') {
+
+        if(!data.timeInterval || data.timeInterval < 30) {
+          dialog.showInfo("请设置视频切割的时间间隔，间隔必须大于等于30秒");
+          return;
+        }
+
+      } else {
+        if(!data.shapeType) {
+          dialog.showInfo("请选择标注形状");
+          return;
+        }
+
+        if(data.shapeType === 'POLYLINE') {
+          if(!data.sideCount || data.sideCount < 3 || data.sideCount >= 10) {
+            dialog.showInfo("请填写多边形边数，边数必须大于等于3且小于等于10.");
+            return;
+          }
+        }
+        if($scope.asset.assetType !== "PICTURE") {
+          if(!data.timeInterval || data.timeInterval < 3) {
+            dialog.showInfo("请设置图片提取的时间间隔，间隔必须大于等于3秒");
+            return;
+          }
+        }
+
+      }
+
+      if(!data.point) {
+        dialog.showInfo("请设置奖励金币，并且金币不能为0。");
+        return;
+      }
+
+      if(data.point <= 0) {
+        dialog.showInfo("金币必须大于0。");
+        return;
+      }
+
+      data.viewTags = getSelectedViewTagItems();
+
+      $scope.showLoading();
+      taskService.createTask(data)
+        .then(function(res) {
+          $scope.hideLoading();
+          dialog.showInfo("保存成功！").then(function() {
+            window.location.href = "asset.detail.html?assetNo=" + assetNo;
+          });
+        })
+    };
+
+    function initView() {
+      if(!assetNo) {
+        dialog.showError("参数不正确");
+        return false;
+      }
+
+      breadCrumbProvider.setHistories([{
+        text: "上传记录",
+        href: "assets.html"
+      }, {
+        text: "记录详情",
+        href: "asset.detail.html?assetNo=" + assetNo
+      }, {
+        text: "新建任务",
+        href: "#"
+      }]);
+
+      $scope.taskTypes = enumService.getTaskTypes();
+      $scope.shapeTypes = enumService.getShapeTypes();
+      $scope.videoShapeTypes = enumService.getVideoShapeTypes();
+      $scope.taskPriorities = enumService.getTaskPriorities();
+      $scope.selection = {};
+      return true;
+    }
+
+    function initData() {
+      $scope.data = {
+        assetNo: assetNo,
+        taskType: "VIDEO",
+        shapeType: "RECT",
+        assetTags: [],
+        priority: 2
+      };
+
+      $scope.viewTags = [];
+
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...");
+      $q.all([assetService.getAsset(assetNo), algorithmService.getAlgorithms()])
+        .then(function(res) {
+          $scope.hideLoading();
+          $scope.asset = res[0];
+          $scope.algorithms = res[1];
+          if($scope.algorithms.length > 0) {
+            $scope.data.algorithmId = $scope.algorithms[0].id;
+          }
+          if($scope.asset.assetType === "PICTURE") {
+            $scope.data.taskType = "PICTURE";
+          }
+
+          if($scope.asset.viewTags) {
+            $scope.asset.viewTags.forEach(function(it) {
+              it.viewTag.items.forEach(function(item) {
+                if(item.id === it.assetViewTagItemId) {
+                  it.viewTagItem = item;
+                }
+              })
+            });
+          }
+        });
+    }
+
+    function initViewTags() {
+      $scope.viewTagsMap = {};
+      $scope.viewTags.forEach(function(it) {
+        it.items.forEach(function(item) {
+          if(item.default) {
+            $scope.viewTagsMap[it.id] = item.id;
+          }
+        });
+
+        if(!$scope.viewTagsMap[it.id] && it.items.length > 0) {
+          $scope.viewTagsMap[it.id] = it.items[0].id;
+        }
+      });
+    }
+
+    function getSelectedViewTagItems() {
+
+      var viewTags = [];
+
+      Object.keys($scope.viewTagsMap).forEach(function(key) {
+        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
+          viewTags.push({
+            viewTagId: key,
+            viewTagItemId: $scope.viewTagsMap[key]
+          });
+        }
+      });
+
+      return viewTags;
+    }
+
+    $scope.$watch("data.algorithmId", function() {
+      if($scope.data.algorithmId) {
+        $scope.showLoading();
+        $scope.setLoadingText("正在加载数据，请稍后...");
+        viewTagService.getViewTags($scope.data.algorithmId)
+          .then(function(res) {
+            $scope.hideLoading();
+            $scope.viewTags = res;
+            initViewTags();
+          });
+      }
+    });
+  }
+]);
+'use strict';
+
+zongmu.controller("assetTagUpdateController", ['$scope', 'dialog', 'assetService', 'taskService',
+  function($scope, dialog, assetService, taskService) {
+    var params = $scope.ngDialogData;
+    var weatherTagId = null;
+    var roadTagId = null;
+    init();
+
+    function init() {
+      if(params.asset) {
+        weatherTagId = params.asset.weatherTagId;
+        roadTagId = params.asset.roadTagId;
+      }
+
+      if(params.taskItem) {
+        weatherTagId = params.taskItem.weatherTagId;
+        roadTagId = params.taskItem.roadTagId;
+      }
+
+      assetService.getAssetTags()
+        .then(function(tags) {
+          initTags(tags);
+        });
+    }
+
+    function initTags(tags) {
+      $scope.weatherTags = [];
+      $scope.roadTags = [];
+      tags.forEach(function(it) {
+        if(it.category === 'ROAD') {
+          if(roadTagId === it.id) {
+            $scope.roadTag = it;
+          }
+          $scope.roadTags.push(it);
+        } else if(it.category === 'WEATHER') {
+          if(weatherTagId === it.id) {
+            $scope.weatherTag = it;
+          }
+          $scope.weatherTags.push(it);
+        }
+      });
+    }
+
+    $scope.onSaveButtonClick = function() {
+      if(params.asset) {
+        assetService.updateAssetTags(params.asset.assetNo, {
+            weatherTagId: $scope.weatherTag.id,
+            roadTagId: $scope.roadTag.id
+          })
+          .then(function() {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      } else if(params.taskItem) {
+        taskService.updateAssetTaskTags(params.taskItem.taskItemNo, {
+            weatherTagId: $scope.weatherTag.id,
+            roadTagId: $scope.roadTag.id
+          })
+          .then(function() {
+            $scope.closeThisDialog({
+              key: 'ok',
+              result: {
+                roadTag: $scope.roadTag,
+                weatherTag: $scope.weatherTag
+              }
+            });
+          });
+      }
+
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("assetUploadController", ["$scope", "$log", "assetService", "serviceUrl",
+  "$timeout", 'Upload', "dialog", "enumService", "$q", "breadCrumb", "assetViewTagService",
+  function($scope, $log, assetService, serviceUrl, $timeout, $upload, dialog, enumService, $q, breadCrumbProvider, assetViewTagService) {
+
+    initView() && initData();
+
+    function initView() {
+      breadCrumbProvider.setHistories([{
+        text: "上传记录",
+        href: "assets.html"
+      }, {
+        text: "新建上传",
+        href: "#"
+      }]);
+      $scope.uploading = false;
+      $scope.assetType = "SINGLE";
+      $scope.videoTypes = enumService.getUploadTypes();
+      return true;
+    }
+
+    function initData() {
+      $scope.selection = {};
+      assetViewTagService.getAll()
+        .then(function(tags) {
+          $scope.viewTags = tags;
+          $scope.viewTagsMap = {};
+          $scope.viewTags.forEach(function(it) {
+            it.items.forEach(function(item) {
+              if(item.default) {
+                $scope.viewTagsMap[it.id] = item.id;
+              }
+            });
+
+            if(!$scope.viewTagsMap[it.id] && it.items.length > 0) {
+              $scope.viewTagsMap[it.id] = it.items[0].id;
+            }
+          });
+          //initTags(tags);
+        });
+    }
+
+    function initTags(tags) {
+      $scope.weatherTags = [];
+      $scope.roadTags = [];
+      $scope.weatherTag = null;
+      $scope.roadTag = null;
+      tags.forEach(function(it) {
+        if(it.category === 'ROAD') {
+          $scope.roadTags.push(it);
+          if(it.default) {
+            $scope.roadTag = it.id;
+          }
+        } else if(it.category === 'WEATHER') {
+          $scope.weatherTags.push(it);
+          if(it.default) {
+            $scope.weatherTag = it.id;
+          }
+        }
+      });
+
+      if($scope.weatherTag === null && $scope.weatherTags.length > 0) {
+        $scope.weatherTag = $scope.weatherTags[0].id;
+      }
+
+      if($scope.roadTag === null && $scope.roadTags.length > 0) {
+        $scope.roadTag = $scope.roadTags[0].id;
+      }
+    }
+
+    function getFileExt(fileName) {
+      var parts = fileName.split(".");
+      if(parts.length > 1) {
+        return parts[parts.length - 1].toLowerCase();
+      }
+    }
+
+    $scope.onUploadButtonClicked = function(files, file1, file2, file3, file4) {
+      if(!$scope.name) {
+        dialog.showError("请输入名称！");
+        return;
+      }
+      var assetType = $scope.assetType;
+      if(assetType === "PICTURE") {
+        if(!files || files.length === 0) {
+          dialog.showError("请选择上传的图片！");
+          return;
+        }
+
+        var checkResult = true;
+        files.forEach(function(it) {
+          if(["image/jpeg", "image/png", "image/png", "image/bmp"].indexOf(it.type) === -1) {
+            dialog.showError(`${it.name}不是正确的图片,请上传正确的图片格式的图片!`);
+            checkResult = false;
+            return;
+          }
+        })
+
+        if(!checkResult) {
+          return;
+        }
+
+        if(!$scope.recordTime) {
+          dialog.showError("请设置视频录制时间！");
+          return;
+        }
+
+        if($scope.recordTime > new Date()) {
+          dialog.showError("视频录制时间不应该晚于当前时间！");
+          return;
+        }
+
+        uploadPics(files);
+        return;
+      }
+
+      if(!file1) {
+        dialog.showError("请选择上传的文件1！");
+        return;
+      }
+
+      if(getFileExt(file1.name) !== "avi") {
+        dialog.showError("视频格式必须是AVI格式！");
+        return;
+      }
+
+      if(assetType === 'FOUR') {
+        if(!file2) {
+          dialog.showError("请选择上传的文件2！");
+          return;
+        }
+        if(!file3) {
+          dialog.showError("请选择上传的文件3！");
+          return;
+        }
+        if(!file4) {
+          dialog.showError("请选择上传的文件4！");
+          return;
+        }
+
+        var fourVideoNames = ["front.avi", "left.avi", "rear.avi", "right.avi"];
+        var videoNameIndex = fourVideoNames.indexOf(file1.name.toLowerCase());
+        if(videoNameIndex === -1) {
+          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
+          return;
+        }
+
+        fourVideoNames.splice(videoNameIndex, 1);
+
+        videoNameIndex = fourVideoNames.indexOf(file2.name.toLowerCase());
+        if(videoNameIndex === -1) {
+          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
+          return;
+        }
+
+        fourVideoNames.splice(videoNameIndex, 1);
+
+        videoNameIndex = fourVideoNames.indexOf(file3.name.toLowerCase());
+        if(videoNameIndex === -1) {
+          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
+          return;
+        }
+
+        fourVideoNames.splice(videoNameIndex, 1);
+
+        videoNameIndex = fourVideoNames.indexOf(file4.name.toLowerCase());
+        if(videoNameIndex === -1) {
+          dialog.showError("四路视频名称必须为front.avi，left.avi，rear.avi，right.avi。");
+          return;
+        }
+      }
+
+      if(!$scope.recordTime) {
+        dialog.showError("请设置视频录制时间！");
+        return;
+      }
+
+      if($scope.recordTime > new Date()) {
+        dialog.showError("视频录制时间不应该晚于当前时间！");
+        return;
+      }
+
+      var viewTags = [];
+
+      Object.keys($scope.viewTagsMap).forEach(function(key) {
+        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
+          viewTags.push({
+            assetViewTagId: key,
+            assetViewTagItemId: $scope.viewTagsMap[key]
+          });
+        }
+      });
+
+      $scope.uploading = true;
+      $scope.showLoading();
+      assetService.createAsset({
+        name: $scope.name,
+        assetType: assetType,
+        recordTime: $scope.recordTime,
+        memo: $scope.memo,
+        weatherTagId: $scope.weatherTag,
+        roadTagId: $scope.roadTag,
+        viewTags: viewTags
+      }).then(function(data) {
+
+        if($scope.assetType === 'FOUR') {
+          $q.all([uploadFile(data.assetNo, file1), uploadFile(data.assetNo, file2), uploadFile(data.assetNo, file3), uploadFile(data.assetNo, file4)])
+            .then(function(results) {
+              var res = results.filter(function(it) {
+                return it;
+              });
+
+              if(res.length === 4) {
+                uploadFinish(true);
+              } else {
+                uploadFinish(false);
+              }
+
+            });
+        } else {
+          uploadFile(data.assetNo, file1).then(function(res) {
+            uploadFinish(res);
+          });
+        }
+      });
+    };
+
+    function uploadPics(files) {
+      var viewTags = [];
+      Object.keys($scope.viewTagsMap).forEach(function(key) {
+        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
+          viewTags.push({
+            assetViewTagId: key,
+            assetViewTagItemId: $scope.viewTagsMap[key]
+          });
+        }
+      });
+      $scope.showLoading();
+      assetService.createAsset({
+        name: $scope.name,
+        assetType: $scope.assetType,
+        recordTime: $scope.recordTime,
+        weatherTagId: $scope.weatherTag,
+        roadTagId: $scope.roadTag,
+        memo: $scope.memo,
+        viewTags: viewTags
+      }).then(function(data) {
+        $q.all(files.map(function(it) {
+          return uploadFile(data.assetNo, it);
+        })).then(function() {
+          uploadFinish(true);
+        });
+      });
+    }
+
+    function uploadFile1(assetNo, file1, file2, file3, file4) {
+      uploadFile(assetNo, file1)
+        .then(function(res) {
+          if($scope.assetType === 'SINGLE') {
+            uploadFinish(res);
+          } else {
+            if(res) {
+              $scope.message = "第一个文件上传成功，正在上传第二个文件...";
+              uploadFile2(assetNo, file2, file3, file4)
+            }
+          }
+        });
+    }
+
+    function uploadFile2(assetNo, file2, file3, file4) {
+      uploadFile(assetNo, file2)
+        .then(function(res) {
+          if(res) {
+            uploadFile3(assetNo, file3, file4);
+          }
+        });
+    }
+
+    function uploadFile3(assetNo, file3, file4) {
+      uploadFile(assetNo, file3)
+        .then(function(res) {
+          if(res) {
+            uploadFile4(assetNo, file4);
+          }
+        });
+    }
+
+    function uploadFile4(assetNo, file4) {
+      uploadFile(assetNo, file4)
+        .then(function(res) {
+          uploadFinish(res);
+        });
+    }
+
+    function uploadFinish(res) {
+      $scope.hideLoading();
+      if(res) {
+        dialog.showInfo("上传成功！")
+          .then(function() {
+            window.location.href = "assets.html";
+          });
+      } else {
+        dialog.showInfo("上传失败！")
+          .then(function() {
+            window.location.href = "assets.html";
+          });
+      }
+
+    }
+
+    function uploadFile(assetNo, file) {
+      var dtd = $q.defer();
+      var url = serviceUrl + 'assets/' + assetNo + '/upload';
+      $log.info("Start to uploading file " + file.name + " ...");
+      file.upload = $upload.upload({
+        url: url,
+        data: {
+          file: file
+        },
+      });
+
+      file.upload.then(function(response) {
+        $log.info("Upload file " + file.name + " success.");
+        dtd.resolve(true);
+      }, function(response) {
+        $log.info("Upload file " + file.name + " failed.");
+        //dialog.showInfo("上传失败！")
+        dtd.resolve(false);
+        /*if (response.status > 0)
+          $scope.errorMsg = response.status + ': ' + response.data;*/
+      }, function(evt) {
+        // Math.min is to fix IE which reports 200% sometimes
+        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+        console.log(file.progress);
+        $log.info("Upload file " + file.name + " progress " + file.progress);
+        //$scope.$apply();
+      });
+
+      return dtd.promise;
+    }
+
+    $scope.onCancelClicked = function() {
+      window.history.back();
+    }
+
+  }
+]);
+'use strict';
+
+zongmu.controller("assetViewTagUpdateDialogController", ['$scope', 'dialog', 'assetService', 'assetViewTagService',
+  function($scope, dialog, assetService, assetViewTagService) {
+    var params = $scope.ngDialogData;
+
+    init();
+
+    function init() {
+
+      assetViewTagService.getAll()
+        .then(function(tags) {
+          $scope.viewTags = tags;
+          $scope.viewTagsMap = {};
+          params.asset.viewTags.forEach(function(it) {
+            $scope.viewTagsMap[it.assetViewTagId] = it.assetViewTagItemId;
+          });
+        });
+    }
+
+    function getSelected() {
+      var viewTags = [];
+
+      Object.keys($scope.viewTagsMap).forEach(function(key) {
+        if($scope.viewTagsMap[key] != null || $scope.viewTagsMap[key] != undefined) {
+          viewTags.push({
+            assetViewTagId: key,
+            assetViewTagItemId: $scope.viewTagsMap[key]
+          });
+        }
+      });
+
+      return viewTags;
+    }
+
+    $scope.onSaveButtonClick = function() {
+      assetService.updateAssetViewTags(params.asset.assetNo, {
+          "items": getSelected()
+        })
+        .then(function() {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("assetController", ["$scope", "assetService", "breadCrumb", "enumService", "dialog",
+  "algorithmService", "assetViewTagService", "viewTagService",
+  function($scope, assetService, breadCrumbProvider, enumService, dialog, algorithmService, assetViewTagService, viewTagService) {
+    var pageIndex = $.url().param("pageIndex");
+    $scope.taskStatus = enumService.getTaskStatus();
+    $scope.assetTypes = enumService.getUploadTypes();
+    $scope.assetButtonExpand = false;
+    $scope.taskViewButtonExpand = false;
+
+    function QueryParams() {
+      this.taskName = null;
+      this.taskItemNo = null;
+      this.assetName = null;
+      this.assetNo = null;
+      this.uploadDate = {
+        from: null,
+        to: null
+      };
+      this.videoLength = {
+        op: null,
+        value: null
+      };
+
+      this.taskFinishDate = {
+        from: null,
+        to: null
+      };
+
+      this.videoRecordDate = {
+        from: null,
+        to: null
+      };
+
+      init();
+
+      function init() {
+        $scope.assetTypes.forEach(function(it) {
+          it.checked = false;
+        });
+
+        ($scope.algorithms || []).forEach(function(it) {
+          it.checked = false;
+        });
+
+        $scope.taskStatus.forEach(function(it) {
+          it.checked = false;
+        });
+
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+
+        ($scope.taskViewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+      }
+
+      this.getData = function() {
+
+        this.assetTypes = [];
+        $scope.assetTypes.forEach(function(it) {
+          if(it.checked) {
+            this.assetTypes.push(it.name);
+          }
+        }.bind(this));
+
+        this.algorithmIds = [];
+        ($scope.algorithms || []).forEach(function(it) {
+          if(it.checked) {
+            this.algorithmIds.push(it.id);
+          }
+        }.bind(this));
+
+        this.taskItemStatus = [];
+        $scope.taskStatus.forEach(function(it) {
+          if(it.checked) {
+            this.taskItemStatus.push(it.name);
+          }
+        }.bind(this));
+
+        this.assetViewTagItemIds = [];
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            if(item.checked) {
+              this.assetViewTagItemIds.push(item.id);
+            }
+          }.bind(this));
+        }.bind(this));
+
+        this.viewTagItemIds = [];
+        ($scope.taskViewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            if(item.checked) {
+              this.viewTagItemIds.push(item.id);
+            }
+          }.bind(this));
+        }.bind(this));
+
+        return this;
+      };
+    }
+
+    $scope.queryParams = new QueryParams();
+
+    algorithmService.getAlgorithms()
+      .then(function(data) {
+        $scope.algorithms = data;
+      });
+
+    assetViewTagService.getAll()
+      .then(function(tags) {
+        $scope.viewTags = tags;
+      });
+
+    viewTagService.getAllViewTags()
+      .then(function(viewTags) {
+        $scope.taskViewTags = viewTags;
+      });
+
+    initView() && initData();
+    getAssetTags();
+
+    function initView() {
+
+      $scope.s = {};
+      breadCrumbProvider.setHistories([{
+        text: "上传记录",
+        href: "assets.html"
+      }]);
+      $scope.columns = [{
+        name: "name",
+        text: "名称"
+      }, {
+        name: "assetType",
+        text: "类型"
+      }, {
+        name: "recordTime",
+        text: "录制时间"
+      }, {
+        name: "recordLength",
+        text: "录制时长"
+      }, {
+        name: "pictureCount",
+        text: "图片张数"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+      $scope.ops = enumService.getOps();
+
+      return true;
+    }
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载，请稍后...");
+      assetService.queryAssets(pageIndex, $scope.queryParams.getData())
+        .then(function(pageData) {
+          $scope.hideLoading();
+          $scope.dataset = pageData.content;
+          $scope.pageData = {
+            totalPage: pageData.totalPages,
+            pageIndex: pageData.number
+          };
+        });
+    }
+
+    function getAssetTags() {
+      assetService.getAssetTags()
+        .then(function(tags) {
+          $scope.tags = tags;
+        })
+    }
+
+    $scope.onExpandButtonClick = function() {
+      $scope.expandSearch = !$scope.expandSearch;
+    };
+
+    $scope.onClearSearchButtonClick = function() {
+      $scope.queryParams = new QueryParams();
+    };
+
+    $scope.onSearchButtonClick = function() {
+      initData()
+        //    var filter = "";
+        //
+        //    if($scope.s.assetType) {
+        //      filter += "assetType eq " + $scope.s.assetType + ";";
+        //    }
+        //
+        //    if($scope.s.uploadTimeOp && $scope.s.uploadTime) {
+        //      filter += "createTime " + $scope.s.uploadTimeOp + " " + $scope.s.uploadTime.toISOString() + ";";
+        //    }
+        //
+        //    if($scope.s.recordTimeOp && $scope.s.recordTime) {
+        //      filter += "uploadTime " + $scope.s.recordTimeOp + " " + $scope.s.recordTime.toISOString() + ";";
+        //    }
+        //
+        //    if($scope.s.recordLengthOp && $scope.s.recordLength) {
+        //      filter += "recordLength " + $scope.s.recordLengthOp + " " + $scope.s.recordLength + ";";
+        //    }
+        //
+        //    var tags = [];
+        //    ($scope.tags || []).forEach(function(it) {
+        //      if(it.isSelected) {
+        //        tags.push(it.id);
+        //      }
+        //    });
+        //
+        //    if(tags.length > 0) {
+        //      filter += "tags in " + JSON.stringify(tags) + ";";
+        //    }
+        //
+        //    $scope.showLoading();
+        //    $scope.setLoadingText("正在搜索，请稍后...");
+        //    assetService.getAssets(pageIndex, filter)
+        //      .then(function(pageData) {
+        //        $scope.hideLoading();
+        //        $scope.dataset = pageData.content;
+        //        $scope.pageData = {
+        //          totalPage: pageData.totalPages,
+        //          pageIndex: pageData.number
+        //        };
+        //      });
+    };
+
+    $scope.$on("tableIndexChanged", function(paginationScope, index) {
+      pageIndex = index;
+      initData();
+      //window.location.href = "assets.html?pageIndex=" + pageIndex;
+    });
+
+    $scope.onUploadButtonClick = function() {
+      window.location.href = "asset.upload.html";
+    };
+
+    $scope.onNewTaskButtonClick = function(rowData) {
+      window.location.href = "asset.new.html?assetNo=" + rowData.assetNo;
+    };
+
+    $scope.onDeleteButtonClick = function(rowData) {
+
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条记录吗？",
+        onConfirm: function() {
+          $scope.showLoading();
+          $scope.setLoadingText("正在删除视频和视频相关数据，请稍后...");
+          assetService.deleteAsset(rowData.assetNo)
+            .then(function() {
+              $scope.hideLoading();
+              initData();
+            });
+        }
+      });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("baseTaskController", ["$scope", "breadCrumb", "serviceUrl", "algorithmService", "appEnv",
+
+  function($scope, breadCrumbProvider, serviceUrl, algorithmService, appEnv) {
+
+    $scope.setTitle("我的任务");
+
+    $scope.sidebar = [{
+      name: "task-management",
+      text: "任务管理",
+      icon: "tasks",
+      items: [{
+        name: "task-record",
+        text: "任务记录",
+        href: serviceUrl + "page/task/index.html"
+      }, {
+        name: "upload-task-record",
+        text: "上传记录",
+        href: serviceUrl + "page/task/assets.html"
+      }, {
+        name: "review-task-record",
+        text: "审核记录",
+        href: serviceUrl + "page/task/reviews.html"
+      }]
+    }, {
+      name: "report",
+      text: "信息统计",
+      icon: "dashboard",
+      items: []
+    }, {
+      name: "user-profile",
+      text: "个人中心",
+      icon: "user",
+      items: [{
+        name: "user-profile",
+        text: "个人信息",
+        href: serviceUrl + "page/user/profile.html"
+      }, {
+        name: "user-point",
+        text: "会员积分",
+        href: serviceUrl + "page/user/point.html"
+      }, {
+        name: "user-secret",
+        text: "安全中心",
+        href: serviceUrl + "page/user/resetpassword.html"
+      }, {
+        name: "point-approve-list",
+        text: "提现申请记录",
+        href: serviceUrl + "page/user/point.request.list.html"
+      }]
+    }];
+
+    initView();
+
+    function initData() {
+      $scope.algorithmMap = {};
+      algorithmService.getAlgorithms()
+        .then(function(data) {
+          data.forEach(function(it) {
+            $scope.algorithmMap[it.id] = it;
+            $scope.sidebar[1].items.push({
+              name: it.id + "",
+              text: it.name,
+              href: serviceUrl + "page/task/bsd.html?reportId=" + it.id
+            });
+          });
+          if( $scope.algorithmMap.callback){
+            $scope.algorithmMap.callback($scope.algorithmMap);
+          }
+        });
+    }
+
+    function initView() {
+      var role = Cookies.get("role");
+      if(role === "NORMAL") {
+        hideGroups(["report"]);
+        hideGroupItems(["upload-task-record", "review-task-record", "point-approve-list"]);
+      } else if(role === "REVIEW") {
+        hideGroups(["report"]);
+        hideGroupItems(["upload-task-record", "point-approve-list"]);
+      } else if(role === "FINANCE") {
+        hideGroups(["report"]);
+        hideGroupItems(["upload-task-record", "review-task-record"]);
+      } else if(role === "UPLOAD") {
+        hideGroups(["report"]);
+        var arrs = ["point-approve-list", "review-task-record"];
+        if(appEnv === "aliyun"){
+          arrs.push("upload-task-record")
+        }
+        hideGroupItems(arrs);
+      } else if(role === "ADMIN") {
+        if(appEnv === "aliyun") {
+          hideGroupItems(["upload-task-record"]);
+        }
+        initData();
+      } else if(role === "SUPER") {
+        hideGroupItems(["upload-task-record", "point-approve-list", "review-task-record"]);
+        initData();
+      }
+    }
+
+    $scope.hideSideItems = function(names) {
+      hideGroupItems(names);
+    }
+
+    $scope.hideSideGroups = function(groups) {
+      hideGroups(groups);
+    };
+
+    function hideGroups(groups) {
+      $scope.sidebar.forEach(function(group) {
+        if(groups.indexOf(group.name) !== -1) {
+          group.visibility = false;
+        } else {
+          delete group.visibility;
+        }
+      });
+    }
+
+    function hideGroupItems(names) {
+      $scope.sidebar.forEach(function(group) {
+        group.items.forEach(function(it) {
+          if(names.indexOf(it.name) !== -1) {
+            it.visibility = false;
+          } else {
+            delete it.visibility;
+          }
+        });
+      });
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("bsdReportController", ["$scope", "breadCrumb", "reportService", "dialog", "enumService", "assetViewTagService", "nullUtils", "viewTagService",
+  function($scope, breadCrumbProvider, reportService, dialog, enumService, assetViewTagService, nullUtils, viewTagService) {
+    var reportId = $.url().param("reportId");
+    $scope.algorithmMap.callback = function(map){
+      var name = map[reportId].name + "路测视频统计";
+      breadCrumbProvider.setHistories([{
+        text: name,
+        href: "bsd.html"
+      }]);
+    };
+    $scope.assetButtonExpand = false;
+    $scope.taskViewButtonExpand = false;
+    $scope.taskStatus = [{
+      name: "Accept",
+      text: "接受"
+    }, {
+      name: "New",
+      text: "未接受"
+    }, {
+      name: "Pass",
+      text: "审核通过"
+    }, {
+      name: "Reject",
+      text: "未审核通过"
+    }];
+    $scope.queryParams = new QueryParams();
+    initView() && initData();
+    $scope.onButtonClick = function() {
+      if($scope.from === undefined || $scope.from === null) {
+        dialog.showError("开始时间段不能为空！");
+        return;
+      }
+
+      if(!$scope.to === undefined || $scope.to === null) {
+        dialog.showError("结束时间段不能为空！");
+        return;
+      }
+
+      if($scope.from >= $scope.to) {
+        dialog.showError("开始时间不能大于结束时间！");
+        return;
+      }
+
+      initData();
+    };
+
+    function QueryParams() {
+      this.taskName = null;
+      this.taskItemNo = null;
+      this.assetName = null;
+      this.assetNo = null;
+      this.uploadDate = {
+        from: null,
+        to: null
+      };
+      this.taskDate = {
+        from: null,
+        to: null
+      };
+      this.recordLength = {
+        op: null,
+        value: null
+      };
+
+      this.taskFinishDate = {
+        from: null,
+        to: null
+      };
+
+      this.assetRecordDate = {
+        from: null,
+        to: null
+      };
+
+      init();
+
+      function init() {
+        $scope.taskStatus.forEach(function(it) {
+          it.checked = false;
+        });
+
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+
+        ($scope.taskViewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+      }
+
+      this.getData = function() {
+        this.taskItemStatus = [];
+        $scope.taskStatus.forEach(function(it) {
+          if(it.checked) {
+            this.taskItemStatus.push(it.name);
+          }
+        }.bind(this));
+
+        this.assetViewItemIds = [];
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            if(item.checked) {
+              this.assetViewItemIds.push(item.id);
+            }
+          }.bind(this));
+        }.bind(this));
+
+        this.viewTagItemMap = getTaskViewItemIds();
+
+        return this;
+      };
+    }
+
+    $scope.onClearSearchButtonClick = function() {
+      $scope.queryParams = new QueryParams();
+    };
+
+    function searching() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在查询，请稍等...");
+      reportService.search(reportId, $scope.queryParams.getData())
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.tables = [];
+
+          data.tables.forEach(function(it) {
+            $scope.tables.push(initTable(it));
+          });
+          var sumTab = maxTable(data.tables);
+          if(sumTab) {
+            $scope.tables.push(sumTab);
+          }
+
+          console.log(data.tables);
+
+        });
+    }
+
+    function initView() {
+      if(!reportId) {
+        dialog.showError("参数错误！");
+        return false;
+      }
+     
+      $scope.reportId = reportId + "";
+      breadCrumbProvider.setHistories([{
+        text: "路测视频统计",
+        href: "bsd.html"
+      }]);
+      $scope.hours = enumService.getHours();
+      $scope.from = 7;
+      $scope.to = 11;
+      $scope.viewTags = [];
+      $scope.taskViewTags = [];
+      $scope.expandSearch = false;
+      $scope.ops = enumService.getOps();
+
+      assetViewTagService.getAll()
+        .then(function(tags) {
+          $scope.viewTags = tags;
+        });
+
+      viewTagService.getViewTags(reportId)
+        .then(function(viewTags) {
+          $scope.taskViewTags = viewTags;
+        });
+      return true;
+    }
+
+    $scope.onExpandButtonClick = function() {
+      $scope.expandSearch = !$scope.expandSearch;
+    };
+
+    function getTaskViewItemIds() {
+      var map = {};
+      $scope.taskViewTags.forEach(function(it) {
+        map[it.id] = [];
+        it.items.forEach(function(item) {
+          if(item.checked) {
+            map[it.id].push(item.id);
+          }
+        });
+
+        if(map[it.id].length === 0) {
+          delete map[it.id];
+        }
+      });
+
+      return map;
+    };
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在查询，请稍等...");
+      var ids = [];
+      $scope.viewTags.forEach(function(it) {
+        it.items.forEach(function(item) {
+          if(item.checked) {
+            ids.push(item.id);
+          }
+        });
+      });
+
+      searching();
+
+      //    reportService.getNewBsdReport(reportId, ids.join(","))
+      //      .then(function(data) {
+      //        $scope.hideLoading();
+      //        $scope.tables = [];
+      //
+      //        data.tables.forEach(function(it) {
+      //          $scope.tables.push(initTable(it));
+      //        });
+      //        var sumTab = sumTable(data.tables);
+      //        if(sumTab) {
+      //          $scope.tables.push(sumTab);
+      //        }
+      //
+      //        console.log(data.tables);
+      //
+      //      });
+      //    reportService.getBsdReport(reportId, $scope.from, $scope.to)
+      //      .then(function(data) {
+      //        $scope.hideLoading();
+      //        data.videoTable.rows.forEach(function(row) {
+      //          Object.keys(row.data).forEach(function(key) {
+      //            if(row.data[key]) {
+      //              row.data[key] = (row.data[key] / 60).toFixed(2);
+      //            } else {
+      //              row.data[key] = 0;
+      //            }
+      //          });
+      //        });
+      //        $scope.videoTable = initTable(data.videoTable);
+      //        $scope.picTable = initTable(data.pictureTable);
+      //      });
+    }
+
+    function sumTable(tables) {
+      var table = {
+        name: "总计",
+        headers: [{
+          "name": "pic",
+          "text": "图片"
+        }, {
+          "name": "video",
+          "text": "视频"
+        }],
+        rows: []
+      };
+
+      var table = {
+        columns: [{
+          name: "text",
+          text: "总计\\类型"
+        }, {
+          "name": "pic",
+          "text": "图片"
+        }, {
+          "name": "video",
+          "text": "视频"
+        }],
+        dataset: [],
+        name: "总计"
+      };
+
+      var sumPic = 0;
+      var sumVideo = 0;
+      tables.forEach(function(it, index) {
+        it.rows.forEach(function(row, rowIndex) {
+          Object.keys(row.data).forEach(function(key) {
+            if(rowIndex === 0) {
+              sumVideo += row.data[key];
+            }
+            if(rowIndex === 1) {
+              sumPic += row.data[key];
+            }
+          });
+        });
+
+        //      if(index === 0) {
+        //        table = $.extend(true, {}, it);
+        //      } else {
+        //        it.rows.forEach(function(row, rowIndex) {
+        //          var sumRow = table.rows[rowIndex];
+        //          Object.keys(row.data).forEach(function(key) {
+        //            sumRow.data[key] = sumRow.data[key] + row.data[key];
+        //          });
+        //
+        //          table.rows[rowIndex] = sumRow;
+        //        });
+        //      }
+      });
+      table.dataset.push({
+        "text": "总计",
+        "pic": sumPic,
+        "video": calc(sumVideo)
+      });
+
+      return table;
+    }
+
+    function initTable(tableData) {
+
+      var columns = [{
+        name: "text",
+        text: "类型\\场景属性"
+      }].concat(tableData.headers);
+
+      var dataset = tableData.rows.map(function(it, index) {
+        var row = {
+          text: it.text
+        };
+        if(index === 0) {
+          it.data1 = {};
+          Object.keys(it.data).forEach(function(key) {
+            it.data1[key] = calc(it.data[key]);
+          });
+          $.extend(true, row, it.data1);
+        } else {
+          $.extend(true, row, it.data);
+        }
+
+        return row;
+      });
+
+      return {
+        columns: columns,
+        dataset: dataset,
+        name: tableData.name
+      };
+    }
+
+    function calc(val) {
+      if(val === 0) {
+        return val;
+      }
+
+      if(val < 60) {
+        return `${val}秒`;
+      }
+
+      var sec = val % 60;
+      var min = null;
+      if(sec === 0) {
+        min = val / 60;
+      } else {
+        min = ((val - sec) / 60) % 60;
+      }
+      if(val < 60 * 60) {
+        return `${min}分 ${sec}秒`;
+      }
+
+      var hour = (val - min * 60 - sec) / 3600;
+      return `${hour}时${min}分 ${sec}秒`;
+    }
+
+    function maxTable(tables) {
+      var table = {
+        columns: [{
+          name: "text",
+          text: "总计\\类型"
+        }, {
+          "name": "pic",
+          "text": "图片"
+        }, {
+          "name": "video",
+          "text": "视频"
+        }],
+        dataset: [],
+        name: "总计"
+      };
+
+      var maxVideo = 0;
+      var maxPicture = 0;
+
+      tables.forEach(function(it, index) {
+        it.rows.forEach(function(row, rowIndex) {
+          Object.keys(row.data).forEach(function(key) {
+            if(rowIndex === 0) {
+              if(maxVideo < row.data[key]) {
+                maxVideo = row.data[key];
+              }
+            }
+            if(rowIndex === 1) {
+              if(maxPicture < row.data[key]) {
+                maxPicture = row.data[key];
+              }
+            }
+          });
+        });
+      });
+
+      table.dataset.push({
+        "text": "总计",
+        "pic": maxPicture,
+        "video": calc(maxVideo)
+      });
+
+      return table;
+    }
+
+  }
+]);
+'use strict';
+
+zongmu.controller("chooseTagsController", ['$scope', 'dialog', 'assetService', 'taskService',
+  function($scope, dialog, assetService, taskService) {
+    var params = $scope.ngDialogData;
+    initData();
+
+    function initData() {
+      var map = {};
+      angular.forEach(params.selectedTags || [], function(it, index) {
+        map[it.id] = it;
+      });
+
+      assetService.getAssetTags()
+        .then(function(tags) {
+          $scope.tags = tags;
+          angular.forEach($scope.tags, function(it, index) {
+            it.isSelected = map[it.id] !== undefined;
+          });
+        });
+    }
+
+    $scope.$watch("allSelected", function() {
+      angular.forEach($scope.tags, function(it, index) {
+        it.isSelected = $scope.allSelected;
+      });
+    });
+
+    $scope.onOkClick = function() {
+      var selectedTags = [];
+      angular.forEach($scope.tags, function(it, index) {
+        if(it.isSelected) {
+          selectedTags.push(it.id);
+        }
+      });
+
+      if(params.type === "task") {
+        taskService.updateAssetTags(params.taskNo, selectedTags)
+          .then(function() {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      } else {
+        assetService.updateAssetTags(params.assetNo, selectedTags)
+          .then(function() {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      }
+    };
+
+  }
+]);
+'use strict';
+
+zongmu.controller("taskItemDetailController", ['$q', '$scope', 'taskService', 'taskRecordService', 'reviewRecordService', 'dialog', "markUtil",
+  function($q, $scope, taskService, taskRecordService, reviewRecordService, dialog, markUtil) {
+    var taskItemNo = $.url().param("taskItemNo");
+
+    initView() && initData();
+
+    function initView() {
+      $scope.setTitle("任务详细信息");
+
+      $scope.taskRecordColumns = [{
+        name: "taskRecordNo",
+        text: "标注记录号"
+      }, {
+        name: "userName",
+        text: "标注者"
+      }, {
+        name: "startTime",
+        text: "开始时间"
+      }, {
+        name: "endTime",
+        text: "结束时间"
+      }, {
+        name: "status",
+        text: "状态"
+      }, {
+        name: "point",
+        text: "奖励"
+      }];
+
+      $scope.reviewRecordColumns = [{
+        name: "reviewRecordNo",
+        text: "审核记录号"
+      }, {
+        name: "userName",
+        text: "审核者"
+      }, {
+        name: "startTime",
+        text: "开始时间"
+      }, {
+        name: "endTime",
+        text: "结束时间"
+      }, {
+        name: "status",
+        text: "状态"
+      }];
+
+      var role = Cookies.get("role");
+      $scope.role = role;
+      $scope.canReview = ["NORMAL", "FINANCE"].indexOf(role) === -1;
+      return true;
+    }
+
+    $scope.onContinueMarkButtonClick = function() {
+      gotoNextPage();
+    };
+
+    function gotoNextPage() {
+      if($scope.task.taskRecordNo) {
+        var pageName = markUtil.getMarkPageUrl($scope.task.assetType, $scope.task.taskType, $scope.task.taskRecordNo);
+        window.location.href = `../mark/${pageName}`;
+        //      if($scope.task.taskType === "VIDEO") {
+        //        if($scope.task.taskItemFiles.length === 4) {
+        //          window.location.href = "../mark/video.four.html?taskRecordNo=" + $scope.task.taskRecordNo;
+        //        } else {
+        //          if($scope.task.assetType === "PICTURE") {
+        //            window.location.href = "../mark/pic.html?taskRecordNo=" + $scope.task.taskRecordNo;
+        //          } else {
+        //            window.location.href = "../mark/video.html?taskRecordNo=" + $scope.task.taskRecordNo;
+        //          }
+        //        }
+        //      } else {
+        //        if($scope.task.taskItemFiles.length === 4) {
+        //          window.location.href = "../mark/pic.four.html?taskRecordNo=" + $scope.task.taskRecordNo;
+        //        } else {
+        //          window.location.href = "../mark/pic.html?taskRecordNo=" + $scope.task.taskRecordNo;
+        //        }
+        //
+        //      }
+      } else {
+        dialog.showError("参数错误");
+      }
+    }
+
+    $scope.onAcceptTaskClick = function() {
+      taskService.acceptTask(taskItemNo)
+        .then(function(data) {
+          var pageName = markUtil.getMarkPageUrl(data.assetType, data.taskType, data.taskRecordNo);
+          window.location.href = `../mark/${pageName}`;
+          //var pageName = markUtil.getMarkPage(data);
+          //window.location.href = "../mark/" + pageName + "?taskRecordNo=" + data.taskRecordNo;
+        });
+    };
+
+    function initData() {
+      if(!taskItemNo) {
+        dialog.showError("参数错误");
+      } else {
+        taskService.getTaskDetail(taskItemNo)
+          .then(function(task) {
+            $scope.task = task;
+          });
+      }
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("exportFailedDialogController", ['$scope','dialog',
+  function($scope, dialog) {    
+
+    $scope.taskItems = $scope.ngDialogData.taskItems;
+
+  }
+]);
+'use strict';
+
+zongmu.controller("myTasksController", ["$scope", "taskRecordService", "breadCrumb", "dialog", "enumService",
+  "algorithmService", "assetViewTagService", "viewTagService", "markUtil",
+  function($scope, taskRecordService, breadCrumbProvider, dialog, enumService,
+    algorithmService, assetViewTagService, viewTagService, markUtil) {
+    var pageIndex = $.url().param("pageIndex") || 0;
+    var tabIndex = 0;
+
+    $scope.assetTypes = enumService.getUploadTypes();
+    $scope.ops = enumService.getOps();
+    $scope.assetButtonExpand = false;
+    $scope.taskViewButtonExpand = false;
+    $scope.taskStatus = [{
+      name: "INPROGRESS",
+      text: "标注进行中"
+    }, {
+      name: "WAITTING",
+      text: "等待审核"
+    }, {
+      name: "REVIEWING",
+      text: "正在进行审核"
+    }, {
+      name: "ACCEPTED",
+      text: "审核通过"
+    }, {
+      name: "REJECTED",
+      text: "审核失败"
+    }];
+
+    $scope.onExpandButtonClick = function() {
+      $scope.expandSearch = !$scope.expandSearch;
+    };
+
+    $scope.canView = function(rowData) {
+      var role = Cookies.get("role");
+      if(role === "ADMIN") {
+        return true;
+      } else {
+        if(["WAITTING", "ACCEPTED"].indexOf(rowData.status) !== -1) {
+          return false;
+        }
+
+        return true;
+      }
+    };
+
+    function QueryParams() {
+      this.taskName = null;
+      this.taskItemNo = null;
+      this.assetName = null;
+      this.assetNo = null;
+      this.uploadDate = {
+        from: null,
+        to: null
+      };
+      this.videoLength = {
+        op: null,
+        value: null
+      };
+
+      this.taskFinishDate = {
+        from: null,
+        to: null
+      };
+
+      this.videoRecordDate = {
+        from: null,
+        to: null
+      };
+
+      init();
+
+      function init() {
+        $scope.assetTypes.forEach(function(it) {
+          it.checked = false;
+        });
+
+        ($scope.algorithms || []).forEach(function(it) {
+          it.checked = false;
+        });
+
+        $scope.taskStatus.forEach(function(it) {
+          it.checked = false;
+        });
+
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+
+        ($scope.taskViewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+      }
+
+      this.getData = function() {
+
+        this.assetTypes = [];
+        $scope.assetTypes.forEach(function(it) {
+          if(it.checked) {
+            this.assetTypes.push(it.name);
+          }
+        }.bind(this));
+
+        this.algorithmIds = [];
+        ($scope.algorithms || []).forEach(function(it) {
+          if(it.checked) {
+            this.algorithmIds.push(it.id);
+          }
+        }.bind(this));
+
+        this.taskRecordStatus = [];
+        $scope.taskStatus.forEach(function(it) {
+          if(it.checked) {
+            this.taskRecordStatus.push(it.name);
+          }
+        }.bind(this));
+
+        this.assetViewTagItemIds = [];
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            if(item.checked) {
+              this.assetViewTagItemIds.push(item.id);
+            }
+          }.bind(this));
+        }.bind(this));
+
+        this.viewTagItemIds = [];
+        ($scope.taskViewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            if(item.checked) {
+              this.viewTagItemIds.push(item.id);
+            }
+          }.bind(this));
+        }.bind(this));
+
+        return this;
+      };
+    }
+
+    $scope.queryParams = new QueryParams();
+    initView() && initData();
+
+    function initView() {
+      breadCrumbProvider.setHistories([{
+        text: "任务记录",
+        href: "index.html"
+      }]);
+
+      $scope.tabs = [{
+        name: "all",
+        text: "全部",
+        active: true
+      }, {
+        name: "INPROGRESS",
+        text: "标注进行中"
+      }, {
+        name: "WAITTING",
+        text: "等待审核"
+      }, {
+        name: "REVIEWING",
+        text: "正在进行审核"
+      }, {
+        name: "ACCEPTED",
+        text: "审核通过"
+      }, {
+        name: "REJECTED",
+        text: "审核失败"
+      }];
+
+      $scope.columns = [{
+        name: "taskItemNo",
+        text: "任务名称"
+      }, {
+        name: "taskType",
+        text: "任务类型"
+      }, {
+        name: "point",
+        text: "金币"
+      }, {
+        name: "status",
+        text: "状态"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+      return true;
+    }
+
+    algorithmService.getAlgorithms()
+      .then(function(data) {
+        $scope.algorithms = data;
+      });
+
+    assetViewTagService.getAll()
+      .then(function(tags) {
+        $scope.viewTags = tags;
+      });
+
+    viewTagService.getAllViewTags()
+      .then(function(viewTags) {
+        $scope.taskViewTags = viewTags;
+      });
+
+    $scope.$on("onTabChanged", function(tabScope, item, index) {
+      pageIndex = 0;
+      tabIndex = index;
+      initData();
+    });
+
+    $scope.onClearSearchButtonClick = function() {
+      $scope.queryParams = new QueryParams();
+    };
+
+    $scope.onSearchButtonClick = function() {
+      initData();
+    };
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...");
+      taskRecordService.search(pageIndex, $scope.queryParams.getData())
+        .then(function(result) {
+          $scope.hideLoading();
+          $scope.tasks = result.content;
+          $scope.pageData = {
+            totalPage: result.totalPages,
+            pageIndex: result.number
+          };
+        });
+      //    taskRecordService.getMyTaskRecords(pageIndex, tabIndex)
+      //      .then(function(result) {
+      //        $scope.hideLoading();
+      //        $scope.tasks = result.content;
+      //        $scope.pageData = {
+      //          totalPage: result.totalPages,
+      //          pageIndex: result.number
+      //        };
+      //      });
+    }
+
+    $scope.$on("tableIndexChanged", function(paginationScope, index) {
+      pageIndex = index;
+      initData();
+      //window.location.href = "index.html?pageIndex=" + pageIndex;
+    });
+
+    $scope.onCancelButtonClicked = function(taskRecord) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确定要放弃任务么？",
+        onConfirm: function() {
+          $scope.showLoading();
+          $scope.setLoadingText("正在取消任务，请稍后...");
+          taskRecordService.cancelTask(taskRecord.taskRecordNo)
+            .then(function() {
+              $scope.hideLoading();
+              window.location.href = "../home/index.html";
+            });
+        }
+      });
+
+    };
+
+    $scope.onViewButtonClicked = function(taskRecord) {
+      var pageName = markUtil.getMarkPageUrl(taskRecord.assetType, taskRecord.taskType, taskRecord.taskRecordNo);;
+      window.location.href = `../mark/${pageName}`;
+      //    if(taskRecord.assetType === "FOUR") {
+      //      pageName = "video.four.html";
+      //    } else if(taskRecord.assetType === "SINGLE") {
+      //      pageName = taskRecord.taskType === 'PICTURE' ? "pic.html" : "video.html";
+      //    } else if(taskRecord.assetType === "PICTURE") {
+      //      pageName = "pic.html";
+      //    }
+      //
+      //    if(pageName) {
+      //      window.location.href = "../mark/" + pageName + "?taskRecordNo=" + taskRecord.taskRecordNo;
+      //    }
+    }
+
+  }
+]);
+'use strict';
+
+zongmu.controller("reviewDetailController", ["$q", "$scope", "reviewRecordService", "dialog", "breadCrumb", "rejectReasonService", "taskRecordService",
+  function($q, $scope, reviewRecordService, dialog, breadCrumbProvider, rejectReasonService, taskRecordService) {
+    var reviewRecordNo = $.url().param("reviewRecordNo");
+
+    initView() && initData();
+
+    function initView() {
+      var role = Cookies.get("role");
+      $scope.role = role;
+      breadCrumbProvider.setHistories([{
+        text: "审核记录",
+        href: "reviews.html"
+      }, {
+        text: "记录详情",
+        href: "#"
+      }]);
+
+      if(!reviewRecordNo) {
+        dialog.showError("参数错误");
+        return false;
+      }
+      return true;
+    }
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...");
+      reviewRecordService.getReviewRecord(reviewRecordNo)
+        .then(function(review) {
+          $scope.review = review;
+          if(review.status === "FAILED" && review.reasonId) {
+            getReason(review.reasonId)
+          } else {
+            $scope.hideLoading();
+          }
+        });
+    }
+
+    function getReason(reasonId) {
+      rejectReasonService.getReason(reasonId)
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.reason = data;
+        });
+    }
+
+    $scope.onReviewPassButtonClick = function() {
+      taskRecordService.reviewPass($scope.review.taskRecordNo)
+        .then(function() {
+          initData();
+        });
+    };
+
+    $scope.onReviewFailedButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: 'reviews.failed.dialog.html',
+        controller: "reviewFailedDialogController",
+        params: {
+          reviewRecord: $scope.review
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+  }
+]);
+'use strict';
+
+zongmu.controller("reviewFailedDialogController", ['$scope', 'dialog', 'taskRecordService', 'rejectReasonService', 'reviewRecordService',
+  function($scope, dialog, taskRecordService, rejectReasonService, reviewRecordService) {
+    var params = $scope.ngDialogData;
+
+    init();
+
+    $scope.onOkClick = function() {
+      if(!$scope.data.reason) {
+        dialog.showError("请选择原因！");
+        return;
+      }
+      var data = {
+        reasonId: $scope.data.reason.id,
+        memo: $scope.data.memo
+      };
+
+      if(params.batch) {
+        data.reviewRecordNos = params.reviewRecordNos;
+        reviewRecordService.batchReviewFailed(data)
+          .then(function(res) {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      } else {
+        taskRecordService.reviewFail(params.reviewRecord.taskRecordNo, data)
+          .then(function() {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      }
+
+    };
+
+    function init() {
+      $scope.data = {};
+      rejectReasonService.getReasons()
+        .then(function(data) {
+          $scope.reasons = data;
+          $scope.reasons.forEach(function(it) {
+            if(it.default) {
+              $scope.data.reason = it;
+            }
+          });
+          if(!$scope.data.reason && $scope.reasons.length > 0) {
+            $scope.data.reason = $scope.reasons[0];
+          }
+        });
+    }
+
+  }
+]);
+'use strict';
+
+zongmu.controller("reviewRecordsController", ["$scope", "reviewRecordService",
+  "dialog", "breadCrumb", "taskRecordService", "markUtil", "algorithmService",
+  "assetViewTagService", "viewTagService", "enumService", "rejectReasonService",
+  function($scope, reviewRecordService, dialog, breadCrumbProvider, taskRecordService,
+    markUtil, algorithmService, assetViewTagService, viewTagService, enumService, rejectReasonService) {
+    var pageIndex = $.url().param("pageIndex") || 0;
+    var tabIndex = 0;
+    $scope.assetTypes = enumService.getUploadTypes();
+    $scope.taskStatus = enumService.getReviewTaskStatus();
+    $scope.ops = enumService.getOps();
+    $scope.assetButtonExpand = false;
+    $scope.taskViewButtonExpand = false;
+
+    function QueryParams() {
+      this.taskName = null;
+      this.taskItemNo = null;
+      this.assetName = null;
+      this.assetNo = null;
+      this.userName = null;
+      this.uploadDate = {
+        from: null,
+        to: null
+      };
+      this.videoLength = {
+        op: null,
+        value: null
+      };
+
+      this.taskFinishDate = {
+        from: null,
+        to: null
+      };
+
+      this.videoRecordDate = {
+        from: null,
+        to: null
+      };
+
+      init();
+
+      function init() {
+        $scope.assetTypes.forEach(function(it) {
+          it.checked = false;
+        });
+
+        ($scope.algorithms || []).forEach(function(it) {
+          it.checked = false;
+        });
+
+        $scope.taskStatus.forEach(function(it) {
+          it.checked = false;
+        });
+
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+
+        ($scope.taskViewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            item.checked = false;
+          });
+        });
+
+        ($scope.reasons || []).forEach(function(it) {
+          it.checked = false;
+        }.bind(this));
+      }
+
+      this.getData = function() {
+
+        this.assetTypes = [];
+        $scope.assetTypes.forEach(function(it) {
+          if(it.checked) {
+            this.assetTypes.push(it.name);
+          }
+        }.bind(this));
+
+        this.algorithmIds = [];
+        ($scope.algorithms || []).forEach(function(it) {
+          if(it.checked) {
+            this.algorithmIds.push(it.id);
+          }
+        }.bind(this));
+
+        this.status = [];
+        $scope.taskStatus.forEach(function(it) {
+          if(it.checked) {
+            this.status.push(it.name);
+          }
+        }.bind(this));
+
+        this.assetViewTagItemIds = [];
+        ($scope.viewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            if(item.checked) {
+              this.assetViewTagItemIds.push(item.id);
+            }
+          }.bind(this));
+        }.bind(this));
+
+        this.viewTagItemIds = [];
+        ($scope.taskViewTags || []).forEach(function(it) {
+          it.items.forEach(function(item) {
+            if(item.checked) {
+              this.viewTagItemIds.push(item.id);
+            }
+          }.bind(this));
+        }.bind(this));
+
+        this.reasonIds = [];
+        ($scope.reasons || []).forEach(function(it) {
+          if(it.checked) {
+            this.reasonIds.push(it.id);
+          }
+        }.bind(this));
+
+        return this;
+      };
+    }
+
+    $scope.queryParams = new QueryParams();
+
+    initView() && initData();
+
+    function initView() {
+      breadCrumbProvider.setHistories([{
+        text: "审核记录",
+        href: "reviews.html"
+      }]);
+      $scope.tabs = [{
+        name: "all",
+        text: "全部",
+        active: true
+      }, {
+        name: "WAITTING",
+        text: "待审核"
+      }, {
+        name: "INPROGRESS",
+        text: "审核中"
+      }, {
+        name: "PASS",
+        text: "审核通过"
+      }, {
+        name: "FAILED",
+        text: "审核失败"
+      }];
+
+      $scope.columns = [{
+        name: "op-first",
+        text: ""
+      }, {
+        name: "reviewRecordNo",
+        text: "No."
+      }, {
+        name: "taskRecordNo",
+        text: "任务编号"
+      }, {
+        name: "subtotal",
+        text: "审核失败次数"
+      }, {
+        name: "status",
+        text: "状态"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+      return true;
+    }
+
+    rejectReasonService.getReasons()
+      .then(function(data) {
+        $scope.reasons = data;
+      });
+
+    algorithmService.getAlgorithms()
+      .then(function(data) {
+        $scope.algorithms = data;
+      });
+
+    assetViewTagService.getAll()
+      .then(function(tags) {
+        $scope.viewTags = tags;
+      });
+
+    viewTagService.getAllViewTags()
+      .then(function(viewTags) {
+        $scope.taskViewTags = viewTags;
+      });
+
+    $scope.onExpandButtonClick = function() {
+      $scope.expandSearch = !$scope.expandSearch;
+    };
+
+    $scope.onClearSearchButtonClick = function() {
+      $scope.queryParams = new QueryParams();
+    };
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载，请稍后...");
+      reviewRecordService.queryReviewRecords(pageIndex, $scope.queryParams.getData())
+        .then(function(result) {
+          $scope.hideLoading();
+          $scope.tasks = result.content;
+          $scope.pageData = {
+            totalPage: result.totalPages,
+            pageIndex: result.number
+          };
+        });
+    }
+
+    $scope.onClearSearchButtonClick = function() {
+      $scope.queryParams = new QueryParams();
+    };
+
+    $scope.onSearchButtonClick = function() {
+      initData();
+    };
+
+    $scope.$on("onTabChanged", function(tabScope, item, index) {
+      pageIndex = 0;
+      tabIndex = index;
+      initData();
+    });
+
+    $scope.$on("tableIndexChanged", function(paginationScope, index) {
+      pageIndex = index;
+      initData();
+    });
+
+    $scope.onStartReviewButtonClick = function(reviewRecord) {
+      reviewRecordService.startReview(reviewRecord.reviewRecordNo)
+        .then(function() {
+          var pageName = markUtil.getMarkPageUrl(reviewRecord.taskRecord.assetType, reviewRecord.taskRecord.taskType, reviewRecord.taskRecord.taskRecordNo);;
+          window.location.href = `../mark/${pageName}`;
+          //
+          //        var pageName = null;
+          //        if(reviewRecord.taskRecord.assetType === "FOUR") {
+          //          pageName = "video.four.html";
+          //        } else if(reviewRecord.taskRecord.assetType === "SINGLE") {
+          //          pageName = reviewRecord.taskRecord.taskType === 'PICTURE' ? "pic.html" : "video.html";
+          //        } else if(reviewRecord.taskRecord.assetType === "PICTURE") {
+          //          pageName = "pic.html";
+          //        }
+          //
+          //        if(pageName) {
+          //          window.location.href = "../mark/" + pageName + "?taskRecordNo=" + reviewRecord.taskRecord.taskRecordNo;
+          //        }
+        });
+    };
+
+    $scope.onViewButtonClick = function(reviewRecord) {
+      var pageName = markUtil.getMarkPage(reviewRecord.taskRecord);
+      if(pageName) {
+        window.location.href = "../mark/" + pageName + "?status=1&taskRecordNo=" + reviewRecord.taskRecord.taskRecordNo;
+      }
+    };
+
+    $scope.onNewTaskButtonClick = function(reviewRecord) {
+      reviewRecordService.newTask(reviewRecord.reviewRecordNo)
+        .then(function() {
+          dialog.showInfo("任务发布成功！")
+            .then(function() {
+              initData();
+            });
+        });
+    };
+
+    $scope.onBatchReviewButtonClick = function() {
+      $scope.enableBatch = true;
+    };
+
+    $scope.onSubmitBatchReviewPassButtonClick = function() {
+      var reviewRecordNos = getBatchItems();
+
+      if(reviewRecordNos.length === 0) {
+        dialog.showError("请选择审核记录!");
+        return;
+      }
+
+      $scope.showLoading();
+      $scope.setLoadingText("正在保存，请稍后...");
+      reviewRecordService.batchReviewPass(reviewRecordNos)
+        .then(function(data) {
+          $scope.enableBatch = false;
+          $scope.hideLoading();
+          dialog.showInfo("批量操作成功！")
+            .then(function() {
+              initData();
+            });
+        });
+    };
+
+    $scope.onSubmitBatchReviewFailedButtonClick = function() {
+      var reviewRecordNos = getBatchItems();
+
+      if(reviewRecordNos.length === 0) {
+        dialog.showError("请选择审核记录!");
+        return;
+      }
+
+      dialog.showCustom({
+        templateUrl: 'reviews.failed.dialog.html',
+        controller: "reviewFailedDialogController",
+        params: {
+          reviewRecordNos: reviewRecordNos,
+          batch: true
+        },
+        onConfirm: function() {
+          $scope.enableBatch = false;
+          dialog.showInfo("批量操作成功！")
+            .then(function() {
+              initData();
+            });
+        }
+      });
+    };
+
+    function getBatchItems() {
+      var reviewRecordNos = [];
+      $scope.tasks.forEach(function(it) {
+        if(it.isSelected) {
+          reviewRecordNos.push(it.reviewRecordNo);
+        }
+      });
+
+      return reviewRecordNos;
+    }
+
+    $scope.onCancelBatchReviewButtonClick = function() {
+      $scope.enableBatch = false;
+    };
+
+    $scope.onSelectedAll = function() {
+      setSelectedAll(true);
+    };
+
+    $scope.onUnSelectedAll = function() {
+      setSelectedAll(false);
+    };
+
+    $scope.onReviewFailedButtonClick = function(reviewRecord) {
+      dialog.showCustom({
+        templateUrl: 'reviews.failed.dialog.html',
+        controller: "reviewFailedDialogController",
+        params: {
+          reviewRecord: reviewRecord
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onReviewPassButtonClick = function(reviewRecord) {
+      taskRecordService.reviewPass(reviewRecord.taskRecordNo)
+        .then(function() {
+          initData();
+        });
+    };
+
+    function setSelectedAll(isSelected) {
+      if($scope.tasks && $scope.tasks.length > 0) {
+        $scope.tasks.forEach(function(it) {
+          it.isSelected = isSelected;
+        });
+      }
+    }
+
+    //  $scope.onSearchButtonClick = function() {
+    //    $scope.expandSearch = !$scope.expandSearch;
+    //  };
+
+  }
+]);
+'use strict';
+
+zongmu.controller("taskDetailController", ["$q", "$scope", "taskService", "dialog", "breadCrumb", "$timeout",
+  function($q, $scope, taskService, dialog, breadCrumbProvider, $timeout) {
+    var taskNo = $.url().param("taskNo");
+    var pageIndex = $.url().param("pageIndex");
+
+    initView() && initData();
+
+    function initView() {
+      $scope.taskColumns = [{
+        name: "taskItemNo",
+        text: "No."
+      }, {
+        name: "taskType",
+        text: "类型"
+      }, {
+        name: "status",
+        text: "状态"
+      }];
+
+      if(!taskNo) {
+        dialog.showError("参数错误");
+        return false;
+      }
+      return true;
+    }
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...")
+      taskService.getTask(taskNo, pageIndex)
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.task = data;
+          $scope.pageData = {
+            totalPage: data.taskItems.totalPages,
+            pageIndex: data.taskItems.number
+          };
+          initTags();
+          initNavPath();
+          refresh();
+        });
+    }
+
+    function refresh() {
+      var items = ($scope.task.taskItems.content || []).filter(function(it) {
+        return it.status === "CUTTING";
+      });
+
+      if(items.length > 0) {
+        $timeout(function() {
+          getTask();
+        }, 2000);
+      }
+    }
+
+    function getTask() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...")
+      taskService.getTask(taskNo, pageIndex)
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.task = data;
+          $scope.pageData = {
+            totalPage: data.taskItems.totalPages,
+            pageIndex: data.taskItems.number
+          };
+
+          initTags();
+          refresh();
+        });
+    }
+
+    function initTags() {
+      if($scope.task.assetViewTags) {
+        $scope.task.assetViewTags.forEach(function(it) {
+          it.viewTag.items.forEach(function(item) {
+            if(item.id === it.assetViewTagItemId) {
+              it.viewTagItem = item;
+            }
+          })
+        });
+      }
+
+      if($scope.task.viewTags) {
+        $scope.task.viewTags.forEach(function(it) {
+          it.viewTag.items.forEach(function(item) {
+            if(item.id === it.viewTagItemId) {
+              it.viewTagItem = item;
+            }
+          })
+        });
+      }
+    }
+
+    function initNavPath() {
+      breadCrumbProvider.setHistories([{
+        text: "上传记录",
+        href: "assets.html"
+      }, {
+        text: "记录详情",
+        href: "asset.detail.html?assetNo=" + $scope.task.assetNo
+      }, {
+        text: "任务详情",
+        href: "#"
+      }]);
+    }
+
+    $scope.$on("tableIndexChanged", function(paginationScope, pageIndex) {
+      window.location.href = "task.detail.html?taskNo=" + taskNo + "&pageIndex=" + pageIndex;
+    });
+
+    $scope.onSetTopButtonClick = function(top) {
+      taskService.setTop(taskNo, top).then(function() {
+        initData();
+      });
+    }
+
+    $scope.onSetShowButtonClick = function(show) {
+      taskService.setShow(taskNo, show).then(function() {
+        initData();
+      });
+    }
+
+    $scope.onSetPriorityButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: 'task.priority.dialog.html',
+        controller: "chooseTaskPriorityController",
+        params: {
+          task: $scope.task
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("chooseTaskPriorityController", ['$scope', 'dialog', 'taskService', 'enumService',
+  function($scope, dialog, taskService, enumService) {
+    var params = $scope.ngDialogData;
+    $scope.task = params.task;
+    $scope.taskPriority = $scope.task.priority;
+    $scope.taskPriorities = enumService.getTaskPriorities();
+    $scope.onOkClick = function() {
+      taskService.setPriority($scope.task.taskNo, $scope.taskPriority)
+        .then(function() {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    };
+
   }
 ]);
 'use strict';

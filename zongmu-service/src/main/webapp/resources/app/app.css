@@ -400,14 +400,6 @@ i::after {
   margin-right: 5px;
 }
 
-/*.dialog-content-container .property.writeable .value{
-  width: 286px;
-}*/
-
-/*.dialog-content-container .property{
-  display: block;
-}*/
-
 .dialog-content-container .property.writeable .key{
   width: 100px;
 }
@@ -415,6 +407,7 @@ i::after {
 .dialog-content-container .property.writeable .value{
   width: 280px;
 }
+
 
 
 .task-center-page .widgets-table {
@@ -522,7 +515,6 @@ i::after {
   width: 30%;
   float: left;
 }
-
 .mark-attrs-dialog {
   min-height: 300px;
 }
@@ -858,6 +850,334 @@ i::after {
   display: none;
 }
 
+.algorithm-create-dialog {
+  height: 180px;
+}
+.algorithm-setting-page th[name='op'] {
+  width: 180px;
+}
+
+.algorithm-setting-page td[name='op'] .widgets-link-button {
+  width: 50px;
+  display: inline-block;
+}
+.algorithm-detail-page .box {
+  min-height: 400px;
+}
+
+.algorithm-detail-page .readonly-panel {
+  padding: 5px 0px;
+}
+
+.algorithm-detail-page th[name='name'] {
+  width: 350px;
+}
+
+.algorithm-detail-page th[name='op'] {
+  width: 180px;
+}
+
+.algorithm-detail-page td[name='op'] .widgets-link-button {
+  width: 50px;
+  display: inline-block;
+}
+
+.algorithm-detail-page .task-tag-list,
+.algorithm-detail-page .color-tag-list {
+  margin-top: 50px;
+}
+
+.algorithm-detail-page .color-block {
+  width: 80px;
+  height: 30px;
+}
+.asset-tag-create-dialog {
+  height: 300px;
+}
+
+.asset-tag-create-dialog textarea {
+  width: 100%;
+  resize: none;
+  height: 120px;
+}
+.asset-tag-setting-page .tag-items-container {
+  margin: 10px 0px;
+}
+
+.asset-tag-setting-page .line-sepector {
+  height: 40px;
+  line-height: 39px;
+  border-bottom: 1px dashed #1FA67A;
+}
+
+.asset-tag-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.asset-tag-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.asset-tag-setting-page th[name='default'] {
+  width: 100px;
+}
+
+.asset-tag-setting-page th[name='default'] {
+  text-align: center;
+}
+
+.asset-tag-setting-page td[name='default'] {
+  text-align: center;
+  color: #1D8C73;
+}
+
+.asset-tag-setting-page .weather-tag-table{
+  margin-top: 50px;
+}
+
+.asset-view-tag-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.asset-view-tag-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.asset-view-tag-setting-page th[name='isDefault'] {
+  width: 100px;
+}
+
+.asset-view-tag-setting-page th[name='isDefault'] {
+  text-align: center;
+}
+
+.asset-view-tag-setting-page td[name='isDefault'] {
+  text-align: center;
+  color: #1D8C73;
+}
+.color-create-dialog {
+  height: 250px;
+}
+
+.color-create-dialog .property.writeable .key {
+  width: 30%;
+}
+
+.color-create-dialog .property.writeable .value {
+  width: 70%;
+}
+
+.color-create-dialog input {
+  height: 40px;
+  width: 100%;
+  line-height: 40px;
+}
+.color-setting-page th[name='op']{
+  width: 100px;
+}
+
+.color-setting-page th[name='color']{
+  width: 200px;
+}
+
+.color-setting-page .color-block{
+  height: 20px;
+  width: 100px;
+}
+
+.color-setting-page tr{
+  min-height: 40px;
+}
+
+.color-setting-page td .widgets-link-button{
+  margin: 5px 0px;
+}
+
+.color-group-dialog{
+  height: 150px;
+}
+
+.reason-create-dialog {
+  height: 250px;
+}
+
+.reason-create-dialog textarea {
+  width: 100%;
+  height: 150px;
+  resize: none;
+}
+.reason-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.reason-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.reason-setting-page th[name='default'] {
+  width: 100px;
+}
+
+.reason-setting-page th[name='default'] {
+  text-align: center;
+}
+
+.reason-setting-page td[name='default'] {
+  text-align: center;
+  color: #1D8C73;
+}
+.tag-create-dialog {
+  height: 250px;
+}
+
+.tag-create-dialog .property.writeable .key {
+  width: 30%;
+}
+
+.tag-create-dialog .property.writeable .value {
+  width: 70%;
+}
+
+.tag-create-dialog input {
+  height: 40px;
+  width: 100%;
+  line-height: 40px;
+}
+.tag-setting-page td .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.tag-setting-page td {
+  min-width: 100px;
+  height: 40px;
+}
+
+.tag-setting-page th[name='op'] {
+  width: 150px;
+}
+.tag-default-value-dialog .content-conatiner.dropdownbox {
+  height: 150px;
+}
+
+.tag-default-value-dialog .content-conatiner.dropdownbox select {
+  width: 100%;
+  height: 40px;
+}
+
+.tag-default-value-dialog .content-conatiner.checkbox,
+.tag-default-value-dialog .content-conatiner.radiobutton {
+  height: 280px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+.tag-detail-page .list-container{
+  padding-top: 5px;
+}
+
+.tag-detail-page .box{
+  min-height: 500px;
+}
+
+
+.tag-detail-page th[name='op'] {
+  width: 150px;
+}
+
+.tag-detail-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.tag-detail-page th[name='default'] {
+  width: 100px;
+}
+
+.tag-detail-page th[name='default'] {
+  text-align: center;
+}
+
+.tag-detail-page td[name='default'] {
+  text-align: center;
+  color: #1D8C73;
+}
+.tag-value-create-dialog {
+  height: 250px;
+}
+
+.tag-value-create-dialog textarea {
+  width: 100%;
+  height: 100px;
+}
+.train-new-page .property.writeable .value textarea {
+  width: 100%;
+  height: 350px;
+  resize: vertical;
+}
+.train-setting-page th[name='op']{
+  width: 100px;
+}
+
+.train-setting-page td .widgets-link-button{
+  margin: 5px 0px;
+}
+
+.user-black-list-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.user-black-list-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+}
+.user-list-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.user-list-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+}
+
+
+.view-tag-create-dialog {
+  height: 150px;
+}
+
+.view-tag-create-dialog input {
+  width: 100%;
+  height: 40px;
+}
+.view-tag-update-dialog {
+  height: 150px;
+}
+
+.view-tag-update-dialog input {
+  width: 100%;
+  height: 40px;
+}
+.view-tag-detail-page th[name='op'] {
+  width: 150px;
+}
+
+.view-tag-detail-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.view-tag-detail-page th[name='isDefault'] {
+  width: 100px;
+}
+
+.view-tag-detail-page th[name='isDefault'] {
+  text-align: center;
+}
+
+.view-tag-detail-page td[name='isDefault'] {
+  text-align: center;
+  color: #1D8C73;
+}
 .asset-detail-page .task-list {
   margin-top: 50px;
 }
@@ -1293,334 +1613,6 @@ i::after {
   height: 180px;
 }
 
-.algorithm-create-dialog {
-  height: 180px;
-}
-.algorithm-setting-page th[name='op'] {
-  width: 180px;
-}
-
-.algorithm-setting-page td[name='op'] .widgets-link-button {
-  width: 50px;
-  display: inline-block;
-}
-.algorithm-detail-page .box {
-  min-height: 400px;
-}
-
-.algorithm-detail-page .readonly-panel {
-  padding: 5px 0px;
-}
-
-.algorithm-detail-page th[name='name'] {
-  width: 350px;
-}
-
-.algorithm-detail-page th[name='op'] {
-  width: 180px;
-}
-
-.algorithm-detail-page td[name='op'] .widgets-link-button {
-  width: 50px;
-  display: inline-block;
-}
-
-.algorithm-detail-page .task-tag-list,
-.algorithm-detail-page .color-tag-list {
-  margin-top: 50px;
-}
-
-.algorithm-detail-page .color-block {
-  width: 80px;
-  height: 30px;
-}
-.asset-tag-create-dialog {
-  height: 300px;
-}
-
-.asset-tag-create-dialog textarea {
-  width: 100%;
-  resize: none;
-  height: 120px;
-}
-.asset-tag-setting-page .tag-items-container {
-  margin: 10px 0px;
-}
-
-.asset-tag-setting-page .line-sepector {
-  height: 40px;
-  line-height: 39px;
-  border-bottom: 1px dashed #1FA67A;
-}
-
-.asset-tag-setting-page th[name='op'] {
-  width: 150px;
-}
-
-.asset-tag-setting-page td[name='op'] .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-  display: inline-block;
-}
-
-.asset-tag-setting-page th[name='default'] {
-  width: 100px;
-}
-
-.asset-tag-setting-page th[name='default'] {
-  text-align: center;
-}
-
-.asset-tag-setting-page td[name='default'] {
-  text-align: center;
-  color: #1D8C73;
-}
-
-.asset-tag-setting-page .weather-tag-table{
-  margin-top: 50px;
-}
-
-.asset-view-tag-setting-page th[name='op'] {
-  width: 150px;
-}
-
-.asset-view-tag-setting-page td[name='op'] .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-  display: inline-block;
-}
-
-.asset-view-tag-setting-page th[name='isDefault'] {
-  width: 100px;
-}
-
-.asset-view-tag-setting-page th[name='isDefault'] {
-  text-align: center;
-}
-
-.asset-view-tag-setting-page td[name='isDefault'] {
-  text-align: center;
-  color: #1D8C73;
-}
-.color-create-dialog {
-  height: 250px;
-}
-
-.color-create-dialog .property.writeable .key {
-  width: 30%;
-}
-
-.color-create-dialog .property.writeable .value {
-  width: 70%;
-}
-
-.color-create-dialog input {
-  height: 40px;
-  width: 100%;
-  line-height: 40px;
-}
-.color-setting-page th[name='op']{
-  width: 100px;
-}
-
-.color-setting-page th[name='color']{
-  width: 200px;
-}
-
-.color-setting-page .color-block{
-  height: 20px;
-  width: 100px;
-}
-
-.color-setting-page tr{
-  min-height: 40px;
-}
-
-.color-setting-page td .widgets-link-button{
-  margin: 5px 0px;
-}
-
-.color-group-dialog{
-  height: 150px;
-}
-
-.reason-create-dialog {
-  height: 250px;
-}
-
-.reason-create-dialog textarea {
-  width: 100%;
-  height: 150px;
-  resize: none;
-}
-.reason-setting-page th[name='op'] {
-  width: 150px;
-}
-
-.reason-setting-page td[name='op'] .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-  display: inline-block;
-}
-
-.reason-setting-page th[name='default'] {
-  width: 100px;
-}
-
-.reason-setting-page th[name='default'] {
-  text-align: center;
-}
-
-.reason-setting-page td[name='default'] {
-  text-align: center;
-  color: #1D8C73;
-}
-.tag-create-dialog {
-  height: 250px;
-}
-
-.tag-create-dialog .property.writeable .key {
-  width: 30%;
-}
-
-.tag-create-dialog .property.writeable .value {
-  width: 70%;
-}
-
-.tag-create-dialog input {
-  height: 40px;
-  width: 100%;
-  line-height: 40px;
-}
-.tag-setting-page td .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-  display: inline-block;
-}
-
-.tag-setting-page td {
-  min-width: 100px;
-  height: 40px;
-}
-
-.tag-setting-page th[name='op'] {
-  width: 150px;
-}
-.tag-default-value-dialog .content-conatiner.dropdownbox {
-  height: 150px;
-}
-
-.tag-default-value-dialog .content-conatiner.dropdownbox select {
-  width: 100%;
-  height: 40px;
-}
-
-.tag-default-value-dialog .content-conatiner.checkbox,
-.tag-default-value-dialog .content-conatiner.radiobutton {
-  height: 280px;
-  overflow-y: auto;
-  margin-bottom: 20px;
-}
-.tag-detail-page .list-container{
-  padding-top: 5px;
-}
-
-.tag-detail-page .box{
-  min-height: 500px;
-}
-
-
-.tag-detail-page th[name='op'] {
-  width: 150px;
-}
-
-.tag-detail-page td[name='op'] .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-  display: inline-block;
-}
-
-.tag-detail-page th[name='default'] {
-  width: 100px;
-}
-
-.tag-detail-page th[name='default'] {
-  text-align: center;
-}
-
-.tag-detail-page td[name='default'] {
-  text-align: center;
-  color: #1D8C73;
-}
-.tag-value-create-dialog {
-  height: 250px;
-}
-
-.tag-value-create-dialog textarea {
-  width: 100%;
-  height: 100px;
-}
-.train-new-page .property.writeable .value textarea {
-  width: 100%;
-  height: 350px;
-  resize: vertical;
-}
-.train-setting-page th[name='op']{
-  width: 100px;
-}
-
-.train-setting-page td .widgets-link-button{
-  margin: 5px 0px;
-}
-
-.user-black-list-setting-page th[name='op'] {
-  width: 150px;
-}
-
-.user-black-list-setting-page td[name='op'] .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-}
-.user-list-setting-page th[name='op'] {
-  width: 150px;
-}
-
-.user-list-setting-page td[name='op'] .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-}
-
-
-.view-tag-create-dialog {
-  height: 150px;
-}
-
-.view-tag-create-dialog input {
-  width: 100%;
-  height: 40px;
-}
-.view-tag-update-dialog {
-  height: 150px;
-}
-
-.view-tag-update-dialog input {
-  width: 100%;
-  height: 40px;
-}
-.view-tag-detail-page th[name='op'] {
-  width: 150px;
-}
-
-.view-tag-detail-page td[name='op'] .widgets-link-button {
-  margin: 5px 10px 5px 0px;
-  display: inline-block;
-}
-
-.view-tag-detail-page th[name='isDefault'] {
-  width: 100px;
-}
-
-.view-tag-detail-page th[name='isDefault'] {
-  text-align: center;
-}
-
-.view-tag-detail-page td[name='isDefault'] {
-  text-align: center;
-  color: #1D8C73;
-}
 .train-index-page .page-right{
   border: 1px solid #1D8C73;
   padding: 20px;

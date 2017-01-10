@@ -3,6 +3,13 @@
 zongmu.controller("bsdReportController", ["$scope", "breadCrumb", "reportService", "dialog", "enumService", "assetViewTagService", "nullUtils", "viewTagService",
   function($scope, breadCrumbProvider, reportService, dialog, enumService, assetViewTagService, nullUtils, viewTagService) {
     var reportId = $.url().param("reportId");
+    $scope.algorithmMap.callback = function(map){
+      var name = map[reportId].name + "路测视频统计";
+      breadCrumbProvider.setHistories([{
+        text: name,
+        href: "bsd.html"
+      }]);
+    };
     $scope.assetButtonExpand = false;
     $scope.taskViewButtonExpand = false;
     $scope.taskStatus = [{
@@ -140,7 +147,7 @@ zongmu.controller("bsdReportController", ["$scope", "breadCrumb", "reportService
         dialog.showError("参数错误！");
         return false;
       }
-
+     
       $scope.reportId = reportId + "";
       breadCrumbProvider.setHistories([{
         text: "路测视频统计",

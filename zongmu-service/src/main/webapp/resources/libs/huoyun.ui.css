@@ -48,6 +48,28 @@ a:hover {
   text-decoration: none !important;
 }
 
+.widgets-bread-crumb {
+  height: 40px;
+  line-height: 40px;
+}
+
+.widgets-bread-crumb li {
+  display: inline-block;
+}
+
+.widgets-bread-crumb li a,
+.widgets-bread-crumb li i {
+  color: #1FA67A;
+}
+
+.widgets-bread-crumb li i::after {
+  content: " ";
+  margin-right: 5px;
+}
+
+.widgets-bread-crumb .last-bread-crumb {
+  color: #555;
+}
 .widgets-button {
   height: 40px;
   background: #1fa67a;
@@ -96,28 +118,6 @@ a:hover {
   background: #C5C1C1;
   color: #9E9393;
   cursor: default;
-}
-.widgets-bread-crumb {
-  height: 40px;
-  line-height: 40px;
-}
-
-.widgets-bread-crumb li {
-  display: inline-block;
-}
-
-.widgets-bread-crumb li a,
-.widgets-bread-crumb li i {
-  color: #1FA67A;
-}
-
-.widgets-bread-crumb li i::after {
-  content: " ";
-  margin-right: 5px;
-}
-
-.widgets-bread-crumb .last-bread-crumb {
-  color: #555;
 }
 .widgets-checkbox {
   height: 40px;
@@ -754,6 +754,7 @@ a:hover {
 .widgets-svg-bar .property .value {
   width: 100%;
   display: block;
+  font-size: 10px;
 }
 .widgets-sidebar {
   width: 200px;

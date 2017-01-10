@@ -208,29 +208,6 @@ angular.module('huoyun-ui').factory("huoyunUtil", function() {
 });
 'use strict';
 
-/*
- * size: small, normal, large, huge
- */
-angular.module('huoyun-ui').directive("widgetsButton", function() {
-  return {
-    restrict: "A",
-    templateUrl: "widgets/button/button.html",
-    replace: true,
-    scope: {
-      text: "@"
-    },
-    controller: "buttonController",
-    link: function($scope, elem, attrs) {
-      $scope.size = attrs.size;
-    }
-  };
-});
-
-angular.module('huoyun-ui').controller("buttonController", ["$scope", function($scope) {
-
-}]);
-'use strict';
-
 angular.module('huoyun-ui').directive("widgetsBreadCrumb", function() {
   return {
     restrict: "A",
@@ -284,6 +261,29 @@ angular.module('huoyun-ui').provider("breadCrumb", function(){
   };
   
 });
+'use strict';
+
+/*
+ * size: small, normal, large, huge
+ */
+angular.module('huoyun-ui').directive("widgetsButton", function() {
+  return {
+    restrict: "A",
+    templateUrl: "widgets/button/button.html",
+    replace: true,
+    scope: {
+      text: "@"
+    },
+    controller: "buttonController",
+    link: function($scope, elem, attrs) {
+      $scope.size = attrs.size;
+    }
+  };
+});
+
+angular.module('huoyun-ui').controller("buttonController", ["$scope", function($scope) {
+
+}]);
 'use strict';
 
 angular.module('huoyun-ui').directive("widgetsCheckbox", ["huoyunUtil", function(huoyunUtil) {
@@ -3514,8 +3514,8 @@ angular.module('huoyun-ui').provider("application", function() {
     return this;
   };
 });
-angular.module("huoyun-ui").run(["$templateCache", function($templateCache) {$templateCache.put("widgets/button/button.html","<div class=\"widgets-button\">{{text}}</div>");
-$templateCache.put("widgets/breadcrumb/breadcrumb.html","<div class=\"widgets-bread-crumb\"><ul><li ng-repeat=\"item in items\"><a ng-href=\"{{item.href}}\" ng-if=\"!$last\">{{item.text}}</a> <i class=\"fa fa-angle-right\" ng-if=\"!$last\"></i> <span class=\"last-bread-crumb\" ng-if=\"$last\">{{item.text}}</span></li></ul></div>");
+angular.module("huoyun-ui").run(["$templateCache", function($templateCache) {$templateCache.put("widgets/breadcrumb/breadcrumb.html","<div class=\"widgets-bread-crumb\"><ul><li ng-repeat=\"item in items\"><a ng-href=\"{{item.href}}\" ng-if=\"!$last\">{{item.text}}</a> <i class=\"fa fa-angle-right\" ng-if=\"!$last\"></i> <span class=\"last-bread-crumb\" ng-if=\"$last\">{{item.text}}</span></li></ul></div>");
+$templateCache.put("widgets/button/button.html","<div class=\"widgets-button\">{{text}}</div>");
 $templateCache.put("widgets/checkbox/checkbox.html","<div class=\"widgets-checkbox\" ng-click=\"onCheckboxClicked()\" dis=\"dis\"><div class=\"checkbox-icon\"><i class=\"fa fa-square-o uncheck-font\" aria-hidden=\"true\"></i> <i class=\"fa fa-check-square check-font\" aria-hidden=\"true\"></i></div><div class=\"checkbox-content\">{{content}}</div></div>");
 $templateCache.put("widgets/colorpicker/color.picker.html","<div class=\"widgets-color-picker\"><input class=\"color-button\"></div>");
 $templateCache.put("widgets/cursor/cursor.html","<div class=\"widgets-cursor\"><div class=\"widgets-cursor-line-h\"></div><div class=\"widgets-cursor-line-v\"></div></div>");

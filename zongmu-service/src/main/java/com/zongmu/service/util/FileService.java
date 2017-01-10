@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
 import com.zongmu.service.configuration.ApplicationProperties;
+import com.zongmu.service.dto.asset.AssetType;
 import com.zongmu.service.entity.AssetFile;
 import com.zongmu.service.entity.Task;
 import com.zongmu.service.entity.TaskItem;
@@ -40,6 +41,9 @@ public class FileService {
 	private FtpProperties ftpProperties;
 	
 	public String getFTPPath(Task task){
+		if(task.getAssetType() == AssetType.PICTURE){
+			return this.ftpProperties.getFtpServiceUrl() + "/upload/" + task.getAssetNo() + "/Datalog/";
+		}
 		return this.ftpProperties.getFtpServiceUrl() + "/upload/" + task.getAssetNo() + "/Datalog/compress/" + task.getTaskNo() + "/";
 	}
 

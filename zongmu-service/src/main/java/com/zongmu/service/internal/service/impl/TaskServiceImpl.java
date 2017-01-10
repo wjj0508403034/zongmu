@@ -353,19 +353,23 @@ public class TaskServiceImpl implements TaskService {
 		if (taskItem == null) {
 			throw new BusinessException(ErrorCode.TASKITEM_NOT_FOUND);
 		}
-
-		if (taskItem.getStatus() != TaskItemStatus.NEW) {
-			throw new BusinessException(ErrorCode.Task_Accept_By_Others);
-		}
-
+		
 		Long rejectTaskCount = this.taskRecordService.countRejectRecords();
 		if (rejectTaskCount >= 10) {
 			throw new BusinessException(ErrorCode.REJECT_TASK_COUNT_LARGER_THAN_10);
 		}
 
+		if (taskItem.getStatus() != TaskItemStatus.NEW) {
+			throw new BusinessException(ErrorCode.Task_Accept_By_Others);
+		}
+		
+		taskItem.setStatus(TaskItemStatus.INPROGRESS);
+		this.saveTaskItem(taskItem);
+		
 		if (taskItem.getTaskRecordNo() == null) {
 			TaskRecord taskRecord = this.taskRecordService.createNewTaskRecord(taskItem);
-			this.assignTaskRecord(taskItem, taskRecord);
+			taskItem.setTaskRecordNo(taskRecord.getTaskRecordNo());
+			this.saveTaskItem(taskItem);
 		} else {
 			TaskRecord taskRecord = this.taskRecordService.getTaskRecord(taskItem.getTaskRecordNo());
 			taskRecord.setUserId(user.getId());
