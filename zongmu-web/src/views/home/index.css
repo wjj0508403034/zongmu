@@ -1,0 +1,105 @@
+.task-center-page .widgets-table {
+  min-height: 400px;
+}
+
+.task-center-page .widgets-table a {
+  color: #1FA67A;
+}
+
+.task-center-page .thumnail {
+  height: 100px;
+  width: 100px;
+}
+
+.task-center-page .widgets-table td[name="status"] {
+  width: 100px;
+}
+
+.task-center-page .widgets-table td[name="taskName"] {
+  width: 350px;
+  max-width: 350px;
+  overflow: hidden;
+}
+
+.task-center-page .widgets-table td[name="taskName"] a {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.task-center-page .widgets-table td[name="status"] .widgets-button {
+  width: 60px;
+}
+
+.task-center-page .task-status-select,
+.task-center-page .task-type-select {
+  width: 150px !important;
+}
+
+.task-center-page .op-select {
+  width: 150px !important;
+}
+
+.task-center-page .point-input {
+  width: 200px !important;
+}
+
+.task-center-page .create-time-datetimepicker {
+  width: 150px;
+  display: inline-block;
+}
+
+.task-center-page .property.createtime {
+  clear: both;
+}
+
+.task-center-page .property.createtime .op-select {
+  float: left;
+}
+
+.task-center-page .property.createtime .create-time-datetimepicker {
+  float: left;
+  margin-right: 50px;
+  width: 200px;
+}
+
+.task-center-page .search-box .widgets-button {
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.task-center-page .cell-icon {
+  font-size: 48px;
+  line-height: 80px;
+  color: #1FA67A;
+  font-weight: 200;
+}
+
+.task-center-page .xx-label {
+  float: left;
+  margin-right: 5px;
+}
+
+.task-center-page .tag-item-x {
+  width: 50%;
+  float: left;
+}
+
+.task-center-page .tag-container-x {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #ccc;
+  padding: 0 2px;
+  min-height: 100px;
+}
+
+.task-center-page .checkbox-item {
+  width: 30%;
+  float: left;
+}

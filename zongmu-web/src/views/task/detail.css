@@ -1,0 +1,11 @@
+.task-detail-page .page-title {
+  width: 900px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-detail-page .section,
+.task-detail-page .section-content {
+  width: 100%;
+}

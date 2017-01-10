@@ -1,0 +1,33 @@
+<div class="tag-default-value-dialog">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>设置默认值</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    
+    <div class="content-conatiner dropdownbox" ng-if="tag.type === 'DROPDOWNBOX'">
+      <select ng-model="$parent.selectTagItem"  ng-options="tagItem as tagItem.value for tagItem in tag.items">
+        <option></option>
+      </select>
+    </div>
+    <div class="content-conatiner checkbox" ng-if="tag.type === 'CHECKBOX'">
+      <div ng-repeat="tagItem in tag.items">
+        <div widgets-checkbox ng-model="tagItem.default" content="{{tagItem.value}}"></div>
+      </div>
+    </div>
+    <div class="content-conatiner radiobutton" ng-if="tag.type === 'RADIOBUTTON'">
+      <div ng-repeat="tagItem in tag.items">
+        <input type="radio" name="billing" ng-model="$parent.$parent.selectTagItem" ng-value="tagItem" >{{tagItem.value}}
+        <!--<div widgets-radio-button ng-model="tagItem.isSelected" content="{{tagItem.value}}"></div>-->
+      </div>
+    </div>
+  </div>
+  <div class="dialog-tools-bar">
+    <div class="dialog-tools-bar-container">
+      <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="closeThisDialog('cancel')"></div>
+      <div widgets-button text="确定" ng-click="onSaveButtonClick()"></div>
+    </div>
+  </div>
+</div>

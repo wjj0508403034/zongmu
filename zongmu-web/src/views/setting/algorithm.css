@@ -1,0 +1,8 @@
+.algorithm-setting-page th[name='op'] {
+  width: 180px;
+}
+
+.algorithm-setting-page td[name='op'] .widgets-link-button {
+  width: 50px;
+  display: inline-block;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="login-page">
+    <div widgets-loading text="正在登录,请稍后..." show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav></div>
+    <div widgets-page>
+      <div class="box box-form" ng-controller="loginController">
+        <div class="box-header">
+          <i class="fa fa-user"></i>
+          <span>用户登录</span>
+        </div>
+        <div class="box-content">
+          <div class="property writeable">
+            <label class="key">邮箱</label>
+            <div class="value">
+              <input type="text" ng-model="email" />
+            </div>
+          </div>
+          <div class="property writeable">
+            <label class="key">密码</label>
+            <div class="value">
+              <input type="password" ng-model="password" />
+            </div>
+          </div>
+          <div widgets-button text="登录" huoyun-append-class="form-submit-button" ng-click="onSubmit()"></div>
+
+          <div widgets-link-button text="没有账号，去注册" huoyun-append-class="register-button" ng-click="onRegisterButtonClick()"></div>
+          <div widgets-link-button text="忘记密码" huoyun-append-class="forget-password-button" ng-click="onForgetPasswordButtonClick()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

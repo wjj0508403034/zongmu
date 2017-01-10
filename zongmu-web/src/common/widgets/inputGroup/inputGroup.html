@@ -1,0 +1,35 @@
+<div class="widgets-input-group">
+  <label>
+    {{label}}
+  </label>
+  <div class="input-group-box input-mode" ng-switch="type">
+    <div ng-switch-when="text">
+      <input type="text" ng-model="$parent.ngModel" ng-disabled="{{disbaled}}">
+    </div>
+    <div ng-switch-when="number">
+      <input type="number" ng-model="$parent.ngModel">
+    </div>
+    <div ng-switch-when="tel">
+      <input type="tel" ng-model="$parent.ngModel">
+    </div>
+    <div ng-switch-when="email">
+      <input type="email" ng-model="$parent.ngModel">
+    </div>
+    <div ng-switch-when="checkbox">
+      <div widgets-checkbox ng-model="$parent.ngModel"></div>
+    </div>
+    <div ng-switch-when="radio">
+      <div widgets-radio-button ng-model="$parent.ngModel"></div>
+    </div>
+    <div ng-switch-when="textarea" class="textarea-container">
+      <textarea ng-model="$parent.ngModel"></textarea>
+    </div>
+    <div ng-switch-default>不支持该类型({{type}})控件</div>
+  </div>
+  <div class="input-group-box readonly-mode" ng-switch="type">
+    <div ng-switch-when="link">
+      <a ng-href="{{ngModel}}">{{ngModel}}</a>
+    </div>
+    <div ng-switch-default>{{ngModel}}</div>
+  </div>
+</div>

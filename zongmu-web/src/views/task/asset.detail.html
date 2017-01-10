@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+
+  </head>
+
+  <body class="asset-detail-page" ng-controller="baseTaskController">
+    <div widgets-loading text="{{loadingText}}" show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav current="mytask"></div>
+    <div widgets-page class="my-assets">
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="task-management" current-item="upload-task-record">
+        </div>
+      </div>
+      <div class="page-right" ng-controller="assetDetailController">
+        <div widgets-bread-crumb>
+        </div>
+        <div class="tools-bar">
+          <div widgets-button text="新建任务" ng-click="onNewTaskButtonClick()" ng-show="asset.canCreateTask"></div>
+          <div widgets-button text="修改视频属性" ng-click="onUpdateAssetViewTagButtonClick()"></div>
+        </div>
+        <div class="box">
+          <div class="box-header">
+            <i class="fa fa-file-o"></i>
+            <span>详细信息</span>
+          </div>
+          <div class="box-content">
+            <div class="property">
+              <label class="key">名称</label>
+              <div class="value">{{asset.name}}</div>
+            </div>
+            <div class="property">
+              <label class="key">上传编号</label>
+              <div class="value">{{asset.assetNo}}</div>
+            </div>
+            <div class="property">
+              <label class="key">类型</label>
+              <div class="value">{{asset.assetType | uploadType}}</div>
+            </div>
+            <div class="property">
+              <label class="key">上传时间</label>
+              <div class="value">{{asset.createTime | joda | date:'yyyy-MM-dd HH:mm'}}</div>
+            </div>
+            <div class="property">
+              <label class="key">视频录制时间</label>
+              <div class="value">{{asset.recordTime | joda | date:'yyyy-MM-dd HH:mm'}}</div>
+            </div>
+            <div class="property" ng-hide="asset.assetType === 'PICTURE'">
+              <label class="key">视频录制时长</label>
+              <div class="value">{{asset.recordLength | timeString}}</div>
+            </div>
+            <div class="property" ng-hide="asset.assetType === 'PICTURE'">
+              <label class="key">FTP地址</label>
+              <div class="value">
+                <a ng-href="{{asset.fullFtpFolder}}" target="_blank">{{asset.fullFtpFolder}}</a>
+              </div>
+            </div>
+            <div ng-repeat="viewTag in asset.viewTags">
+              <div class="property">
+                <label class="key">{{viewTag.viewTag.name}}</label>
+                <div class="value">{{viewTag.viewTagItem.name}}</div>
+              </div>
+            </div>
+            <!--<div class="property">
+              <label class="key">路况属性</label>
+              <div class="value">{{asset.roadTag.name}}</div>
+            </div>
+            <div class="property">
+              <label class="key">天气属性</label>
+              <div class="value">{{asset.weatherTag.name}}</div>
+            </div>-->
+            <div class="property">
+              <label class="key">备注</label>
+              <div class="value">{{asset.memo}}</div>
+            </div>
+          </div>
+
+          <div class="box-header task-list">
+            <i class="fa fa-list-ul"></i>
+            <span>文件列表</span>
+            <div widgets-button text="{{expandButton?'收起':'展开'}}" huoyun-append-class="expand-btn" ng-click="onSearchButtonClick()"></div>
+          </div>
+          <div class="box-content" ng-show="expandButton">
+            <div widgets-table columns="fileColumns" dataset="asset.assetFiles" empty-text="没有文件">
+              <div cell-template column-index="2">
+                {{cellData | fileSize}}
+              </div>
+              <div cell-template column-index="3">
+                {{cellData | uploadStatus}}
+              </div>
+            </div>
+          </div>
+          <div class="box-header task-list">
+            <i class="fa fa-tasks"></i>
+            <span>任务列表</span>
+          </div>
+          <div class="box-content">
+            <div widgets-table columns="taskColumns" dataset="tasks" empty-text="没有任务记录">
+              <div cell-template column-index="0">
+                <a title="{{cellData}}" ng-href="task.detail.html?taskNo={{rowData.taskNo}}">{{cellData}}</a>
+              </div>
+              <div cell-template column-index="1">
+                {{cellData | taskType}}
+              </div>
+              <div cell-template column-index="2">
+                {{cellData | taskPriority}}
+              </div>
+              <div cell-template column-index="3">
+                {{cellData | boolText}}
+              </div>
+              <div cell-template column-index="4">
+                <div widgets-link-button text="删除" ng-click="$superScope.onDeleteButtonClick(rowData)"></div>
+                <div ng-if="rowData.taskType === 'VIDEO'" widgets-link-button text="导出数据" ng-click="$superScope.onExportButtonClick(rowData)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

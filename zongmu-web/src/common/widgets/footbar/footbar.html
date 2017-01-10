@@ -1,0 +1,15 @@
+<div class="widgets-foot-bar">
+  <ul>
+    <li ng-repeat="link in links">
+      <a ng-href="{{link.href}}">{{link.text}}</a>
+    </li>
+  </ul>
+  <div class="addition-info">
+    <span class="copyright">
+      <i class="fa fa-copyright"></i>
+      {{copyright}}
+    </span>
+    <span class="company-name">{{companyName}}</span>
+    <span class="record">{{record}}</span>
+  </div>
+</div>

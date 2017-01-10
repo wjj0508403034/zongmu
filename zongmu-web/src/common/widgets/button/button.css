@@ -1,0 +1,49 @@
+.widgets-button {
+  height: 40px;
+  background: #1fa67a;
+  line-height: 40px;
+  text-align: center;
+  padding: 0 10px;
+  color: white;
+  display: inline-table;
+  cursor: pointer;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+
+.widgets-button:hover {
+  background: #1D8C73;
+}
+
+.widgets-button.btn-gray {
+  background: #969494;
+}
+
+.widgets-button.btn-gray:hover {
+  background: #848181;
+}
+
+.widgets-button.small {
+  height: 20px;
+  line-height: 20px;
+  padding: 0 5px;
+}
+
+.widgets-button.large {
+  height: 60px;
+  line-height: 60px;
+  padding: 0 15px;
+}
+
+.widgets-button.huge {
+  height: 80px;
+  line-height: 80px;
+  padding: 0 20px;
+}
+
+.widgets-button[disabled="disabled"] {
+  background: #C5C1C1;
+  color: #9E9393;
+  cursor: default;
+}

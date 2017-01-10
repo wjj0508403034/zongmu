@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="user-register-info-page">
+    <div widgets-top-bar></div>
+    <div widgets-nav></div>
+    <div widgets-page>
+      <div class="box box-form" ng-controller="registerInfoController">
+        <div class="box-header">
+          <i class="fa fa-user color-highligth"></i>
+          <span class="color-highligth" ">用户注册提示</span>
+        </div>
+        <div class="box-content ">
+
+          <div class="active-message ">
+            <i class="fa fa-check-circle result-icon "></i>
+            <span>账号激活邮件已经发送到</span><span class="email-account ">{{email}}</span><span>，请前去您的邮件点击激活链接，完成注册。</span>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

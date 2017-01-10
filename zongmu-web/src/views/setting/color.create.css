@@ -1,0 +1,17 @@
+.color-create-dialog {
+  height: 250px;
+}
+
+.color-create-dialog .property.writeable .key {
+  width: 30%;
+}
+
+.color-create-dialog .property.writeable .value {
+  width: 70%;
+}
+
+.color-create-dialog input {
+  height: 40px;
+  width: 100%;
+  line-height: 40px;
+}

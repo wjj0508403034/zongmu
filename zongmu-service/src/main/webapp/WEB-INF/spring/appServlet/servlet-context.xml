@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task 
+		http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven conversion-service="conversionService"
+		enable-matrix-variables="true">
+	</annotation-driven>
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources/ directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	<resources mapping="/page/**" location="/WEB-INF/views/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".html" />
+	</beans:bean>
+
+	<!-- Only needed because we install custom converters to support the examples 
+		in the org.springframewok.samples.mvc.convert package -->
+	<beans:bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+	</beans:bean>
+
+	<!-- Only needed because we require fileupload in the org.springframework.samples.mvc.fileupload 
+		package -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"  >
+        <beans:property name="defaultEncoding" value="UTF-8"/>
+        <beans:property name="maxUploadSize" value="20000000000"/>
+	</beans:bean>
+
+	<!-- Imports user-defined @Controller beans that process client requests -->
+	<beans:import resource="controllers.xml" />
+	<beans:import resource="spring-jpa.xml" />
+	<beans:import resource="spring-security.xml" />
+
+	<!-- 异步线程池 -->
+	<beans:bean id="threadPool"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 核心线程数 -->
+		<beans:property name="corePoolSize" value="2" />
+		<!-- 最大线程数 -->
+		<beans:property name="maxPoolSize" value="10" />
+		<!-- 队列最大长度 >=mainExecutor.maxSize -->
+		<beans:property name="queueCapacity" value="25" />
+		<!-- 线程池维护线程所允许的空闲时间 -->
+		<beans:property name="keepAliveSeconds" value="300" />
+		<!-- 线程池对拒绝任务(无线程可用)的处理策略 ThreadPoolExecutor.CallerRunsPolicy策略 ,调用者的线程会执行该任务,如果执行器已关闭,则丢弃. -->
+		<beans:property name="rejectedExecutionHandler">
+			<beans:bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+		</beans:property>
+	</beans:bean>
+
+	<task:annotation-driven />
+
+</beans:beans>

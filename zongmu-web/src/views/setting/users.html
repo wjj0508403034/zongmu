@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="user-list-setting-page" ng-controller="settingController">
+    <div widgets-top-bar></div>
+    <div widgets-nav current="setting"></div>
+    <div widgets-page>
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="user-profile" current-item="user-list">
+        </div>
+      </div>
+      <div class="page-right" ng-controller="userListController">
+        <div widgets-bread-crumb>
+        </div>
+        <div class="tools-bar">
+          <div widgets-tab items="tabs"></div>
+        </div>
+        <div class="box">
+          <div class="box-header">
+            <i class="fa fa-users"></i>
+            <span>用户列表</span>
+          </div>
+          <div class="box-content">
+            <div widgets-table columns="columns" dataset="users" page-data="pageData" empty-text="系统还没有用户">
+              <div cell-template column-index="1">
+                {{cellData | businessRole}}
+              </div>
+              <div cell-template column-index="2">
+                <div widgets-link-button text="查看" ng-click="$superScope.onViewButtonClick(rowData)"></div>
+                <div widgets-link-button text="拉入黑名单" ng-click="$superScope.onAddBlackButtonClick(rowData)" ng-if="$superScope.canShow(rowData)"></div>
+                <div widgets-link-button text="角色设置" ng-click="$superScope.onPermissionButtonClick(rowData)" ng-if="$superScope.canShow(rowData)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

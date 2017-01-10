@@ -1,0 +1,85 @@
+.bsd-report-page .tools-bar .property {
+  width: 250px;
+  float: left;
+  margin-right: 20px;
+}
+
+.bsd-report-page .tools-bar .property .key {
+  width: 100px;
+}
+
+.bsd-report-page .tools-bar .property .value {
+  width: 150px;
+}
+
+.bsd-report-page .search-box {
+  margin-bottom: 20px;
+}
+
+.bsd-report-page .search-box .checkbox-item {
+  width: 50%;
+  display: inline-block;
+}
+
+.bsd-report-page .search-box .property .key {
+  line-height: 40px;
+}
+
+.bsd-report-page th[name] {
+  width: 60px;
+}
+
+.bsd-report-page th[name="text"] {
+  width: auto;
+}
+
+.bsd-report-page .picture-chart-section {
+  margin-top: 20px;
+}
+
+.bsd-report-page .search-box .box-header .widgets-button {
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.bsd-report-page .table-item {
+  margin-bottom: 20px;
+}
+
+.bsd-report-page .op-select {
+  width: 150px !important;
+}
+
+.bsd-report-page .op-value {
+  width: 200px !important;
+}
+
+.bsd-report-page .create-time-datetimepicker {
+  width: 150px;
+  display: inline-block;
+}
+
+.bsd-report-page .property.createtime {
+  clear: both;
+}
+
+.bsd-report-page .property.createtime .create-time-datetimepicker {
+  float: left;
+  margin-right: 50px;
+  width: 200px;
+}
+
+.bsd-report-page .xx-label {
+  float: left;
+  margin-right: 5px;
+}
+
+.bsd-report-page .box-group .box-group-header .widgets-button {
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+}

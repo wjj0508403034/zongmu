@@ -1,0 +1,36 @@
+<div class="widgets-player-bar">
+  <div widgets-progress percent="{{controlBar.percent}}"></div>
+  <div class="control-container" play-rate="{{controlBar.playRate}}">
+    <div class="btn" ng-click="controlBar.play()" ng-show="controlBar.status !== 'play'">
+      <i class="fa fa-play"></i>
+    </div>
+    <div class="btn" ng-click="controlBar.pause()" ng-show="controlBar.status === 'play'">
+      <i class="fa fa-pause"></i>
+    </div>
+    <div class="btn">
+      <i class="fa fa-fast-backward" ng-click="controlBar.back()"></i>
+    </div>
+    <div class="btn">
+      <i class="fa fa-step-backward" ng-click="controlBar.smallback()"></i>
+    </div>
+    <div class="btn">
+      <i class="fa fa-step-forward" ng-click="controlBar.smallforward()"></i>
+    </div>
+    <div class="btn">
+      <i class="fa fa-fast-forward" ng-click="controlBar.forward()"></i>
+    </div>
+    <div class="btn rate" rate="0.5">
+      <i class="fa" ng-click="controlBar.setPlayRate(0.5)">0.5倍</i>
+    </div>
+    <div class="btn rate" rate="1">
+      <i class="fa" ng-click="controlBar.setPlayRate(1)">1倍</i>
+    </div>
+    <div class="btn rate" rate="2">
+      <i class="fa" ng-click="controlBar.setPlayRate(2)">2倍</i>
+    </div>
+
+    <div class="time-info">
+      <span>{{controlBar.currentTime | hour}}</span> | <span>{{controlBar.duration | hour}}</span>
+    </div>
+  </div>
+</div>

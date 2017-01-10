@@ -1,0 +1,51 @@
+.my-tasks-page .search-box {
+  margin-bottom: 10px;
+}
+
+.my-tasks-page .search-box .widgets-button {
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.my-tasks-page .op-select {
+  width: 150px !important;
+  float: left;
+}
+
+.my-tasks-page .property.createtime .create-time-datetimepicker {
+  float: left;
+  margin-right: 50px;
+  width: 200px;
+}
+
+.my-tasks-page .checkbox-item {
+  width: 30%;
+  float: left;
+}
+
+.my-tasks-page .xx-label {
+  float: left;
+  margin-right: 5px;
+}
+
+.my-tasks-page .property .point-input {
+  width: 200px !important;
+  margin-left: 5px;
+}
+
+.my-tasks-page .widgets-table td[name="taskItemNo"] {
+  width: 350px;
+  max-width: 350px;
+  overflow: hidden;
+}
+
+.my-tasks-page .widgets-table td[name="taskItemNo"] a {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

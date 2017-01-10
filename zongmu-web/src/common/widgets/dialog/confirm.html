@@ -1,0 +1,17 @@
+<div class="widgets-dialog-confirm">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>{{ngDialogData.title}}</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    {{ngDialogData.message}}
+  </div>
+  <div class="dialog-tools-bar">
+    <div class="dialog-tools-bar-container">
+      <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="closeThisDialog('cancel')"></div>
+      <div widgets-button text="确定" ng-click="closeThisDialog('ok')"></div>
+    </div>
+  </div>
+</div>

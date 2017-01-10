@@ -1,0 +1,15 @@
+.task-detail-page .tag-item.add {
+  background: white;
+  color: black;
+  border-style: dashed;
+  cursor: pointer;
+  width: 150px;
+}
+
+.task-detail-page .task-tag-list-content{
+  min-height: 50px;
+}
+
+.task-detail-page .task-tag-list-content .tag-items-container{
+  margin-top: 5px;
+}

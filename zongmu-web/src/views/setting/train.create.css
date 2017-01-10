@@ -1,0 +1,5 @@
+.train-new-page .property.writeable .value textarea {
+  width: 100%;
+  height: 350px;
+  resize: vertical;
+}

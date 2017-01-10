@@ -1,0 +1,30 @@
+.widgets-nav {
+  height: 60px;
+  background: #1fa67a;
+}
+
+.widgets-nav ul {
+  height: 100%;
+  margin: 0 auto;
+}
+
+.widgets-nav ul>li {
+  height: 100%;
+  line-height: 60px;
+  display: inline-block;
+  min-width: 100px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0px 10px;
+  color: white;
+}
+
+.widgets-nav ul>li:hover,
+.widgets-nav ul>li.active {
+  background: #1D8C73;
+}
+
+.widgets-nav ul>li a{
+  display: block;
+  color: white;
+}

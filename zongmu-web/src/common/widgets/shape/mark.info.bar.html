@@ -1,0 +1,26 @@
+<div class="widgets-mark-info-bar">
+  <div class="property-info-container" ng-if="markInfo !== undefined && markInfo !== null">
+    <div class="property" ng-show="colorGroup">
+      <label>{{colorGroup.name}}</label>
+      <div class="value">
+        <select ng-model="markInfo.colorTag" ng-change="onColorSelectedChanged(markInfo.colorTag)" ng-options="colorTag.name for colorTag in colorGroup.tags track by colorTag.id"></select>
+      </div>
+    </div>
+    <div class="property" ng-repeat="tag in tags" ng-if="tag.type === 'DROPDOWNBOX'">
+      <label>{{tag.name}}</label>
+      <div class="value">
+        <select ng-model="markInfo.tagDorpdownList[tag.id]" ng-options="item.value for item in tag.items track by item.id">
+        </select>
+      </div>
+    </div>
+    <div class="property" ng-repeat="tag in tags" ng-if="tag.type === 'CHECKBOX'">
+      <label>{{tag.name}}</label>
+      <div ng-repeat="tagItem in tag.items">
+        <div widgets-checkbox ng-model="markInfo.tagCheckBoxList[tagItem.id]" content="{{tagItem.value}}"></div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="markInfo === undefined || markInfo === null">
+    暂时没有信息
+  </div>
+</div>

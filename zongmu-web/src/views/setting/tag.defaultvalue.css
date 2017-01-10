@@ -1,0 +1,15 @@
+.tag-default-value-dialog .content-conatiner.dropdownbox {
+  height: 150px;
+}
+
+.tag-default-value-dialog .content-conatiner.dropdownbox select {
+  width: 100%;
+  height: 40px;
+}
+
+.tag-default-value-dialog .content-conatiner.checkbox,
+.tag-default-value-dialog .content-conatiner.radiobutton {
+  height: 280px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}

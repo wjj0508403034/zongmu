@@ -1,0 +1,103 @@
+.widgets-svg-bar {
+  display: table;
+  position: relative;
+}
+
+.widgets-svg-bar .svg-bar-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0px 3px;
+}
+
+.widgets-svg-bar .mark-layer {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(204, 204, 204, 0.6);
+  z-index: 1001;
+}
+
+.widgets-svg-bar .tools-bar {
+  height: 40px;
+}
+
+.widgets-svg-bar .tools-bar .widgets-button {
+  margin-right: 5px;
+  line-height: 30px;
+  height: 30px;
+}
+
+.widgets-svg-bar .shape-section {
+  padding: 5px;
+}
+
+.widgets-svg-bar .shape-section[active='true'],
+.widgets-svg-bar .shape-section:hover {
+  outline-offset: initial;
+  outline: #1fa67a auto 2px;
+  background: rgba(31, 166, 122, 0.21);
+}
+
+.widgets-svg-bar .shape-section[active='true'] .shape-tools-bar {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.widgets-svg-bar .shape-section[hide='true'] {
+  display: none !important;
+}
+
+.widgets-svg-bar .shape-section .shape-tools-bar {
+  height: 30px;
+  line-height: 29px;
+  border-bottom: 1px solid white;
+  display: none;
+}
+
+.widgets-svg-bar .shape-section .shape-tools-bar label {
+  float: left;
+  line-height: 28px;
+  margin-right: 15px;
+}
+
+.widgets-svg-bar .shape-section .shape-tools-bar .btn {
+  width: 26px;
+  height: 26px;
+  text-align: center;
+  cursor: pointer;
+  float: left;
+  margin-right: 5px;
+  padding: 0;
+  line-height: 26px;
+}
+
+.widgets-svg-bar .shape-section .shape-tools-bar .btn:hover {
+  background: #1FA67A;
+  color: white;
+}
+
+
+/*.widgets-svg-bar .property .key,
+.widgets-svg-bar .property .value {
+  width: 50%;
+}
+
+.widgets-svg-bar .property{
+  margin-top: 0px;
+}*/
+
+.widgets-svg-bar .property label {
+  display: block;
+  height: 10px;
+  line-height: 10px;
+  font-size: 8px;
+}
+
+.widgets-svg-bar .property .value {
+  width: 100%;
+  display: block;
+}

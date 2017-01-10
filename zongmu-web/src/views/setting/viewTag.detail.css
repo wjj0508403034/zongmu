@@ -1,0 +1,21 @@
+.view-tag-detail-page th[name='op'] {
+  width: 150px;
+}
+
+.view-tag-detail-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.view-tag-detail-page th[name='isDefault'] {
+  width: 100px;
+}
+
+.view-tag-detail-page th[name='isDefault'] {
+  text-align: center;
+}
+
+.view-tag-detail-page td[name='isDefault'] {
+  text-align: center;
+  color: #1D8C73;
+}

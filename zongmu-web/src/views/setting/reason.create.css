@@ -1,0 +1,9 @@
+.reason-create-dialog {
+  height: 250px;
+}
+
+.reason-create-dialog textarea {
+  width: 100%;
+  height: 150px;
+  resize: none;
+}

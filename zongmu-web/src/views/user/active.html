@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="user-active-page">
+    <div widgets-top-bar></div>
+    <div widgets-nav></div>
+    <div widgets-page>
+      <div class="box box-form" ng-controller="activeUserController">
+        <div class="box-header">
+          <i class="fa fa-user color-gray"></i>
+          <span class="color-gray">用户注册</span>
+          <span class="char-sepector">/</span>
+          <i class="fa fa-child color-highligth"></i>
+          <span class="color-highligth">用户激活</span>
+        </div>
+        <div class="box-content">
+          <div class="active-message" ng-hide="activeResult.result">
+            <i class="fa fa-remove result-icon"></i>
+            <span>{{activeResult.message}}</span>
+          </div>
+
+          <div class="active-message" ng-show="activeResult.result">
+            <i class="fa fa-check-circle result-icon"></i>
+            <span>账号激活成功。</span><span><a class="login-link" href="login.html">去登录</a></span>
+            <div class="jump-message">页面将会在{{counter}}秒钟跳到登录页面...</div>
+          </div>
+          <div widgets-button text="重新发送激活邮件" ng-hide="activeResult.result || activeResult.errorCode === '20517' || activeResult.errorCode === '20519'" huoyun-append-class="form-submit-button" ng-click="onSubmit()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

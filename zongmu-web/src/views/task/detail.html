@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="task-detail-page" ng-controller="taskItemDetailController">
+    <div widgets-top-bar></div>
+    <div widgets-nav current="home"></div>
+    <div widgets-page ng-if="task">
+      <p class="page-title" title="{{task | taskFullName}}">{{task | taskFullName}}</p>
+      <div class="section">
+        <div class="section-header">
+          <i class="fa fa-file-video-o"></i><span>详细信息</span>
+          <div class="section-action-bar">
+            <div widgets-button text="去查看" ng-show="task.status !== 'NEW'" ng-click="onContinueMarkButtonClick()"></div>
+            <div widgets-button text="接任务" ng-show="task.status === 'NEW'" ng-click="onAcceptTaskClick()"></div>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="property">
+            <label class="key">任务编号</label>
+            <div class="value">{{task.taskItemNo}}</div>
+          </div>
+          <div class="property">
+            <label class="key">任务名称</label>
+            <div class="value">{{task | taskFullName}}</div>
+          </div>
+          <div class="property">
+            <label class="key">任务类型</label>
+            <div class="value">{{task.taskType | taskType}}</div>
+          </div>
+          <div class="property">
+            <label class="key">创建时间</label>
+            <div class="value">{{task.createTime | joda | date:'yyyy-MM-dd HH:mm'}}</div>
+          </div>
+          <div class="property">
+            <label class="key">修改时间</label>
+            <div class="value">{{task.updateTime | joda | date:'yyyy-MM-dd HH:mm'}}</div>
+          </div>
+          <div class="property">
+            <label class="key">奖励</label>
+            <div class="value"><i class="fa fa-database gold"></i><span>{{task.point}}</span></div>
+          </div>
+          <div class="property">
+            <label class="key">任务状态</label>
+            <div class="value">{{task.status | taskItemStatus}}</div>
+          </div>
+          <div class="property" ng-if="role === 'ADMIN'">
+            <label class="key">FTP</label>
+            <div class="value">
+              <a target="_blank" ng-href="ftp://{{task.ftpFolder}}">ftp://{{task.ftpFolder}}</a>
+            </div>
+          </div>
+          <div class="property" ng-if="task.taskMemo">
+            <label class="key">任务描述</label>
+            <div class="value">{{task.taskMemo}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header">
+          <i class="fa fa-history"></i><span>标注历史</span>
+        </div>
+        <div class="section-content">
+          <div widgets-table columns="taskRecordColumns" dataset="task.taskRecords" empty-text="暂时还没有标注记录">
+            <div class="user-cell" cell-template column-index="1">
+              {{rowData.userName}}
+            </div>
+            <div class="user-cell" cell-template column-index="2">
+              {{rowData.startTime | joda | date:'yyyy-MM-dd HH:mm'}}
+            </div>
+            <div class="user-cell" cell-template column-index="3">
+              {{rowData.endTime | joda | date:'yyyy-MM-dd HH:mm'}}
+            </div>
+            <div class="user-cell" cell-template column-index="4">
+              {{rowData.status | taskRecordStatus}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section" ng-if="canReview">
+        <div class="section-header">
+          <i class="fa fa-file-text-o"></i><span>审核历史</span>
+        </div>
+        <div class="section-content">
+          <div widgets-table columns="reviewRecordColumns" dataset="task.reviewRecords" empty-text="暂时还没有审核记录">
+            <div class="user-cell" cell-template column-index="2">
+              {{rowData.startTime | joda | date:'yyyy-MM-dd HH:mm'}}
+            </div>
+            <div class="user-cell" cell-template column-index="3">
+              {{rowData.endTime | joda | date:'yyyy-MM-dd HH:mm'}}
+            </div>
+            <div class="user-cell" cell-template column-index="4">
+              {{rowData.status | reviewRecordStatus}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

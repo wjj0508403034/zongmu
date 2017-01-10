@@ -1,0 +1,11 @@
+<div class="widgets-bread-crumb">
+  <ul>
+    <li ng-repeat="item in items">
+      <a ng-href="{{item.href}}" ng-if="!$last">
+        {{item.text}}
+      </a>
+      <i class="fa fa-angle-right" ng-if="!$last"></i>
+      <span class="last-bread-crumb" ng-if="$last">{{item.text}}</span>
+    </li>
+  </ul>
+</div>

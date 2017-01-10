@@ -1,0 +1,24 @@
+<div class="choose-tag-dialog">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>选择</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="tag-item-container selectedall">
+      <div widgets-checkbox ng-model="allSelected" content="全选"></div>
+    </div>
+    <div class="tag-items-container">
+      <div class="tag-item-container" ng-repeat="tag in tags">
+        <div widgets-checkbox ng-model="tag.isSelected" content="{{tag.name}}"></div>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-tools-bar">
+    <div class="dialog-tools-bar-container">
+      <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="closeThisDialog('cancel')"></div>
+      <div widgets-button text="确定" ng-click="onOkClick()"></div>
+    </div>
+  </div>
+</div>

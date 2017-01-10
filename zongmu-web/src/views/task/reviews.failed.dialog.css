@@ -1,0 +1,7 @@
+.reviews-failed-dialog {
+  height: 250px;
+}
+
+.reviews-failed-dialog textarea {
+  resize: none !important;
+}

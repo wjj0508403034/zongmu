@@ -1,0 +1,54 @@
+.widgets-top-bar {
+  height: 60px;
+  line-height: 60px;
+}
+
+.widgets-top-bar>.left {
+  float: left;
+  width: 60%;
+}
+
+.widgets-top-bar>.left .title-container {
+  font-size: 28px;
+  color: #1D8C73;
+  padding: 0 50px;
+  font-weight: bold;
+}
+
+.widgets-top-bar>.right {
+  float: right;
+  width: 40%;
+}
+
+.widgets-top-bar>.right .sign-bar,
+.widgets-top-bar>.right .info-bar {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.widgets-top-bar>.right .info-bar .logout,
+.widgets-top-bar>.right .sign-bar .register {
+  position: absolute;
+  width: 60px;
+  text-align: center;
+  right: 50px;
+}
+
+.widgets-top-bar>.right .info-bar .user-info,
+.widgets-top-bar>.right .sign-bar .login {
+  position: absolute;
+  right: 120px;
+  width: 60px;
+  text-align: center;
+}
+
+.widgets-top-bar>.right .info-bar .user-info {
+  text-align: right;
+  width: inherit;
+}
+
+.widgets-top-bar>.right .info-bar .user-info .user-name::before {
+  content: " ";
+  width: 3px;
+}

@@ -1,0 +1,34 @@
+.widgets-foot-bar {
+  height: 80px;
+  width: 100%;
+  padding: 10px 0px;
+  color: #666666;
+  line-height: 30px;
+  text-align: center;
+}
+
+.widgets-foot-bar ul {
+  height: 30px;
+  display: inline-table;
+}
+
+.widgets-foot-bar ul li {
+  height: 100%;
+  display: inline-block;
+  cursor: pointer;
+  padding: 0px 10px;
+}
+
+.widgets-foot-bar ul li a {
+  text-decoration: underline;
+}
+
+.widgets-foot-bar .addition-info {
+  height: 30px;
+  text-align: center;
+}
+
+.widgets-foot-bar .addition-info .record::before {
+  content: "  ";
+  padding-left: 5px;
+}

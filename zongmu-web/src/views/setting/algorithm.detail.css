@@ -1,0 +1,30 @@
+.algorithm-detail-page .box {
+  min-height: 400px;
+}
+
+.algorithm-detail-page .readonly-panel {
+  padding: 5px 0px;
+}
+
+.algorithm-detail-page th[name='name'] {
+  width: 350px;
+}
+
+.algorithm-detail-page th[name='op'] {
+  width: 180px;
+}
+
+.algorithm-detail-page td[name='op'] .widgets-link-button {
+  width: 50px;
+  display: inline-block;
+}
+
+.algorithm-detail-page .task-tag-list,
+.algorithm-detail-page .color-tag-list {
+  margin-top: 50px;
+}
+
+.algorithm-detail-page .color-block {
+  width: 80px;
+  height: 30px;
+}

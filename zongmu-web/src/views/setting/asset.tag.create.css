@@ -1,0 +1,9 @@
+.asset-tag-create-dialog {
+  height: 300px;
+}
+
+.asset-tag-create-dialog textarea {
+  width: 100%;
+  resize: none;
+  height: 120px;
+}

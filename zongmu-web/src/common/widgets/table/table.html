@@ -1,0 +1,19 @@
+<div class="widgets-table">
+  <table>
+    <thead>
+      <tr>
+        <!--<th ng-repeat="column in columns" name="{{column.name}}">
+          {{column.text}}
+        </th>-->
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='empty-mask' ng-if="!dataset || dataset.length === 0">
+        <td colspan="{{columns.length}}">
+          <div><i class='fa fa-inbox'></i><span>{{emptyText}}</span></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div widgets-pagination ng-show="pageData" total-page="{{pageData.totalPage}}" page-index="{{pageData.pageIndex}}"></div>
+</div>

@@ -1,0 +1,22 @@
+.widgets-bread-crumb {
+  height: 40px;
+  line-height: 40px;
+}
+
+.widgets-bread-crumb li {
+  display: inline-block;
+}
+
+.widgets-bread-crumb li a,
+.widgets-bread-crumb li i {
+  color: #1FA67A;
+}
+
+.widgets-bread-crumb li i::after {
+  content: " ";
+  margin-right: 5px;
+}
+
+.widgets-bread-crumb .last-bread-crumb {
+  color: #555;
+}

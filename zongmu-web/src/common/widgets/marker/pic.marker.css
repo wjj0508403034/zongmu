@@ -1,0 +1,25 @@
+.widgets-pic-marker {
+  position: relative;
+  z-index: 1000;
+}
+
+.widgets-pic-marker img {
+  width: 100%;
+}
+
+.widgets-pic-marker div[widgets-svg-draw] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.widgets-pic-marker div[widgets-svg-story-board] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1001;
+}

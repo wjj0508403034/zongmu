@@ -1,0 +1,21 @@
+.asset-view-tag-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.asset-view-tag-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.asset-view-tag-setting-page th[name='isDefault'] {
+  width: 100px;
+}
+
+.asset-view-tag-setting-page th[name='isDefault'] {
+  text-align: center;
+}
+
+.asset-view-tag-setting-page td[name='isDefault'] {
+  text-align: center;
+  color: #1D8C73;
+}

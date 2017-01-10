@@ -1,0 +1,46 @@
+.asset-list-page .search-box {
+  margin-bottom: 10px;
+}
+
+.asset-list-page .search-box .widgets-button {
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.asset-list-page .asset-type-select {
+  width: 150px !important;
+}
+
+.asset-list-page .op-select {
+  width: 150px !important;
+  float: left;
+}
+
+.asset-list-page .property.createtime .create-time-datetimepicker {
+  float: left;
+  margin-right: 50px;
+  width: 200px;
+}
+
+.asset-list-page .record-length-input {
+  width: 200px !important;
+  margin-left: 5px;
+}
+
+.asset-list-page .checkbox-item {
+  width: 30%;
+  float: left;
+}
+
+.asset-list-page .xx-label {
+  float: left;
+  margin-right: 5px;
+}
+
+.asset-list-page .property .point-input {
+  width: 200px !important;
+  margin-left: 5px;
+}

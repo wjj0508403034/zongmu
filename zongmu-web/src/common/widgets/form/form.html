@@ -1,0 +1,10 @@
+<div class="widgets-form">
+  <div class="form-header">
+    {{title}}
+  </div>
+  <div class="form-body clearfix">
+    <div class="input-group-container" ng-repeat="field in fields">
+      <div widgets-input-group label="{{field.label}}" ng-model="data[field.name]" type="{{field.type}}" requried="{{field.requried}}"></div>
+    </div>
+  </div>
+</div>

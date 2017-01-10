@@ -1,0 +1,13 @@
+.tag-setting-page td .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.tag-setting-page td {
+  min-width: 100px;
+  height: 40px;
+}
+
+.tag-setting-page th[name='op'] {
+  width: 150px;
+}

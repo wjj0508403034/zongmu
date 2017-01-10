@@ -1,0 +1,20 @@
+.color-setting-page th[name='op']{
+  width: 100px;
+}
+
+.color-setting-page th[name='color']{
+  width: 200px;
+}
+
+.color-setting-page .color-block{
+  height: 20px;
+  width: 100px;
+}
+
+.color-setting-page tr{
+  min-height: 40px;
+}
+
+.color-setting-page td .widgets-link-button{
+  margin: 5px 0px;
+}

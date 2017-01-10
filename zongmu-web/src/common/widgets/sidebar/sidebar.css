@@ -1,0 +1,41 @@
+.widgets-sidebar {
+  width: 200px;
+  border: 1px solid #1FA67A;
+  border-top-width: 5px;
+}
+
+.widgets-sidebar .group {
+  margin: 5px;
+  border-bottom: 1px solid #1FA67A;
+}
+
+.widgets-sidebar .group:last-child {
+  border-bottom: none;
+}
+
+.widgets-sidebar .group .header {
+  height: 40px;
+  line-height: 40px;
+  font-weight: bolder;
+  color: #1D8C73;
+}
+
+.widgets-sidebar .group ul {
+  padding: 0 30px;
+}
+
+.widgets-sidebar .group ul li {
+  height: 40px;
+  line-height: 40px;
+}
+
+.widgets-sidebar .group ul li.active {
+  color: #1D8C73;
+}
+
+.widgets-sidebar .group ul li a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}

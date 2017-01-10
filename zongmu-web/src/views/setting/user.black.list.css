@@ -1,0 +1,7 @@
+.user-black-list-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.user-black-list-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+}

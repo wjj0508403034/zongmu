@@ -1,0 +1,30 @@
+.asset-upload-page .upload-form-container{
+  position: relative;
+}
+
+.asset-upload-page .mark-layer{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(214, 209, 209, 0.8);
+  z-index: 1000;
+}
+
+.asset-upload-page .widgets-progress{
+  height: 40px;
+}
+
+.asset-upload-page .widgets-progress .background-container{
+  background: #CCCCCC;
+}
+
+.asset-upload-page .widgets-progress .huoyun-progress-bar{
+  background: #1FA67A;
+  width: 0px;
+}
+
+.asset-upload-page .widgets-progress .position-btn{
+  display: none;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="asset-tag-setting-page" ng-controller="settingController">
+    <div widgets-top-bar></div>
+    <div widgets-nav current="setting"></div>
+    <div widgets-page>
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="setting-general" current-item="asset-tag-settings">
+        </div>
+      </div>
+      <div class="page-right" ng-controller="assetViewTagController">
+        <div widgets-bread-crumb>
+        </div>
+        <div class="tools-bar">
+          <div widgets-button text="新建视频属性" ng-click="createTag()"></div>
+        </div>
+        <div class="box">
+          <div class="box-header">
+            <i class="fa fa-tags"></i>
+            <span>视频属性列表</span>
+          </div>
+          <div class="box-content">
+            <div widgets-table columns="columns" dataset="items" empty-text="你还没有添加属性">
+              <div cell-template column-index="1">
+                <div widgets-link-button text="查看" ng-click="$superScope.onViewTagButtonClicked(rowData)"></div>
+                <div widgets-link-button text="修改" ng-click="$superScope.onUpdateViewTagButtonClicked(rowData)"></div>
+                <div widgets-link-button text="删除" ng-click="$superScope.onDeleteButtonClick(rowData)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div widgets-foot-bar></div>
+  </body>
+
+</html>

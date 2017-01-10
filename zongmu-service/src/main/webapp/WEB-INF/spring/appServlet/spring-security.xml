@@ -1,0 +1,83 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<http pattern="/resources/**" security="none" />
+	<!-- <http pattern="/page/**" security="none" /> -->
+	<http pattern="/page/train/index.html*" security="none" />
+	<http pattern="/page/home/index.html*" security="none" />
+	<http pattern="/page/user/login.html*" security="none" />
+	<http pattern="/page/user/forget.password.html*" security="none" />
+	<http pattern="/page/user/register.html*" security="none" />
+	<http pattern="/page/user/forget.reset.password.html*" security="none" />
+	<http pattern="/page/user/active.html*" security="none" />
+	<http pattern="/page/user/forget.password.info.html*" security="none" />
+	<http pattern="/page/user/register.info.html*" security="none" />
+	<http pattern="/page/help/index.html*" security="none" />
+
+	
+	<http pattern="/register*" security="none" />
+	<http pattern="/active*" security="none" />
+	<http pattern="/reactive*" security="none" />
+	<http pattern="/login*" security="none" />
+	<http pattern="/forgetPassword*" security="none" />
+	<http pattern="/forgetResetPassword*" security="none" />
+	<http pattern="/trains**" security="none" />
+	<http pattern="/tasks*" security="none" />
+	<http pattern="/algorithms*" security="none" />
+	<http pattern="/assetTags*" security="none" />
+	<http pattern="/assets/**" security="none" />
+	<http pattern="/tasks/cutFinished*" security="none" />
+	<http pattern="/tasks/cutFailure*" security="none" />
+	<http pattern="/tasks/cutSuccess*" security="none" />
+	<http pattern="/viewtags/listAll*" security="none" />
+	<http pattern="/assetViewTags" security="none" />
+	<http pattern="/tasks/queryTasks*" security="none" />
+	
+	
+
+	<http auto-config="true" entry-point-ref="appAuthenticationEntryPoint">
+		<session-management>
+			<concurrency-control max-sessions="1" />
+		</session-management>
+		<intercept-url pattern="/**" access="hasRole('USER')" />
+		<form-login login-page="/page/user/login.html"
+			login-processing-url="/login" default-target-url="/page/home/index.html"
+			authentication-failure-url="/login?error" username-parameter="email"
+			password-parameter="password" />
+		<logout logout-success-url="/page/home/index.html" />
+		<!-- enable csrf protection -->
+		<csrf disabled="true"/>
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref='userDetailsService' />
+	</authentication-manager>
+
+
+
+	<beans:bean id="exceptionTranslationFilter"
+		class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<beans:constructor-arg ref="appAuthenticationEntryPoint">
+		</beans:constructor-arg>
+		<!-- <beans:property name="authenticationEntryPoint" ref="appAuthenticationEntryPoint" 
+			/> -->
+	</beans:bean>
+
+	<beans:bean id="appAuthenticationEntryPoint"
+		class="com.zongmu.service.configuration.AppAuthenticationEntryPoint">
+	</beans:bean>
+
+	<!-- <bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint"> 
+		<property name="loginFormUrl" value="/login.jsp" /> </bean> -->
+
+	<!-- <beans:bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl"> 
+		<beans:property name="errorPage" value="/accessDenied.htm" /> </beans:bean> -->
+
+	<beans:bean id="userDetailsService"
+		class="com.zongmu.service.dto.user.UserDetailsService"></beans:bean>
+
+</beans:beans>

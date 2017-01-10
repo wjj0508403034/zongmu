@@ -1,0 +1,15 @@
+.widgets-mark-info-bar .property label {
+  display: block;
+  height: 30px;
+  line-height: 30px;
+}
+
+.widgets-mark-info-bar .property .value {
+  width: 100%;
+  display: block;
+}
+
+.widgets-mark-info-bar {
+  padding: 0 5px;
+  overflow-x: hidden;
+}

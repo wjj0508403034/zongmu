@@ -1,0 +1,32 @@
+.asset-detail-page .task-list {
+  margin-top: 50px;
+}
+
+.asset-detail-page .tag-item.add {
+  background: white;
+  color: black;
+  border-style: dashed;
+  cursor: pointer;
+  width: 150px;
+}
+
+.asset-detail-page .task-list .expand-btn {
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+}
+
+.asset-detail-page .widgets-table td[name="taskName"] {
+  width: 350px;
+  max-width: 350px;
+  overflow: hidden;
+}
+
+.asset-detail-page .widgets-table td[name="taskName"] a {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

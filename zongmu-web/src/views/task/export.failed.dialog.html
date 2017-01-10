@@ -1,0 +1,21 @@
+<div class="export-failed-dialog">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>导出失败</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="dialog-content-container">
+      <div ng-repeat="taskItem in taskItems">
+        <div class="column-1">{{taskItem.taskItemNo}}</div>
+        <div class="column-2">{{taskItem.status | taskItemStatus}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-tools-bar">
+    <div class="dialog-tools-bar-container">
+      <div widgets-button text="确定" ng-click="closeThisDialog('cancel')"></div>
+    </div>
+  </div>
+</div>

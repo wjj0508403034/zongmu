@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+
+  </head>
+
+  <body class="asset-list-page" ng-controller="baseTaskController">
+    <div widgets-loading text="{{loadingText}}" show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav current="mytask"></div>
+    <div widgets-page class="my-assets">
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="task-management" current-item="upload-task-record">
+        </div>
+      </div>
+      <div class="page-right" ng-controller="assetController">
+        <div widgets-bread-crumb>
+        </div>
+        <div class="tools-bar">
+          <div widgets-button text="我要上传" ng-click="onUploadButtonClick()"></div>
+          <div widgets-button text="{{expandSearch ? '收起搜索条件' : '展开搜索条件'}}" ng-click="onExpandButtonClick()"></div>
+        </div>
+        <div class="box search-box" ng-show="expandSearch">
+          <div class="box-header">
+            <i class="fa fa-search"></i>
+            <span>搜索条件</span>
+            <div widgets-button text="搜索" ng-click="onSearchButtonClick()"></div>
+            <div widgets-button text="清空搜索条件" ng-click="onClearSearchButtonClick()"></div>
+          </div>
+          <div class="box-content">
+            <div class="property">
+              <label class="key">任务名称</label>
+              <div class="value">
+                <input type="text" ng-model="queryParams.taskName">
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">任务编号</label>
+              <div class="value">
+                <input type="text" ng-model="queryParams.taskItemNo">
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">视频名称</label>
+              <div class="value">
+                <input type="text" ng-model="queryParams.assetName">
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">视频编号</label>
+              <div class="value">
+                <input type="text" ng-model="queryParams.assetNo">
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">上传记录类型</label>
+              <div class="value">
+                <div class="checkbox-item" ng-repeat="item in assetTypes">
+                  <div widgets-checkbox ng-model="item.checked" content="{{item.text}}"></div>
+                </div>
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">算法类型</label>
+              <div class="value">
+                <div class="checkbox-item" ng-repeat="item in algorithms">
+                  <div widgets-checkbox ng-model="item.checked" content="{{item.name}}"></div>
+                </div>
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">任务状态</label>
+              <div class="value">
+                <div class="checkbox-item" ng-repeat="item in taskStatus">
+                  <div widgets-checkbox ng-model="item.checked" content="{{item.text}}"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="property createtime">
+              <label class="key">上传时间</label>
+              <div class="value">
+                <span class="xx-label">从</span>
+                <div class="create-time-datetimepicker">
+                  <div class="dropdown">
+                    <a class="dropdown-toggle" id="uploadDate-from" role="button" data-toggle="dropdown" data-target="#" href="#">
+                      <div class="input-group">
+                        <input type="text" class="form-control" readonly value="{{queryParams.uploadDate.from | date:'yyyy-MM-dd HH:mm' }}">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <datetimepicker data-ng-model="queryParams.uploadDate.from" data-datetimepicker-config="{ dropdownSelector: '#uploadDate-from',minuteStep:1 }" />
+                    </ul>
+                  </div>
+                </div>
+                <span class="xx-label">到</span>
+                <div class="create-time-datetimepicker">
+                  <div class="dropdown">
+                    <a class="dropdown-toggle" id="uploadDate-to" role="button" data-toggle="dropdown" data-target="#" href="#">
+                      <div class="input-group">
+                        <input type="text" class="form-control" readonly value="{{queryParams.uploadDate.to | date:'yyyy-MM-dd HH:mm' }}">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <datetimepicker data-ng-model="queryParams.uploadDate.to" data-datetimepicker-config="{ dropdownSelector: '#uploadDate-to',minuteStep:1 }" />
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">录制时长</label>
+              <div class="value">
+                <select class="op-select" ng-model="queryParams.videoLength.op" ng-options="item.value as item.text for item in ops">
+                  <option></option>
+                </select>
+                <input class="point-input" type="number" ng-model="queryParams.videoLength.value" />
+              </div>
+            </div>
+            <div class="property createtime">
+              <label class="key">任务完成的时间</label>
+              <div class="value">
+                <span class="xx-label">从</span>
+                <div class="create-time-datetimepicker">
+                  <div class="dropdown">
+                    <a class="dropdown-toggle" id="taskFinishDate-from" role="button" data-toggle="dropdown" data-target="#" href="#">
+                      <div class="input-group">
+                        <input type="text" class="form-control" readonly value="{{queryParams.taskFinishDate.from | date:'yyyy-MM-dd HH:mm' }}">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <datetimepicker data-ng-model="queryParams.taskFinishDate.from" data-datetimepicker-config="{ dropdownSelector: '#taskFinishDate-from',minuteStep:1 }" />
+                    </ul>
+                  </div>
+                </div>
+                <span class="xx-label">到</span>
+                <div class="create-time-datetimepicker">
+                  <div class="dropdown">
+                    <a class="dropdown-toggle" id="taskFinishDate-to" role="button" data-toggle="dropdown" data-target="#" href="#">
+                      <div class="input-group">
+                        <input type="text" class="form-control" readonly value="{{queryParams.taskFinishDate.to | date:'yyyy-MM-dd HH:mm' }}">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <datetimepicker data-ng-model="queryParams.taskFinishDate.to" data-datetimepicker-config="{ dropdownSelector: '#taskFinishDate-to',minuteStep:1 }" />
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="property createtime">
+              <label class="key">录制时间</label>
+              <div class="value">
+                <span class="xx-label">从</span>
+                <div class="create-time-datetimepicker">
+                  <div class="dropdown">
+                    <a class="dropdown-toggle" id="videoRecordDate-from" role="button" data-toggle="dropdown" data-target="#" href="#">
+                      <div class="input-group">
+                        <input type="text" class="form-control" readonly value="{{queryParams.videoRecordDate.from | date:'yyyy-MM-dd HH:mm' }}">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <datetimepicker data-ng-model="queryParams.videoRecordDate.from" data-datetimepicker-config="{ dropdownSelector: '#videoRecordDate-from',minuteStep:1 }" />
+                    </ul>
+                  </div>
+                </div>
+                <span class="xx-label">到</span>
+                <div class="create-time-datetimepicker">
+                  <div class="dropdown">
+                    <a class="dropdown-toggle" id="videoRecordDate-to" role="button" data-toggle="dropdown" data-target="#" href="#">
+                      <div class="input-group">
+                        <input type="text" class="form-control" readonly value="{{queryParams.videoRecordDate.to | date:'yyyy-MM-dd HH:mm' }}">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                      <datetimepicker data-ng-model="queryParams.videoRecordDate.to" data-datetimepicker-config="{ dropdownSelector: '#videoRecordDate-to',minuteStep:1 }" />
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="box-group" expand="{{assetButtonExpand}}">
+              <div class="box-group-header">
+                <div class="title">视频属性</div>
+                <div widgets-button text="{{assetButtonExpand ? '收起':'展开'}}" ng-click="assetButtonExpand =  !assetButtonExpand"></div>
+              </div>
+              <div class="box-group-content">
+                <div ng-repeat="viewTag in viewTags">
+                  <div class="property">
+                    <label class="key">{{viewTag.name}}</label>
+                    <div class="value">
+                      <div class="checkbox-item" ng-repeat="item in viewTag.items">
+                        <div widgets-checkbox ng-model="item.checked" content="{{item.name}}"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="box-group" expand="{{taskViewButtonExpand}}">
+              <div class="box-group-header">
+                <div class="title">场景属性</div>
+                <div widgets-button text="{{taskViewButtonExpand ? '收起':'展开'}}" ng-click="taskViewButtonExpand =  !taskViewButtonExpand"></div>
+              </div>
+              <div class="box-group-content">
+                <div ng-repeat="viewTag in taskViewTags">
+                  <div class="property">
+                    <label class="key">{{viewTag.name}}({{viewTag.algorithm.name}})</label>
+                    <div class="value">
+                      <div class="checkbox-item" ng-repeat="item in viewTag.items">
+                        <div widgets-checkbox ng-model="item.checked" content="{{item.name}}"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-header">
+            <i class="fa fa-cloud-upload"></i>
+            <span>我的上传记录</span>
+          </div>
+          <div class="box-content">
+            <div class="asset-record-list">
+              <div widgets-table columns="columns" dataset="dataset" page-data="pageData" empty-text="没有上传记录">
+                <div class="assetNo-cell" cell-template column-index="0">
+                  <a href="asset.detail.html?assetNo={{rowData.assetNo}}">{{cellData}}</a>
+                </div>
+                <div cell-template column-index="1">
+                  {{cellData | uploadType}}
+                </div>
+                <div class="file-size-cell" cell-template column-index="2">
+                  {{cellData | joda | date:'yyyy-MM-dd HH:mm'}}
+                </div>
+                <div cell-template column-index="3">
+                  {{rowData["recordLength"] | timeString }}
+                </div>
+                <div cell-template column-index="5">
+                  <div widgets-link-button text="删除" ng-click="$superScope.onDeleteButtonClick(rowData)"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../../resources/libs/evol-colorpicker.min.css">
+    <link rel="stylesheet" href="../../../resources/libs/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../resources/libs/huoyun.ui.css">
+    <link rel="stylesheet" href="../../../resources/libs/ngDialog-theme-default.min.css">
+    <link rel="stylesheet" href="../../../resources/libs/ngDialog.min.css">
+    <link rel="stylesheet" href="../../../resources/libs/jquery-ui/jquery-ui.min.css">
+    <link rel="stylesheet" href="../../../resources/app/app.css">
+    <!-- endinject -->
+  </head>
+
+  <body class="pic-mark-page" ng-controller="markPicController">
+    <div widgets-top-bar></div>
+    <div widgets-nav current="home"></div>
+    <div widgets-page>
+      <div widgets-bread-crumb>
+      </div>
+      <p class="page-title">{{task | taskFullName}}</p>
+      <div class="section">
+        <div class="section-header">
+          <i class="fa fa-file-video-o"></i><span>图片标记信息</span>
+          <div class="section-action-bar">
+            <div widgets-button text="开始标注" ng-click="onStartClick()" ng-hide="isEdit"></div>
+            <div widgets-button text="保存" ng-click="onSaveClick()" ng-show="isEdit"></div>
+            <div widgets-button text="取消" ng-click="onCancelClick()" ng-show="isEdit"></div>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="container">
+            <div class="tools-bar" ng-show="isEdit">
+              <div class="title">标注工具栏</div>
+              <div title="选取工具" ng-click="svgDrawObj.disableDrawing()" ng-class="svgDrawObj.readonly? 'icon-button active': 'icon-button'">
+                <i class="fa fa-mouse-pointer"></i>
+              </div>
+              <div title="画图工具" ng-click="svgDrawObj.enableDrawing()" ng-class="svgDrawObj.readonly? 'icon-button': 'icon-button active'">
+                <i class="fa fa-pencil"></i>
+              </div>
+              <div class="icon-button" title="设置属性" ng-click="onSetAttrClick()" ng-disabled="!svgDrawObj.readonly">
+                <i class="fa fa-tags"></i>
+              </div>
+              <div class="icon-button" title="删除" ng-click="onDeleteClick()" ng-disabled="!svgDrawObj.readonly">
+                <i class="fa fa-trash-o"></i>
+              </div>
+            </div>
+            <div class="pic-marker-container">
+              <div widgets-pic-marker obj="svgDrawObj"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div widgets-foot-bar></div>
+    <!-- inject:js -->
+    <script src="../../../resources/libs/jquery-2.1.3.min.js"></script>
+    <script src="../../../resources/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../../resources/libs/angular.js"></script>
+    <script src="../../../resources/libs/evol-colorpicker.js"></script>
+    <script src="../../../resources/libs/huoyun.ui.js"></script>
+    <script src="../../../resources/libs/ngDialog.min.js"></script>
+    <script src="../../../resources/libs/purl.js"></script>
+    <script src="../../../resources/libs/svg.js"></script>
+    <script src="../../../resources/app/app.js"></script>
+    <!-- endinject -->
+  </body>
+
+</html>

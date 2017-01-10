@@ -1,0 +1,9 @@
+<div class="widgets-pagination">
+  <div class="widgets-pagination-container" ng-show="totalPage !== '0'">
+    <div widgets-button text="首页" class="prev-button" ng-disabled="pageIndex === '0'" ng-click="onFirstButtonClicked()"></div>
+    <div widgets-button text="上一页" class="prev-button" ng-disabled="pageIndex === '0'" ng-click="onPreviousButtonClicked()"></div>
+    <div widgets-button text="{{item.index}}" ng-class="item.current ? 'index-button active' : 'index-button'" ng-repeat="item in items" ng-click="onIndexButtonClicked(item.index - 1)"></div>
+    <div widgets-button text="下一页" class="next-button" ng-disabled="disableLast()"  ng-click="onNextButtonClicked()"></div>
+    <div widgets-button text="最后一页" class="prev-button" ng-disabled="disableLast()"  ng-click="onLastButtonClicked()"></div>
+  </div>
+</div>

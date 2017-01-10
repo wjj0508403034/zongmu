@@ -1,0 +1,44 @@
+.widgets-checkbox {
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  cursor: pointer;
+}
+
+.widgets-checkbox>.checkbox-icon {
+  width: 20px;
+  height: 100%;
+  position: absolute;
+  color: #666;
+}
+
+.widgets-checkbox>.checkbox-icon .check-font {
+  display: none;
+}
+
+.widgets-checkbox>.checkbox-icon>i {
+  line-height: 40px;
+  font-size: 20px;
+}
+
+.widgets-checkbox.checked>.checkbox-icon {
+  color: #1fa67a;
+}
+
+.widgets-checkbox.checked>.checkbox-icon .check-font {
+  display: inherit;
+}
+
+.widgets-checkbox.checked>.checkbox-icon .uncheck-font {
+  display: none;
+}
+
+.widgets-checkbox>.checkbox-content {
+  position: absolute;
+  left: 25px;
+  right: 5px;
+}
+
+.widgets-checkbox[disabled="disabled"]>.checkbox-icon {
+  color: #ccc !important;
+}

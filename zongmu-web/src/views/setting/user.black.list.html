@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="user-black-list-setting-page" ng-controller="settingController">
+    <div widgets-top-bar></div>
+    <div widgets-nav current="setting"></div>
+    <div widgets-page>
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="user-profile" current-item="black-user-list">
+        </div>
+      </div>
+      <div class="page-right" ng-controller="blackUserListController">
+        <div widgets-bread-crumb>
+        </div>
+        <div class="box">
+          <div class="box-header">
+            <i class="fa fa-users"></i>
+            <span>黑名单列表</span>
+          </div>
+          <div class="box-content">
+            <div widgets-table columns="columns" dataset="users" page-data="pageData" empty-text="黑名单列表为空">
+              <div cell-template column-index="1">
+                <div widgets-link-button text="移除黑名单" ng-click="$superScope.onRemoveBlackButtonClick(rowData)" ng-if="rowData.id !== 1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="train-new-page" ng-controller="settingController">
+    <div widgets-loading text="正在保存，请稍等..." show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav current="setting"></div>
+    <div widgets-page>
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="setting-general" current-item="train-settings">
+        </div>
+      </div>
+      <div class="page-right" ng-controller="trainCreateController">
+        <div widgets-bread-crumb>
+        </div>
+        <div class="box">
+          <div class="box-header">
+            <i class="fa fa-cloud-upload"></i>
+            <span>{{title}}</span>
+          </div>
+          <div class="box-content">
+            <div class="property">
+              <label class="key">文档名称</label>
+              <div class="value">
+                <input type="text" ng-model="train.subject" />
+              </div>
+            </div>
+            <div class="property writeable">
+              <label class="key">文档内容</label>
+              <div class="value">
+                <textarea ng-model="train.body"></textarea>
+              </div>
+            </div>
+            <div class="tools-bar">
+              <div widgets-button text="确定" ng-click="onSaveButtonClick()"></div>
+              <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="onCancelButtonClick()"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

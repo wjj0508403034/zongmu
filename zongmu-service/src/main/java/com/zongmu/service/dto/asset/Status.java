@@ -1,0 +1,6 @@
+package com.zongmu.service.dto.asset;
+
+public enum Status {
+
+	UPLOADING, UPLOADFAILED, UPLOADSUCCESS, COMPRESSING, COMPRESSFAILED, COMPRESSSUCCESS
+}

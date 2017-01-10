@@ -1,0 +1,20 @@
+.export-failed-dialog .dialog-content {
+  height: 300px;
+}
+
+.export-failed-dialog .dialog-content-container {
+  height: 300px;
+  overflow: scroll;
+}
+
+.export-failed-dialog .dialog-content-container .column-1 {
+  float: left;
+  width: 60%;
+  line-height: 20px;
+}
+
+.export-failed-dialog .dialog-content-container .column-2 {
+  float: left;
+  width: 40%;
+  line-height: 20px;
+}

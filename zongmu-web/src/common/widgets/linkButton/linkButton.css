@@ -1,0 +1,8 @@
+.widgets-link-button {
+  color: #1D8C73;
+  cursor: pointer;
+}
+
+.widgets-link-button:hover {
+  text-decoration: underline;
+}

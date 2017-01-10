@@ -1,0 +1,18 @@
+.choose-tag-dialog {
+  height: 400px;
+}
+
+.choose-tag-dialog .tag-items-container {
+  height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: block;
+}
+
+.choose-tag-dialog .tag-item-container {
+  border-bottom: 1px dashed #333333;
+}
+
+.choose-tag-dialog .tag-item-container.selectedall{
+  border-bottom: 1px solid #333333;
+}

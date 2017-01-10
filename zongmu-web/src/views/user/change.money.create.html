@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+
+  </head>
+
+  <body class="change-money-create-page" ng-controller="baseTaskController">
+    <div widgets-loading text="{{loadingText}}" show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav current="mytask"></div>
+    <div widgets-page>
+      <div ng-controller="changeMoneyCreateController">
+        <div class="page-left">
+          <div widgets-side-bar groups="sidebar" current-group="user-profile" current-item="user-point">
+          </div>
+        </div>
+        <div class="page-right">
+          <div widgets-bread-crumb>
+          </div>
+          <div class="box">
+            <div class="box-header">
+              <i class="fa fa-user"></i>
+              <span>积分提现</span>
+            </div>
+            <div class="box-content">
+              <div class="property writeable">
+                <label class="key">可用积分</label>
+                <div class="value">
+                  {{availablePoint}}
+                </div>
+              </div>
+              <div class="property writeable">
+                <label class="key">提现积分</label>
+                <div class="value">
+                  <input type="number" ng-model="money" />
+                </div>
+              </div>
+              <div class="tools-bar">
+                <div widgets-button text="确定" ng-click="onSubmitClicked()"></div>
+                <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="onCancelClicked()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

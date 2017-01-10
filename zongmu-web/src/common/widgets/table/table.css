@@ -1,0 +1,73 @@
+.widgets-table table {
+  width: 100%;
+  text-align: left;
+  margin: 10px 0px;
+}
+
+.widgets-table table th {
+  height: 40px;
+}
+
+.widgets-table table th,
+.widgets-table table td {
+  border-bottom: 1px solid #1FA67A;
+  padding: 5px 0px;
+}
+
+.widgets-table .empty-mask {
+  text-align: center;
+  width: 100%;
+}
+
+.widgets-table .empty-mask td {
+  border-bottom: none;
+  padding: 50px 0px;
+  color: #555;
+}
+
+.widgets-table .empty-mask td i::after {
+  content: " ";
+  margin-right: 10px;
+}
+
+.widgets-pagination {
+  position: relative;
+  height: 50px;
+}
+
+.widgets-pagination .widgets-pagination-container {
+  position: absolute;
+  right: 0;
+  top: 5px;
+  bottom: 5px;
+}
+
+.widgets-pagination .widgets-button {
+  background: white;
+  color: #1FA67A;
+  margin-right: 5px;
+  border: 1px solid #1FA67A;
+  line-height: 38px;
+}
+
+.widgets-pagination .widgets-button:last-child {
+  margin-right: 0px;
+}
+
+.widgets-pagination .index-button {
+  width: 40px;
+}
+
+.widgets-pagination .index-button.active {
+  cursor: default;
+  background: #1FA67A;
+  color: white;
+}
+
+.widgets-pagination .widgets-button[disabled] {
+  pointer-events: none;
+  background: #C5C1C1;
+  color: #9E9393;
+  cursor: default;
+  border: 1px solid #afafaf;
+}

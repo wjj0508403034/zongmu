@@ -1,0 +1,8 @@
+.tag-value-create-dialog {
+  height: 250px;
+}
+
+.tag-value-create-dialog textarea {
+  width: 100%;
+  height: 100px;
+}

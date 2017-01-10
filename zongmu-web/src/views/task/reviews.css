@@ -1,0 +1,65 @@
+.review-list-page th[name="taskRecordNo"],
+.review-list-page td[name="taskRecordNo"] {
+  width: 300px;
+  padding: 0 10px;
+}
+
+.review-list-page td[name="taskRecordNo"] a {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.review-list-page th[name="reviewRecordNo"],
+.review-list-page td[name="reviewRecordNo"] {
+  width: 170px;
+}
+
+.review-list-page .widgets-table table {
+  table-layout: fixed;
+}
+
+.review-list-page .op-select {
+  width: 150px !important;
+  float: left;
+}
+
+.review-list-page .property.createtime .create-time-datetimepicker {
+  float: left;
+  margin-right: 50px;
+  width: 200px;
+}
+
+.review-list-page .record-length-input {
+  width: 200px !important;
+  margin-left: 5px;
+}
+
+.review-list-page .checkbox-item {
+  width: 30%;
+  float: left;
+}
+
+.review-list-page .xx-label {
+  float: left;
+  margin-right: 5px;
+}
+
+.review-list-page .property .point-input {
+  width: 200px !important;
+  margin-left: 5px;
+}
+
+.review-list-page .search-box {
+  margin-bottom: 10px;
+}
+
+.review-list-page .search-box .widgets-button {
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+  margin-left: 5px;
+}

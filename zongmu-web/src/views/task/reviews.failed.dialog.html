@@ -1,0 +1,28 @@
+<div class="reviews-failed-dialog">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>审核失败</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="property writeable">
+      <label class="key">原因</label>
+      <div class="value">
+        <select ng-model="data.reason" ng-options="item as item.description for item in reasons"></select>
+      </div>
+    </div>
+    <div class="property writeable">
+      <label class="key">备注</label>
+      <div class="value">
+        <textarea ng-model="data.memo"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-tools-bar">
+    <div class="dialog-tools-bar-container">
+      <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="closeThisDialog('cancel')"></div>
+      <div widgets-button text="确定" ng-click="onOkClick()"></div>
+    </div>
+  </div>
+</div>

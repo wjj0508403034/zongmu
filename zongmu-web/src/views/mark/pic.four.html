@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="pic-four-mark-page" ng-controller="markFourPicController">
+    <div widgets-cursor classes=".video-player-container-1;.video-player-container-2;.video-player-container-3;.video-player-container-4" show="showCursor"></div>
+    <div widgets-loading text="正在保存，请稍等..." show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav current="home"></div>
+    <div widgets-page ng-if="taskRecord">
+      <div widgets-bread-crumb>
+      </div>
+      <div class="section">
+        <div class="section-header">
+          <i class="fa fa-file-video-o"></i><span>任务详细信息</span>
+          <div class="section-action-bar">
+
+          </div>
+        </div>
+        <div class="section-content task-detail-section">
+          <div class="property">
+            <label class="key">任务编号</label>
+            <div class="value">{{taskRecord.taskItem.taskItemNo}}</div>
+          </div>
+          <div class="property">
+            <label class="key">任务名称</label>
+            <div class="value">{{taskRecord.taskItem | taskFullName}}</div>
+          </div>
+          <div class="property">
+            <label class="key">任务类型</label>
+            <div class="value">{{taskRecord.taskItem.taskType | taskType}}</div>
+          </div>
+          <div class="property">
+            <label class="key">标记类型</label>
+            <div class="value">{{taskRecord.taskItem.shapeType | shapeType}}</div>
+          </div>
+          <div class="property">
+            <label class="key">状态</label>
+            <div class="value">{{taskRecord.status| taskRecordStatus}}</div>
+          </div>
+          <div ng-repeat="viewTag in taskRecord.taskItem.viewTags">
+            <div class="property">
+              <label class="key">{{viewTag.viewTag.name}}</label>
+              <div class="value">{{viewTag.viewTagItem.name}}</div>
+            </div>
+          </div>
+          <div ng-if="reviewRecord && reviewRecord.status === 'FAILED'">
+            <div class="property">
+              <label class="key">审核失败次数</label>
+              <div class="value">{{reviewRecord.subtotal}}</div>
+            </div>
+            <div class="property">
+              <label class="key">最后一次审核失败原因</label>
+              <div class="value">{{reviewRecord.reason.description}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section xx-section" id="mark" can-mark="{{canContinueMark()}}">
+        <div class="tools-bar">
+          <div widgets-button text="上一个任务" huoyun-append-class="pervious-button" ng-click="onPreviousButtonClick(taskRecord.previousTaskRecord)" ng-disabled="!taskRecord.previousTaskRecord"></div>
+          <div widgets-button text="下一个任务" huoyun-append-class="next-button" ng-click="onNextButtonClick(taskRecord.nextTaskRecord)" ng-disabled="!taskRecord.nextTaskRecord"></div>
+        </div>
+        <div class="section-header">
+          <i class="fa fa-file-video-o"></i><span>图片标记信息</span>
+          <div class="section-action-bar">
+            <div widgets-checkbox ng-model="showCursor" on-checked="onCursorChecked()" on-unchecked="onCursorUnChecked()" huoyun-append-class="mark-checkbox" content="启用十字光标"></div>
+            <div widgets-button text="设置场景属性" ng-click="onViewTagButtonClick()"></div>
+            <div widgets-button text="开始审核" ng-click="onStartReviewClick()" ng-if="canReview" ng-show="taskRecord.status === 'WAITTING'"></div>
+            <div widgets-button text="审核通过" ng-click="onReviewPassClick()" ng-if="canReview" ng-show="taskRecord.status === 'REVIEWING' || taskRecord.status === 'REJECTED' "></div>
+            <div widgets-button text="审核失败" ng-click="onReviewFailClick()" ng-if="canReview" ng-show="taskRecord.status === 'REVIEWING' || taskRecord.status === 'ACCEPTED' "></div>
+            <div widgets-button text="提交" ng-click="onSubmitClick()" ng-hide="taskRecord.status === 'ACCEPTED'"></div>
+            <div widgets-button text="保存" ng-click="onSaveClick()"></div>
+          </div>
+        </div>
+        <div class="section-content four-video-marker-box">
+          <table class="four-video-table">
+            <tbody>
+              <tr>
+                <td class="video-column">
+                  <div class="video-item-container">
+                    <div class="video-player-container video-player-container-1">
+                      <div widgets-pic-marker src="taskItemFile1.path" shapes="tempShapes1" task-item-file="taskItemFile1"></div>
+                    </div>
+                    <div class="mark-tools-container">
+                      <div widgets-svg-bar tags="tags" shapes-box="tempShapes1" name-selected="nameSelected" names="names1" on-selected-shape-changed="onShape1SelectedChanged(shape)" shapes="shapes1" frame-index="frameIndex" on-shape-object-copyed="onShape1ObjectCopy(shape)" side-count="taskRecord.taskItem.sideCount" type="taskRecord.taskItem.shapeType"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="video-column">
+                  <div class="video-item-container">
+                    <div class="video-player-container video-player-container-2">
+                      <div widgets-pic-marker src="taskItemFile2.path" shapes="tempShapes2" task-item-file="taskItemFile2"></div>
+                    </div>
+                    <div class="mark-tools-container">
+                      <div widgets-svg-bar tags="tags" shapes-box="tempShapes2" name-selected="nameSelected" names="names2" on-selected-shape-changed="onShape2SelectedChanged(shape)" shapes="shapes2" frame-index="frameIndex" on-shape-object-copyed="onShape2ObjectCopy(shape)" side-count="taskRecord.taskItem.sideCount" type="taskRecord.taskItem.shapeType"></div>
+                    </div>
+                  </div>
+                </td>
+                <td rowspan="2" class="info-row">
+                  <div widgets-mark-info-bar tags="tags" on-color-changed="onColorSelectedChanged(colorTag)" color-group="colorGroup" mark-info="currentSelected"></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="video-column">
+                  <div class="video-item-container">
+                    <div class="video-player-container video-player-container-3">
+                      <div widgets-pic-marker src="taskItemFile3.path" shapes="tempShapes3" task-item-file="taskItemFile3"></div>
+                    </div>
+                    <div class="mark-tools-container">
+                      <div widgets-svg-bar tags="tags" shapes-box="tempShapes3" name-selected="nameSelected" names="names3" on-selected-shape-changed="onShape3SelectedChanged(shape)" shapes="shapes3" frame-index="frameIndex" on-shape-object-copyed="onShape3ObjectCopy(shape)" side-count="taskRecord.taskItem.sideCount" type="taskRecord.taskItem.shapeType"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="video-column">
+                  <div class="video-item-container">
+                    <div class="video-player-container video-player-container-4">
+                      <div widgets-pic-marker src="taskItemFile4.path" shapes="tempShapes4" task-item-file="taskItemFile4"></div>
+                    </div>
+                    <div class="mark-tools-container">
+                      <div widgets-svg-bar tags="tags" shapes-box="tempShapes4" name-selected="nameSelected" names="names4" on-selected-shape-changed="onShape4SelectedChanged(shape)" shapes="shapes4" frame-index="frameIndex" on-shape-object-copyed="onShape4ObjectCopy(shape)" side-count="taskRecord.taskItem.sideCount" type="taskRecord.taskItem.shapeType"></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tools-bar">
+        <div widgets-button text="上一个任务" huoyun-append-class="pervious-button" ng-click="onPreviousButtonClick(taskRecord.previousTaskRecord)" ng-disabled="!taskRecord.previousTaskRecord"></div>
+        <div widgets-button text="下一个任务" huoyun-append-class="next-button" ng-click="onNextButtonClick(taskRecord.nextTaskRecord)" ng-disabled="!taskRecord.nextTaskRecord"></div>
+      </div>
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

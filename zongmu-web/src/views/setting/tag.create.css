@@ -1,0 +1,17 @@
+.tag-create-dialog {
+  height: 250px;
+}
+
+.tag-create-dialog .property.writeable .key {
+  width: 30%;
+}
+
+.tag-create-dialog .property.writeable .value {
+  width: 70%;
+}
+
+.tag-create-dialog input {
+  height: 40px;
+  width: 100%;
+  line-height: 40px;
+}

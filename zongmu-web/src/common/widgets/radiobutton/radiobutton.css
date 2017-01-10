@@ -1,0 +1,28 @@
+.widgets-radio-button {
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  cursor: pointer;
+}
+
+.widgets-radio-button>.radio-button-icon {
+  width: 40px;
+  height: 100%;
+  position: absolute;
+  color: #666;
+}
+
+.widgets-radio-button>.radio-button-icon>i {
+  line-height: 40px;
+  font-size: 20px;
+}
+
+.widgets-radio-button.checked>.radio-button-icon {
+  color: #1fa67a;
+}
+
+.widgets-radio-button>.radio-button-content {
+  position: absolute;
+  left: 45px;
+  right: 5px;
+}

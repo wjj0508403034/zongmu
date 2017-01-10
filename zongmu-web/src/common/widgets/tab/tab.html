@@ -1,0 +1,7 @@
+<nav class="widgets-tab">
+  <ul>
+    <li ng-repeat="item in items" name="{{item.name}}" active="{{item.active}}" ng-click="onTabItemClicked(item,$index)">
+      {{item.text}}
+    </li>
+  </ul>
+</nav>

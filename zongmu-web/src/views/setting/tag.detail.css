@@ -1,0 +1,30 @@
+.tag-detail-page .list-container{
+  padding-top: 5px;
+}
+
+.tag-detail-page .box{
+  min-height: 500px;
+}
+
+
+.tag-detail-page th[name='op'] {
+  width: 150px;
+}
+
+.tag-detail-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.tag-detail-page th[name='default'] {
+  width: 100px;
+}
+
+.tag-detail-page th[name='default'] {
+  text-align: center;
+}
+
+.tag-detail-page td[name='default'] {
+  text-align: center;
+  color: #1D8C73;
+}

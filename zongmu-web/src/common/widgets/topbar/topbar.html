@@ -1,0 +1,17 @@
+<div class="widgets-top-bar">
+  <div class="left">
+    <div class="title-container">{{appName}}</div>
+  </div>
+  <div class="right">
+    <div class="sign-bar" ng-if="!hasLogin">
+      <div class="login" widgets-link-button text="登录" ng-click="login()"></div>
+      <div class="register" widgets-link-button text="注册" ng-click="register()"></div>
+    </div>
+    <div class="info-bar" ng-if="hasLogin">
+      <div class="user-info">
+        欢迎<span class="user-name">{{userName}}</span>
+      </div>
+      <div class="logout" widgets-link-button text="退出" ng-click="logout()"></div>
+    </div>
+  </div>
+</div>

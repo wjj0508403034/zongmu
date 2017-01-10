@@ -1,0 +1,43 @@
+.widgets-loading-container {
+  position: fixed;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 10000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: 160px;
+  padding-top: 160px;
+}
+
+.widgets-loading-container .widgets-loading-overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, .4);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  animation: ngdialog-fadein .5s;
+}
+
+.widgets-loading-container .widgets-loading-content {
+  -webkit-animation: ngdialog-flyin .5s;
+  animation: ngdialog-flyin .5s;
+  background: #f0f0f0;
+  border-radius: 5px;
+  color: #444;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.1em;
+  line-height: 1.5em;
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 1em;
+  position: relative;
+  width: 450px;
+  min-height: 50px;
+}
+
+.widgets-loading-container .widgets-loading-content i{
+  margin-right: 5px;
+}

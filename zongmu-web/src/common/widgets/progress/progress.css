@@ -1,0 +1,30 @@
+.widgets-progress {
+  height: 10px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.widgets-progress .background-container {
+  height: 100%;
+  width: 100%;
+  background: white;
+  position: relative;
+}
+
+.widgets-progress .huoyun-progress-bar {
+  height: 100%;
+  background: #333333;
+}
+
+.widgets-progress .position-btn {
+  height: 16px;
+  width: 16px;
+  background: white;
+  position: absolute;
+  z-index: 9999;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  top: -3px;
+  cursor: pointer;
+  margin-left: -4px;
+}

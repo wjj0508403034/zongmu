@@ -1,0 +1,28 @@
+<div class="tag-create-dialog">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>新建属性</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="property writeable">
+      <label class="key">属性名称</label>
+      <div class="value">
+        <input type="input" ng-model="name" />
+      </div>
+    </div>
+    <div class="property writeable">
+      <label class="key">控件类型</label>
+      <div class="value">
+        <select ng-model="type" ng-options="item.name as item.text for item in controlTypes" ng-hide="isEdit"></select>
+        <input value="{{type | tagControlType}}" disabled ng-show="isEdit"/>
+      </div>
+    </div>
+    <div class="dialog-tools-bar">
+      <div class="dialog-tools-bar-container">
+        <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="closeThisDialog('cancel')"></div>
+        <div widgets-button text="确定" ng-click="onSaveButtonClick()"></div>
+      </div>
+    </div>
+  </div>

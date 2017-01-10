@@ -1,0 +1,35 @@
+.asset-tag-setting-page .tag-items-container {
+  margin: 10px 0px;
+}
+
+.asset-tag-setting-page .line-sepector {
+  height: 40px;
+  line-height: 39px;
+  border-bottom: 1px dashed #1FA67A;
+}
+
+.asset-tag-setting-page th[name='op'] {
+  width: 150px;
+}
+
+.asset-tag-setting-page td[name='op'] .widgets-link-button {
+  margin: 5px 10px 5px 0px;
+  display: inline-block;
+}
+
+.asset-tag-setting-page th[name='default'] {
+  width: 100px;
+}
+
+.asset-tag-setting-page th[name='default'] {
+  text-align: center;
+}
+
+.asset-tag-setting-page td[name='default'] {
+  text-align: center;
+  color: #1D8C73;
+}
+
+.asset-tag-setting-page .weather-tag-table{
+  margin-top: 50px;
+}

@@ -1,0 +1,24 @@
+.asset-new-page .timeInterval {
+  position: relative;
+}
+
+.asset-new-page .timeInterval .unit {
+  position: absolute;
+  top: 2px;
+  right: 20px;
+}
+
+.asset-new-page input[readonly] {
+  background: #CCCCCC;
+  border: none;
+}
+
+.asset-new-page .asset-tag-container {
+  clear: both;
+  display: block;
+}
+
+.asset-new-page .asset-tag-container .asset-tag-item {
+  width: 50%;
+  float: left;
+}

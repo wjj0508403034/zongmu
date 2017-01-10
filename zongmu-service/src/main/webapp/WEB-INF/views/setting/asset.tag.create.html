@@ -1,0 +1,24 @@
+<div class="asset-tag-create-dialog">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>新建属性</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="property writeable">
+      <label class="key">类别</label>
+      <div class="value">
+        <select ng-model="category" ng-options="item.name as item.text for item in categories"></select>
+      </div>
+    </div>
+    <p>可以一次添加多个属性值，每个属性值用;分隔</p>
+    <textarea ng-model="value" /></textarea>
+  </div>
+  <div class="dialog-tools-bar">
+    <div class="dialog-tools-bar-container">
+      <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="closeThisDialog('cancel')"></div>
+      <div widgets-button text="确定" ng-click="onSaveButtonClick()"></div>
+    </div>
+  </div>
+</div>

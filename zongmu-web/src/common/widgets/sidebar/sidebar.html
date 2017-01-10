@@ -1,0 +1,13 @@
+<aside class="widgets-sidebar">
+  <div class="group" ng-repeat="group in groups" name="{{group.name}}" ng-if="group.visibility !== false">
+    <div class="header">
+      <i class="fa" huoyun-append-class="fa-{{group.icon}}" ng-if="group.icon"></i>
+      <span>{{group.text}}</span>
+    </div>
+    <ul>
+      <li ng-repeat="item in group.items" ng-class="group.name === currentGroup && item.name === currentItem ? 'active':''" ng-if="item.visibility !== false" name="{{item.name}}" curr="{{currentItem}}" groupName="{{group.name}}">
+        <a ng-href="{{item.href}}">{{item.text}}</a>
+      </li>
+    </ul>
+  </div>
+</aside>

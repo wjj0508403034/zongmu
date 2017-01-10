@@ -1,0 +1,16 @@
+.widgets-form>.form-header {
+  height: 40px;
+  line-height: 38px;
+  border-bottom: 2px solid #1fa67a;
+  padding: 0px 5px;
+  margin: 10px 0px;
+}
+
+.widgets-form>.form-body {
+  clear: both;
+}
+
+.widgets-form>.form-body>.input-group-container {
+  float: left;
+  width: 50%;
+}

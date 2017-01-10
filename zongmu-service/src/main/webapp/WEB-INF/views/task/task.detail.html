@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <script src="../../resources/libs/jquery-2.1.3.min.js"></script>
+    <script src="../../resources/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../resources/libs/angular.js"></script>
+    <script src="../../resources/libs/js.cookie.js"></script>
+    <script src="../../resources/libs/timepicker/1moment.min.js"></script>
+    <script src="../../resources/libs/timepicker/bootstrap.min.js"></script>
+    <script src="../../resources/libs/timepicker/datetimepicker.js"></script>
+    <script src="../../resources/libs/timepicker/datetimepicker.templates.js"></script>
+    <script src="../../resources/libs/timepicker/moment.min.js"></script>
+    <script src="../../resources/libs/angular-file-upload.min.js"></script>
+    <script src="../../resources/libs/evol-colorpicker.js"></script>
+    <script src="../../resources/libs/huoyun.ui.js"></script>
+    <script src="../../resources/libs/jquery.datetimepicker.full.min.js"></script>
+    <script src="../../resources/libs/jquery.datetimepicker.min.js"></script>
+    <script src="../../resources/libs/ng-file-upload.min.js"></script>
+    <script src="../../resources/libs/ngDialog.min.js"></script>
+    <script src="../../resources/libs/purl.js"></script>
+    <script src="../../resources/libs/showdown.min.js"></script>
+    <script src="../../resources/libs/svg.js"></script>
+    <script src="../../resources/app/app.js"></script>
+    <!-- endinject -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../resources/libs/evol-colorpicker.min.css">
+    <link rel="stylesheet" href="../../resources/libs/font-awesome.min.css">
+    <link rel="stylesheet" href="../../resources/libs/huoyun.ui.css">
+    <link rel="stylesheet" href="../../resources/libs/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="../../resources/libs/ngDialog-theme-default.min.css">
+    <link rel="stylesheet" href="../../resources/libs/ngDialog.min.css">
+    <link rel="stylesheet" href="../../resources/libs/jquery-ui/jquery-ui.min.css">
+    <link rel="stylesheet" href="../../resources/libs/timepicker/bootstrap.min.css">
+    <link rel="stylesheet" href="../../resources/libs/timepicker/datetimepicker.css">
+    <link rel="stylesheet" href="../../resources/app/app.css">
+    <!-- endinject -->
+
+  </head>
+
+  <body class="task-detail-page" ng-controller="baseTaskController">
+    <div widgets-loading text="{{loadingText}}" show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav current="mytask"></div>
+    <div widgets-page class="my-assets">
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="task-management" current-item="upload-task-record">
+        </div>
+      </div>
+      <div class="page-right" ng-controller="taskDetailController">
+        <div widgets-bread-crumb>
+        </div>
+        <div class="tools-bar">
+          <div widgets-button text="置顶" ng-click="onSetTopButtonClick(true)" ng-show="!task.top"></div>
+          <div widgets-button text="取消置顶" ng-click="onSetTopButtonClick(false)" ng-show="task.top"></div>
+          <div widgets-button text="设置优先级" ng-click="onSetPriorityButtonClick()"></div>
+          <div widgets-button text="显示" ng-click="onSetShowButtonClick(true)" ng-show="!task.showHome"></div>
+          <div widgets-button text="隐藏" ng-click="onSetShowButtonClick(false)" ng-show="task.showHome"></div>
+        </div>
+        <div class="box">
+          <div class="box-header">
+            <i class="fa fa-file-o"></i>
+            <span>详细信息</span>
+          </div>
+          <div class="box-content">
+            <div class="property">
+              <label class="key">任务编号</label>
+              <div class="value"><span>{{task.taskNo}}</span> <span class="hot" ng-show="task.top"><i class="fa fa-fire" aria-hidden="true"></i>置顶</span></div>
+            </div>
+            <div class="property">
+              <label class="key">任务名称</label>
+              <div class="value">{{task.taskName}}</div>
+            </div>
+            <div class="property">
+              <label class="key">任务类型</label>
+              <div class="value">{{task.taskType | taskType}}</div>
+            </div>
+            <div class="property">
+              <label class="key">算法类型</label>
+              <div class="value">{{task.algorithmName}}</div>
+            </div>
+            <div class="property">
+              <label class="key">任务优先级</label>
+              <div class="value">{{task.priority | taskPriority}}</div>
+            </div>
+            <div class="property">
+              <label class="key">是否在任务大厅显示</label>
+              <div class="value">{{task.showHome ? "是" : "否" }}</div>
+            </div>
+            <div class="property">
+              <label class="key">标注类型</label>
+              <div class="value">{{task.shapeType | shapeType}}</div>
+            </div>
+            <div class="property" ng-show="task.shapeType === 'POLYLINE'">
+              <label class="key">多边形边数</label>
+              <div class="value">{{task.sideCount}}</div>
+            </div>
+            <div class="property" ng-show="task.taskType === 'VIDEO'">
+              <label class="key">视频切割时间间隔</label>
+              <div class="value">{{task.timeInterval}}秒</div>
+            </div>
+            <!--<div class="property">
+              <label class="key">路况属性</label>
+              <div class="value">{{task.roadTag.name}}</div>
+            </div>
+            <div class="property">
+              <label class="key">天气属性</label>
+              <div class="value">{{task.weatherTag.name}}</div>
+            </div>-->
+            <div ng-repeat="viewTag in task.assetViewTags">
+              <div class="property">
+                <label class="key">{{viewTag.viewTag.name}}</label>
+                <div class="value">{{viewTag.viewTagItem.name}}</div>
+              </div>
+            </div>
+            <div ng-repeat="viewTag in task.viewTags">
+              <div class="property">
+                <label class="key">{{viewTag.viewTag.name}}</label>
+                <div class="value">{{viewTag.viewTagItem.name}}</div>
+              </div>
+            </div>
+            <div class="property">
+              <label class="key">备注</label>
+              <div class="value">
+                {{task.memo}}
+              </div>
+            </div>
+          </div>
+
+          <div class="box-header task-list">
+            <i class="fa fa-tasks"></i>
+            <span>子任务列表 (共{{task.taskItems.totalElements}}个)</span>
+          </div>
+          <div class="box-content">
+            <div widgets-table columns="taskColumns" dataset="task.taskItems.content" page-data="pageData" empty-text="没有任务记录">
+              <div cell-template column-index="0">
+                <a ng-href="detail.html?taskItemNo={{rowData.taskItemNo}}" ng-hide="rowData.status === 'CUTTING' || rowData.status === 'CREATEFAILED'">{{cellData}}</a>
+                <span ng-show="rowData.status === 'CUTTING' || rowData.status === 'CREATEFAILED'">{{cellData}}</span>
+              </div>
+              <div cell-template column-index="1">
+                {{cellData | taskType}}
+              </div>
+              <div cell-template column-index="2">
+                {{cellData | taskItemStatus}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

@@ -1,0 +1,49 @@
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+}
+
+ul,
+p {
+  -webkit-padding-start: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+}
+
+li {
+  display: block;
+}
+
+a:-webkit-any-link {
+  color: inherit;
+  text-decoration: none !important;
+}
+
+table {
+  border-spacing: 0px;
+  border-color: #1D8C73;
+}
+
+.clearfix {
+  zoom: 1;
+  display: table;
+  width: 100%;
+}
+
+canvas {
+  border: 1px solid #ccc;
+}
+
+canvas:active {
+  cursor: pointer;
+}
+
+a:focus,
+a:hover {
+  text-decoration: none !important;
+}

@@ -1,0 +1,80 @@
+.widgets-input-group {
+  width: 100%;
+  min-height: 40px;
+  margin: 5px 0px;
+  display: table;
+}
+
+.widgets-input-group>label {
+  width: 35%;
+  float: left;
+  padding: 0px 5px;
+  text-align: right;
+  line-height: 40px;
+}
+
+.widgets-input-group.requried:not(.readonly)>label::before {
+  content: " ";
+  border: 2px solid brown;
+  margin-right: 3px;
+}
+
+.widgets-input-group>.input-group-box {
+  width: 65%;
+  float: left;
+  padding: 0px 5px;
+}
+
+.widgets-input-group>.input-group-box.readonly-mode {
+  display: none;
+}
+
+.widgets-input-group.readonly>.input-group-box {
+  line-height: 40px;
+}
+
+.widgets-input-group>.input-group-box>div {
+  line-height: 40px;
+}
+
+.widgets-input-group.readonly>.input-group-box.readonly-mode {
+  display: inherit;
+}
+
+.widgets-input-group.readonly>.input-group-box.input-mode {
+  display: none;
+}
+
+.widgets-input-group>.input-group-box input {
+  width: 100%;
+  line-height: 38px;
+  border: 1px solid #ccc;
+  padding: 0px 5px;
+}
+
+.widgets-input-group>.input-group-box textarea {
+  width: 100%;
+  line-height: 24px;
+  border: 1px solid #ccc;
+  padding: 0px 5px;
+  min-height: 60px;
+  resize: vertical;
+}
+
+.widgets-input-group.error>.input-group-box input {
+  border-color: red;
+}
+
+.widgets-input-group>.input-group-box input:focus {
+  outline-offset: initial;
+  outline: #1fa67a auto 2px;
+}
+
+.widgets-input-group.error>.input-group-box input:focus {
+  border-color: transparent;
+}
+
+.widgets-input-group>.input-group-box a {
+  color: #1FA67A;
+  text-decoration: underline;
+}

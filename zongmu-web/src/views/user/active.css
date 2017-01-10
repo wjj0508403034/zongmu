@@ -1,0 +1,33 @@
+.user-active-page .result-icon {
+  height: 50px;
+  line-height: 50px;
+  font-size: 38px;
+}
+
+.user-active-page .result-icon.fa-remove {
+  color: red;
+}
+
+.user-active-page .result-icon.fa-check-circle {
+  color: #1FA67A;
+}
+
+.user-active-page .box-form .box-content .form-submit-button {
+  margin: 100px 0px 5px 0px;
+}
+
+.user-active-page .box-form {
+  min-height: 200px;
+  padding-bottom: 10px;
+}
+
+.user-active-page .jump-message {
+  margin: 5px;
+}
+
+.user-active-page .login-link {
+  color: #1FA67A;
+  margin-left: 10px;
+  font-weight: 800;
+  font-size: 20px;
+}

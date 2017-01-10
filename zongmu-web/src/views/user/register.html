@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="register-page">
+    <div widgets-loading text="正在注册,请稍后..." show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav></div>
+    <div widgets-page>
+      <div class="box box-form" ng-controller="registerController">
+        <div class="box-header">
+          <i class="fa fa-user color-highligth"></i>
+          <span class="color-highligth">用户注册</span>
+          <span class="char-sepector">/</span>
+          <i class="fa fa-child color-gray"></i>
+          <span class="color-gray">用户激活</span>
+        </div>
+        <div class="box-content">
+          <div class="property writeable">
+            <label class="key">邮箱地址</label>
+            <div class="value">
+              <input type="text" ng-model="email" />
+            </div>
+          </div>
+          <div class="property writeable">
+            <label class="key">密码</label>
+            <div class="value">
+              <input type="password" ng-model="password" />
+            </div>
+          </div>
+          <div class="property writeable">
+            <label class="key">重复密码</label>
+            <div class="value">
+              <input type="password" ng-model="repeatPassword" />
+            </div>
+          </div>
+          <div widgets-button text="注册" huoyun-append-class="form-submit-button" ng-click="onSubmit()"></div>
+
+          <div widgets-link-button text="已有账号，去登录" huoyun-append-class="login-button" ng-click="onLoginButtonClick()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

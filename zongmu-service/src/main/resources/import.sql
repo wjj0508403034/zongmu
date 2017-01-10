@@ -1,0 +1,2 @@
+INSERT INTO USER(id,userName,email,password,role,businessRole,active,resetActive,sex,black,locked,loginFailedCount) VALUES (1,'admin','admin@zongmu.com','123456',1,0,1,0,1,0,0,0);
+UPDATE USER_SEQUENCE SET NEXT_VAL = 2 WHERE NEXT_VAL = 1;

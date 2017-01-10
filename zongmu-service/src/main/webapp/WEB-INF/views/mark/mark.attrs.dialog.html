@@ -1,0 +1,28 @@
+<div class="mark-attrs-dialog">
+  <div class="header-bar">
+    <div class="header-bar-container">
+      <i class="icon fa fa-info"></i>
+      <span>设置标记属性</span>
+    </div>
+  </div>
+  <div class="dialog-content">
+    <div class="property">
+      <label class="key">颜色</label>
+      <div class="value">
+        <div widgets-color-picker ng-model="data.color"></div>
+      </div>
+    </div>
+    <div class="property" ng-repeat="tag in tags">
+      <label class="key">{{tag.name}}</label>
+      <div class="value">
+        <select ng-model="data.attrs[tag.name]" ng-options="item.value for item in tag.items track by item.id"></select>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-tools-bar">
+    <div class="dialog-tools-bar-container">
+      <div widgets-button text="取消" huoyun-append-class="btn-gray" ng-click="closeThisDialog('cancel')"></div>
+      <div widgets-button text="确定" ng-click="onOkClick()"></div>
+    </div>
+  </div>
+</div>

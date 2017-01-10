@@ -1,0 +1,410 @@
+@media (min-width: 992px) {
+  .container {
+    width: initial;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: initial;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: initial;
+  }
+}
+
+.container {
+  padding-right: initial;
+  padding-left: initial;
+  margin-right: initial;
+  margin-left: initial;
+}
+
+a:focus {
+  outline: inherit;
+  outline: inherit;
+  outline-offset: inherit;
+}
+
+body {
+  color: #555;
+}
+
+body .widgets-page {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  min-height: 300px;
+  zoom: 1;
+  //display: table;
+  width: 1024px;
+}
+
+body .widgets-page .page-left {
+  float: left;
+  width: 25%;
+}
+
+body .widgets-page .page-right {
+  float: left;
+  width: 75%;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  outline-offset: initial;
+  outline: #1fa67a auto 2px;
+}
+
+.hot {
+  color: #da1515;
+  font-size: 5px;
+  margin-left: 5px;
+}
+
+.page-title {
+  font-size: 24px;
+  line-height: 40px;
+  height: 40px;
+  font-weight: bold;
+}
+
+.tools-bar {
+  height: 50px;
+  padding: 5px 0px;
+}
+
+.tools-bar .widgets-button {
+  min-width: 80px;
+}
+
+.box {
+  border: 1px solid #1FA67A;
+  padding: 10px;
+  padding-bottom: 50px;
+}
+
+.box>.box-header {
+  height: 40px;
+  line-height: 38px;
+  border-bottom: 2px solid #1FA67A;
+}
+
+.box>.box-header i {
+  color: #1D8C73;
+}
+
+.widgets-input-group>label {
+  text-align: left;
+  width: 20%;
+}
+
+.widgets-input-group>.input-group-box {
+  width: 80%;
+}
+
+.red {
+  color: red;
+}
+
+.gold {
+  color: #E4C62A;
+}
+
+.section>.section-header {
+  border-bottom: 1px solid #1FA67A;
+  height: 40px;
+  line-height: 39px;
+  color: #1D8C73;
+  position: relative;
+}
+
+.section>.section-header>.section-action-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.section>.section-header>.section-action-bar .widgets-button {
+  height: 30px;
+  line-height: 30px;
+}
+
+.section::after {
+  content: " ";
+  display: table;
+  margin-bottom: 50px;
+  clear: both;
+}
+
+.section>.section-content {
+  clear: both;
+  padding-top: 10px;
+}
+
+.section>.section-content::after {
+  content: " ";
+  display: table;
+  clear: both;
+}
+
+i::after {
+  content: " ";
+  margin-right: 5px;
+}
+
+.tools-bar .icon-button {
+  height: 40px;
+  display: inline-block;
+  float: left;
+  width: 40px;
+  text-align: center;
+  line-height: 38px;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.tools-bar .icon-button:hover {
+  background: #1FA67A;
+}
+
+.tools-bar .icon-button.active {
+  background: #1FA67A;
+}
+
+.tools-bar .icon-button[disabled='disabled'] {
+  background: #C5C1C1;
+  color: #9E9393;
+  cursor: default;
+}
+
+.property {
+  width: 100%;
+  min-height: 30px;
+  margin: 5px 0px;
+  display: table;
+}
+
+.property.writeable {
+  min-height: 40px;
+}
+
+.property .key {
+  float: left;
+  padding: 0px 5px;
+  line-height: 30px;
+  text-align: left;
+  width: 20%;
+}
+
+.property.writeable .key {
+  line-height: 40px;
+}
+
+.property .value {
+  float: left;
+  width: 80%;
+  line-height: 30px;
+}
+
+.property .value.ng-binding {
+  width: 550px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.property .value select,
+.property .value input {
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+}
+
+.property .value a {
+  color: #1FA67A;
+}
+
+.property.writeable .value {
+  line-height: 40px;
+}
+
+.property.writeable .value select,
+.property.writeable .value input {
+  width: 100%;
+  height: 40px;
+}
+
+.property .value input[type="file"] {
+  background: #ccc;
+  border: 1px solid rgb(169, 169, 169);
+}
+
+.property.writeable .value textarea {
+  width: 100%;
+  height: 80px;
+  resize: vertical;
+}
+
+.widgets-table .op-cell .widgets-link-button {
+  height: 30px;
+  line-height: 30px;
+}
+
+.widgets-table a {
+  color: #1FA67A;
+}
+
+.tag-items-container {
+  display: table;
+  width: 100%;
+}
+
+.tag-items-container .tag-item {
+  height: 30px;
+  width: 100px;
+  border: 1px solid #1D8C73;
+  line-height: 28px;
+  text-align: center;
+  position: relative;
+  color: white;
+  margin-bottom: 5px;
+  float: left;
+  margin-right: 5px;
+}
+
+.tag-items-container .tag-item .content {
+  position: absolute;
+  left: 0;
+  right: 30px;
+  height: 100%;
+  cursor: pointer;
+  background: #1D8C73;
+}
+
+.tag-items-container .tag-item .delete-icon {
+  width: 30px;
+  border-left: 1px solid white;
+  position: absolute;
+  right: 0;
+  height: 100%;
+  cursor: pointer;
+  background: #1D8C73;
+}
+
+.tag-items-container .tag-item.readonly {
+  background: #1FA67A;
+  float: left;
+  margin-right: 10px;
+  padding: 0 10px;
+  min-width: 80px;
+  text-align: center;
+  color: white;
+  cursor: default;
+}
+
+.widgets-table th[name="op-first"],
+.widgets-table td[name="op-first"] {
+  width: 50px;
+  display: none;
+}
+
+.widgets-table[batch="true"] th[name="op-first"],
+.widgets-table[batch="true"] td[name="op-first"] {
+  display: table-cell;
+}
+
+.widgets-table th[name="op-first"] .widgets-checkbox {
+  height: 30px;
+  line-height: 30px;
+}
+
+.widgets-table th[name="op-first"] .widgets-checkbox>.checkbox-icon>i {
+  line-height: 30px;
+}
+
+.widgets-table td[name="op"] .widgets-link-button {
+  margin: 5px 0px;
+}
+
+.mark-checkbox {
+  float: left;
+  display: inline-block;
+  width: 200px;
+}
+
+.box-form {
+  width: 500px;
+  margin: 0 auto;
+  min-height: 300px;
+}
+
+.box-form .box-content {
+  padding: 10px 0px;
+}
+
+.box-form .box-content .property .key,
+.box-form .box-content .property .value {
+  float: none;
+  width: 100%;
+}
+
+.box-form .box-content .property .key {
+  height: 30px;
+  line-height: 30px;
+}
+
+.box-form .box-content .form-submit-button {
+  margin: 15px 0px;
+  width: 100%;
+}
+
+.color-gray {
+  color: #CCCCCC !important;
+}
+
+.char-sepector::before,
+.char-sepector::after {
+  content: " ";
+  margin-right: 5px;
+}
+
+.color-highligth {
+  color: #1FA67A !important;
+}
+
+.box-group {
+  border: 1px solid rgba(31, 166, 122, 0.5);
+  margin-top: 10px;
+}
+
+.box-group[expand="false"] .box-group-content {
+  display: none;
+}
+
+.box-group .box-group-header {
+  height: 40px;
+  line-height: 40px;
+  background: rgba(31, 166, 122, 0.5);
+}
+
+.box-group .box-group-header .title {
+  display: inline-block;
+}
+
+.box-group .box-group-header .widgets-button {
+  margin-right: 5px;
+}
+
+.dialog-content-container .property.writeable .key{
+  width: 100px;
+}
+
+.dialog-content-container .property.writeable .value{
+  width: 280px;
+}
+

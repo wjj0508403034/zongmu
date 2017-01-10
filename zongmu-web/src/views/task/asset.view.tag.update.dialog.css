@@ -1,0 +1,19 @@
+.asset-view-tag-update-dialog {
+  height: 300px;
+}
+
+.asset-view-tag-update-dialog .dialog-content {
+  height: 230px;
+}
+
+.asset-view-tag-update-dialog .dialog-content-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.asset-view-tag-update-dialog .key {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}

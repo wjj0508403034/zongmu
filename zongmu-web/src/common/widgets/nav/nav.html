@@ -1,0 +1,9 @@
+<nav class="widgets-nav">
+  <ul>
+    <li ng-repeat="item in items" name="{{item.name}}" huoyun-append-class="{{item.className}}" ng-if="item.visibility !== false">
+      <a ng-href="{{item.href}}">
+        {{item.text}}
+      </a>
+    </li>
+  </ul>
+</nav>

@@ -1,0 +1,11 @@
+.widgets-color-picker .color-button {
+  border: 1px solid#CCC;
+  cursor: pointer;
+  width: 100px;
+  height: 30px;
+  color: transparent;
+}
+
+.widgets-color-picker .evo-cp-wrap {
+  width: 100% !important;
+}

@@ -1,0 +1,72 @@
+.video-mark-page .video-marker-container {
+  height: 450px;
+}
+
+.video-mark-page .tools-bar .title {
+  float: left;
+  line-height: 40px;
+  margin-right: 10px;
+}
+
+.video-mark-page .section-content {
+  height: 500px;
+}
+
+.video-mark-page .section-content .widgets-svg-bar {
+  width: 150px;
+  margin-top: 10px;
+  background: #CCCCCC;
+  height: 500px;
+  position: absolute;
+  right: 200px;
+}
+
+.video-mark-page .section-content .container {
+  position: absolute;
+  left: 0px;
+  right: 350px;
+  height: 500px;
+  border: 1px solid #CCCCCC;
+  margin-top: 10px;
+}
+
+.video-mark-page .task-detail-section {
+  height: auto;
+}
+
+.video-mark-page .video-marker-box {
+  height: 500px;
+  margin: 0 -100px;
+  position: relative;
+}
+
+.video-mark-page .section-content .widgets-mark-info-bar {
+  position: absolute;
+  right: 0px;
+  width: 200px;
+  height: 100%;
+  margin-top: 10px;
+  background: #ccc;
+  border-left: 1px solid white;
+}
+
+.video-mark-page .tools-bar .pervious-button {
+  width: 200px;
+}
+
+.video-mark-page .tools-bar .next-button {
+  width: 200px;
+  float: right;
+}
+
+.video-mark-page .xx-section[can-mark="false"] .svg-bar-container {
+  display: none;
+}
+
+.video-mark-page .xx-section[can-mark="false"] .widgets-mark-info-bar * {
+  display: none;
+}
+
+.video-mark-page .xx-section[can-mark="false"] .section-action-bar {
+  display: none;
+}

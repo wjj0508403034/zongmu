@@ -1,0 +1,8 @@
+.mark-attrs-dialog {
+  min-height: 300px;
+}
+
+.mark-attrs-dialog .property select {
+  height: 30px;
+  width: 100%;
+}

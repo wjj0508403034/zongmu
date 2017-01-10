@@ -1,0 +1,7 @@
+.train-setting-page th[name='op']{
+  width: 100px;
+}
+
+.train-setting-page td .widgets-link-button{
+  margin: 5px 0px;
+}

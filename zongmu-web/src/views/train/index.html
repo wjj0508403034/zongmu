@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="zongmu" ng-controller="appController">
+
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../resources/imgs/favicon.ico" />
+    <title>{{title}}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- inject:css -->
+    <!-- endinject -->
+  </head>
+
+  <body class="train-index-page" ng-controller="trainController">
+    <div widgets-loading text="正在加载，请稍后..." show="loading"></div>
+    <div widgets-top-bar></div>
+    <div widgets-nav current="train"></div>
+    <div widgets-page>
+      <div class="page-left">
+        <div widgets-side-bar groups="sidebar" current-group="train-general" current-item="{{currentItem}}">
+        </div>
+      </div>
+      <div class="page-right" ng-show="currentItem">
+        <article widgets-markdown content="{{content}}">
+        </article>
+      </div>
+    </div>
+
+    <div widgets-foot-bar></div>
+  </body>
+
+</html>

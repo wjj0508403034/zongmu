@@ -1,0 +1,89 @@
+.pic-four-mark-page .section-content {
+  height: 615px;
+}
+
+.pic-four-mark-page .task-detail-section {
+  height: auto;
+}
+
+.widgets-svg-bar .svg-bar-container .widgets-button {
+  min-width: 30px;
+  font-size: 12px;
+  padding: 0 5px;
+}
+
+.pic-four-mark-page .four-video-marker-box {
+  margin: 0 -150px;
+  margin-top: 10px;
+}
+
+.pic-four-mark-page .four-video-table td {
+  border-top: 1px solid #CCCCCC;
+  border-left: 1px solid #CCCCCC;
+  border-right: 1px solid #CCCCCC;
+}
+
+.pic-four-mark-page .four-video-table .video-item-container {
+  clear: both;
+}
+
+.pic-four-mark-page .four-video-table .video-item-container .video-player-container {
+  width: 420px;
+  height: 285px;
+  float: left;
+  margin: 2px 0px 2px 0px;
+}
+
+.pic-four-mark-page .four-video-table .video-item-container .mark-tools-container {
+  background: aliceblue;
+  float: right;
+  height: 285px;
+  width: 125px;
+  margin: 2px 2px 2px 0px;
+}
+
+.pic-four-mark-page .four-video-table .info-row {
+  width: 200px;
+}
+
+.pic-four-mark-page .four-video-table .video-column {
+  width: 550px;
+}
+
+.pic-four-mark-page .four-video-table .mark-tools-container .widgets-svg-bar {
+  width: 100%;
+  height: 100%;
+}
+
+.pic-four-mark-page .four-video-table .play-bar-row {
+  border: 1px solid #1D8C73;
+}
+
+.pic-four-mark-page .four-video-table .widgets-mark-info-bar {
+  height: 100%;
+}
+
+.pic-four-mark-page .tools-bar .pervious-button {
+  width: 200px;
+}
+
+.pic-four-mark-page .tools-bar .next-button {
+  width: 200px;
+  float: right;
+}
+
+.pic-four-mark-page .xx-section[can-mark="false"] .svg-bar-container {
+  display: none;
+}
+
+.pic-four-mark-page .xx-section[can-mark="false"] .widgets-mark-info-bar * {
+  display: none;
+}
+
+.pic-four-mark-page .xx-section[can-mark="false"] .section-action-bar {
+  display: none;
+}
+
+.pic-four-mark-page .finish-btn {
+  display: none;
+}

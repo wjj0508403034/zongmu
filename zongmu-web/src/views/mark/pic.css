@@ -1,0 +1,75 @@
+.pic-mark-page .pic-marker-container {
+  min-height: 432px;
+}
+
+.pic-mark-page .tools-bar .title {
+  float: left;
+  line-height: 40px;
+  margin-right: 10px;
+}
+
+.pic-mark-page .container {
+  border: 1px solid #CCCCCC;
+  margin-top: 10px;
+}
+
+.pic-mark-page .pic-marker-box {
+  height: 500px;
+  margin: 0 -100px;
+  position: relative;
+}
+
+.pic-mark-page .section-content .widgets-svg-bar {
+  width: 150px;
+  margin-top: 10px;
+  background: #CCCCCC;
+  height: 500px;
+  position: absolute;
+  right: 200px;
+}
+
+.pic-mark-page .section-content .container {
+  position: absolute;
+  left: 0px;
+  right: 350px;
+  height: 500px;
+}
+
+.pic-mark-page .widgets-pic-marker img {
+  height: 500px;
+}
+
+.pic-mark-page .section-content .widgets-mark-info-bar {
+  position: absolute;
+  right: 0px;
+  width: 200px;
+  height: 100%;
+  margin-top: 10px;
+  background: #ccc;
+  border-left: 1px solid white;
+}
+
+.pic-mark-page .tools-bar .pervious-button {
+  width: 200px;
+}
+
+.pic-mark-page .tools-bar .next-button {
+  width: 200px;
+  float: right;
+}
+
+.pic-mark-page .finish-btn {
+  display: none;
+}
+
+.pic-mark-page .xx-section[can-mark="false"] .svg-bar-container {
+  display: none;
+}
+
+.pic-mark-page .xx-section[can-mark="false"] .widgets-mark-info-bar * {
+  display: none;
+}
+
+.pic-mark-page .xx-section[can-mark="false"] .section-action-bar {
+  display: none;
+}

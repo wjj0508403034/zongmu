@@ -1,0 +1,45 @@
+<div class="widgets-svg-bar">
+  <div class="svg-bar-container">
+    <div class="tools-bar">
+      <div widgets-button text="新建" ng-click="onNewButtonClick()"></div>
+      <div widgets-button text="删除" ng-click="onDeleteButtonClick()"></div>
+    </div>
+    <ul>
+      <li class="shape-section" hide="{{isShapeHide(shape)}}" ng-repeat="shape in shapes" ng-click="onShapeSectionSelect($index,shape)" active="{{shape.isSelected()}}">
+        <div class="property-container">
+          <div class="property" ng-hide="nameSelected === true">
+            <div class="shape-tools-bar">
+              <label>名称</label>
+              <div class="btn" title="删除标记" ng-click="onDeleteShapeButtonClick(shape)">
+                <i class="fa fa-trash-o"></i>
+              </div>
+              <div class="btn finish-btn" title="结束标记" ng-click="onStopMarkButtonClick(shape)">
+                <i class="fa fa-stop"></i>
+              </div>
+            </div>
+            <div class="value">
+              <input ng-model="shape.shapeId" type="text" disabled="disabled" />
+            </div>
+          </div>
+          <div class="property" ng-show="nameSelected === true">
+            <div class="shape-tools-bar">
+              <label>名称</label>
+              <div class="btn" title="删除标记" ng-click="onDeleteShapeButtonClick(shape)">
+                <i class="fa fa-trash-o"></i>
+              </div>
+              <div class="btn finish-btn" title="结束标记" ng-click="onStopMarkButtonClick(shape)">
+                <i class="fa fa-stop"></i>
+              </div>
+            </div>
+            <div class="value">
+              <select ng-model="shape.shapeId" ng-options="name as name for name in getShapeNames(shape)" ng-change="onShapeCopySelected(shape.shapeId)"></select>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="mark-layer" ng-show="disabled">
+
+  </div>
+</div>
