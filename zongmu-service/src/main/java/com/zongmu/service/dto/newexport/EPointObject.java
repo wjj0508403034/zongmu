@@ -6,7 +6,7 @@ import org.w3c.dom.Node;
 
 public class EPointObject extends AbstractXML {
 
-	private final static float DeltaValue = 50f;
+	private final static float DeltaValue = 80f;
 	private float x;
 	private float y;
 	private boolean isMatch;
