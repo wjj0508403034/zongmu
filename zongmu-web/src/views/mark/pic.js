@@ -73,7 +73,7 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
         .then(function () {
-          initData();
+          window.location.reload();
         });
     };
 

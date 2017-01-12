@@ -110,7 +110,7 @@
             <div widgets-button text="开始审核" ng-click="onStartReviewClick()" ng-if="canReview" ng-show="taskRecord.status === 'WAITTING'"></div>
             <div widgets-button text="审核通过" ng-click="onReviewPassClick()" ng-if="canReview" ng-show="taskRecord.status === 'REVIEWING' || taskRecord.status === 'REJECTED' "></div>
             <div widgets-button text="审核失败" ng-click="onReviewFailClick()" ng-if="canReview" ng-show="taskRecord.status === 'REVIEWING' || taskRecord.status === 'ACCEPTED' "></div>
-            <div widgets-button text="提交" ng-click="onSubmitClick()" ng-hide="taskRecord.status === 'ACCEPTED'"></div>
+            <div widgets-button text="提交" ng-click="onSubmitClick()" ng-hide="taskRecord.status === 'ACCEPTED' || taskRecord.status === 'REVIEWING' || taskRecord.status === 'WAITTING'"></div>
             <div widgets-button text="保存" ng-click="onSaveClick()"></div>
           </div>
         </div>

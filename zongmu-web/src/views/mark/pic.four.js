@@ -686,7 +686,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
         .then(function() {
-          initData();
+          window.location.reload();
         });
     };
 

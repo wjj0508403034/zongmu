@@ -1,6 +1,7 @@
 package com.zongmu.service.dto.newexport;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +151,7 @@ public class EShapeObject extends AbstractXML {
 		List<EChannelObject> list = channelMap.get(channel.getTaskItemFileId());
 		if (list == null) {
 			list = new ArrayList<>();
-			channelMap.put(channel.getFileName(), list);
+			channelMap.put(channel.getFileName().toLowerCase(), list);
 		}
 		list.add(channel);
 	}
@@ -222,32 +223,82 @@ public class EShapeObject extends AbstractXML {
 
 		Element channels = doc.createElement("channels");
 		root.appendChild(channels);
-
-		for (String fileName : shapeObject.getChannelMap().keySet()) {
-			String tagName = shapeObject.getTagName(fileName);
-			Element channelElement = doc.createElement(tagName);
-			channels.appendChild(channelElement);
-
-			Element frameElement = doc.createElement("frameSections");
-			channelElement.appendChild(frameElement);
-			List<EFrameInfoObject> frameInfos = shapeObject.frameInfoMap.get(fileName);
-			if (frameInfos != null) {
-				for (int frameIndex = 0; frameIndex < frameInfos.size(); frameIndex++) {
-					frameElement.appendChild(frameInfos.get(frameIndex).toXml(frameIndex, doc));
-				}
+		if(shapeObject.getChannelMap().size() > 1){
+			if(shapeObject.getChannelMap().containsKey("front.avi")){
+				doHandle(doc,channels,asset,"front.avi",shapeObject);
 			}
-
-			Element geoElement = doc.createElement("geometries");
-			channelElement.appendChild(geoElement);
-			List<EChannelObject> channelObjs = shapeObject.getChannelMap().get(fileName);
-			List<EGeometryObject> newEGeometryObjects = new ArrayList<EGeometryObject>();
-			for (EChannelObject channelObj : channelObjs) {
-				newEGeometryObjects.addAll(channelObj.getGeometries());
+			
+			if(shapeObject.getChannelMap().containsKey("left.avi")){
+				doHandle(doc,channels,asset,"left.avi",shapeObject);
 			}
-
-			for (Element ele : shapeObject.toXmlList(doc, asset, frameInfos, newEGeometryObjects)) {
-				geoElement.appendChild(ele);
+			
+			if(shapeObject.getChannelMap().containsKey("right.avi")){
+				doHandle(doc,channels,asset,"right.avi",shapeObject);
 			}
+			
+			if(shapeObject.getChannelMap().containsKey("rear.avi")){
+				doHandle(doc,channels,asset,"rear.avi",shapeObject);
+			}
+		}else{
+			for (String fileName : shapeObject.getChannelMap().keySet()) {
+				doHandle(doc,channels,asset,fileName,shapeObject);
+			}
+		}
+		
+//		for (String fileName : shapeObject.getChannelMap().keySet()) {
+//			String tagName = shapeObject.getTagName(fileName);
+//			Element channelElement = doc.createElement(tagName);
+//			channels.appendChild(channelElement);
+//
+//			Element frameElement = doc.createElement("frameSections");
+//			channelElement.appendChild(frameElement);
+//			List<EFrameInfoObject> frameInfos = shapeObject.frameInfoMap.get(fileName);
+//			if (frameInfos != null) {
+//				for (int frameIndex = 0; frameIndex < frameInfos.size(); frameIndex++) {
+//					frameElement.appendChild(frameInfos.get(frameIndex).toXml(frameIndex, doc));
+//				}
+//			}
+//
+//			Element geoElement = doc.createElement("geometries");
+//			channelElement.appendChild(geoElement);
+//			List<EChannelObject> channelObjs = shapeObject.getChannelMap().get(fileName);
+//			List<EGeometryObject> newEGeometryObjects = new ArrayList<EGeometryObject>();
+//			for (EChannelObject channelObj : channelObjs) {
+//				newEGeometryObjects.addAll(channelObj.getGeometries());
+//			}
+//			
+//			Collections.sort(newEGeometryObjects);
+//			for (Element ele : shapeObject.toXmlList(doc, asset, frameInfos, newEGeometryObjects)) {
+//				geoElement.appendChild(ele);
+//			}
+//		}
+	}
+	
+	private static void doHandle(Document doc, Element channels,EAssetObject asset,String fileName,EShapeObject shapeObject){
+		String tagName = shapeObject.getTagName(fileName);
+		Element channelElement = doc.createElement(tagName);
+		channels.appendChild(channelElement);
+
+		Element frameElement = doc.createElement("frameSections");
+		channelElement.appendChild(frameElement);
+		List<EFrameInfoObject> frameInfos = shapeObject.frameInfoMap.get(fileName);
+		if (frameInfos != null) {
+			for (int frameIndex = 0; frameIndex < frameInfos.size(); frameIndex++) {
+				frameElement.appendChild(frameInfos.get(frameIndex).toXml(frameIndex, doc));
+			}
+		}
+
+		Element geoElement = doc.createElement("geometries");
+		channelElement.appendChild(geoElement);
+		List<EChannelObject> channelObjs = shapeObject.getChannelMap().get(fileName);
+		List<EGeometryObject> newEGeometryObjects = new ArrayList<EGeometryObject>();
+		for (EChannelObject channelObj : channelObjs) {
+			newEGeometryObjects.addAll(channelObj.getGeometries());
+		}
+		
+		Collections.sort(newEGeometryObjects);
+		for (Element ele : shapeObject.toXmlList(doc, asset, frameInfos, newEGeometryObjects)) {
+			geoElement.appendChild(ele);
 		}
 	}
 

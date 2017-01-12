@@ -3,10 +3,11 @@ package com.zongmu.service.dto.newexport;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class EChannelObject extends AbstractXML {
+public class EChannelObject extends AbstractXML implements Comparable<EChannelObject> {
 
 	private Long taskItemFileId;
 	private String fileName;
@@ -59,6 +60,53 @@ public class EChannelObject extends AbstractXML {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	@Override
+	public int compareTo(EChannelObject obj) {
+//		if (StringUtils.equalsIgnoreCase(fileName, "front.avi")) {
+//			tagName = "channel0";
+//		}
+//
+//		if (StringUtils.equalsIgnoreCase(fileName, "left.avi")) {
+//			tagName = "channel1";
+//		}
+//		if (StringUtils.equalsIgnoreCase(fileName, "right.avi")) {
+//			tagName = "channel2";
+//		}
+//		if (StringUtils.equalsIgnoreCase(fileName, "rear.avi")) {
+//			tagName = "channel3";
+//		}
+		
+		if(this.fileName == obj.fileName){
+			return 0;
+		}
+		
+		if(StringUtils.equalsIgnoreCase(this.fileName, "front.avi")){
+			return -1;
+		}
+		
+		if(StringUtils.equalsIgnoreCase(this.fileName, "left.avi")){
+			if(StringUtils.equalsIgnoreCase(this.fileName, "front.avi")){
+				return 1;
+			}
+			
+			return -1;
+		}
+		
+		if(StringUtils.equalsIgnoreCase(this.fileName, "right.avi")){
+			if(StringUtils.equalsIgnoreCase(this.fileName, "front.avi") || StringUtils.equalsIgnoreCase(this.fileName, "left.avi")){
+				return 1;
+			}
+			
+			return -1;
+		}
+		
+		if(StringUtils.equalsIgnoreCase(this.fileName, "rear.avi")){
+			return 1;
+		}
+		
+		return -1;
 	}
 
 }

@@ -3392,7 +3392,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
         .then(function() {
-          initData();
+          window.location.reload();
         });
     };
 
@@ -3548,7 +3548,7 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
         .then(function () {
-          initData();
+          window.location.reload();
         });
     };
 
@@ -4459,7 +4459,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
         .then(function () {
-          initData();
+          window.location.reload();
         });
     };
 
@@ -4813,7 +4813,7 @@ zongmu.controller("markVideoController", ['$q', '$scope', 'dialog', 'taskRecordS
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
         .then(function () {
-          initData();
+          window.location.reload();
         });
     };
 

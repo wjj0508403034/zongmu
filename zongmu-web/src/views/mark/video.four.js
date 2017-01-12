@@ -693,7 +693,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
         .then(function () {
-          initData();
+          window.location.reload();
         });
     };
 

@@ -6,7 +6,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class EGeometryObject extends AbstractXML {
+public class EGeometryObject extends AbstractXML implements Comparable<EGeometryObject>{
 
 	private long frameIndex;
 	private int geometryType;
@@ -117,5 +117,18 @@ public class EGeometryObject extends AbstractXML {
 		}
 
 		return -1;
+	}
+
+	@Override
+	public int compareTo(EGeometryObject obj) {
+		if(this.frameIndex < obj.frameIndex){
+			return -1;
+		}
+		
+		if(this.frameIndex == obj.frameIndex){
+			return 0;
+		}
+		
+		return 1;
 	}
 }
