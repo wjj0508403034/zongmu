@@ -119,7 +119,7 @@ public class JobConfiguration {
         }
     }
 
-    //@Scheduled(cron = "0/1 * *  * * ? ")
+    @Scheduled(cron = "0/1 * *  * * ? ")
     public void uploadVideoToAliyun() {
         List<TaskItemFile> taskItemFiles = this.taskService.getPendingUploadFiles(1);
         for (TaskItemFile taskItemFile : taskItemFiles) {
