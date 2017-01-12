@@ -60,7 +60,7 @@
               <label class="key">视频录制时长</label>
               <div class="value">{{asset.recordLength | timeString}}</div>
             </div>
-            <div class="property" ng-hide="asset.assetType === 'PICTURE'">
+            <div class="property">
               <label class="key">FTP地址</label>
               <div class="value">
                 <a ng-href="{{asset.fullFtpFolder}}" target="_blank">{{asset.fullFtpFolder}}</a>

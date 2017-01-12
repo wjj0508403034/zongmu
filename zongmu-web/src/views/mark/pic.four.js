@@ -634,16 +634,20 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       return tags;
     }
 
-    $(document).on("keydown", function(event) {
-      switch(event.keyCode) {
-        case 81:
-          event.stopPropagation();
-          $scope.onSubmitClick();
-          break;
-        case 87:
-          event.stopPropagation();
-          $scope.onSaveClick();
-          break;
+    $(document).on("keydown", function (event) {
+      if (event.ctrlKey) {
+        switch (event.keyCode) {
+          case 81: // Ctrl + Q
+            event.stopPropagation();
+            event.preventDefault();
+            $scope.onSubmitClick();
+            break;
+          case 83: // Ctrl + S
+            event.stopPropagation();
+            event.preventDefault();
+            $scope.onSaveClick();
+            break;
+        }
       }
     });
 

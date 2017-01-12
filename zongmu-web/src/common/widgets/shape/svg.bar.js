@@ -119,20 +119,25 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
           console.log(event.keyCode)
           event.stopPropagation();
           switch(event.keyCode) {
-            case 65:
+            case 65: // A
               $scope.onNewButtonClick();
               $scope.$apply();
               break;
-            case 70:
+            case 68: // D
               if($scope.current) {
                 $scope.onDeleteShapeButtonClick($scope.current);
               }
               break;
-            case 71:
+            case 70: //F
               if($scope.current) {
                 $scope.onStopMarkButtonClick($scope.current);
               }
               break;
+            case 69: // E
+             if (event.ctrlKey) {
+               event.preventDefault();
+               $scope.onDeleteButtonClick();
+             }
           }
         });
       }

@@ -409,7 +409,6 @@ i::after {
 }
 
 
-
 .task-center-page .widgets-table {
   min-height: 400px;
 }
@@ -515,6 +514,7 @@ i::after {
   width: 30%;
   float: left;
 }
+
 .mark-attrs-dialog {
   min-height: 300px;
 }
@@ -1178,12 +1178,6 @@ i::after {
   text-align: center;
   color: #1D8C73;
 }
-.train-index-page .page-right{
-  border: 1px solid #1D8C73;
-  padding: 20px;
-  min-height: 600px;
-}
-
 .asset-detail-page .task-list {
   margin-top: 50px;
 }
@@ -1617,6 +1611,12 @@ i::after {
 
 .task-priority-dialog{
   height: 180px;
+}
+
+.train-index-page .page-right{
+  border: 1px solid #1D8C73;
+  padding: 20px;
+  min-height: 600px;
 }
 
 .user-active-page .result-icon {
