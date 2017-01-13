@@ -175,6 +175,7 @@ zongmu.controller("markVideoController", ['$q', '$scope', 'dialog', 'taskRecordS
           if ($scope.taskRecord.taskMarkRecords) {
             $scope.taskRecord.taskMarkRecords.forEach(function (it, index) {
               it.tagsMap = $scope.tagsMap;
+              it.sideCount = $scope.taskRecord.taskItem.sideCount;
               it.taskItem = $scope.taskRecord.taskItem;
             });
 

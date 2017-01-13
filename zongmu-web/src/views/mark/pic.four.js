@@ -236,7 +236,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
           var frameIndexInfo = frameIndexInfoMap[`${shape.name}@${key}`];
           var temp = initNewShape(shape);
           temp.$$timeline = initTimeline(shapeMap[key], frameIndexInfo);
-          formatService.convertBackFour(temp);
+          formatService.convertBackFour(temp,$scope.taskItemFile1.height, $scope.taskItemFile1.width);
           shapes.push(temp);
           $scope[`tempShapes${fileIndex}`].push(temp);
         }
@@ -509,7 +509,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
         taskMarkRecords.push(map[key]);
       });
 
-      formatService.convertToFour(taskMarkRecords);
+      formatService.convertToFour(taskMarkRecords,$scope.taskItemFile1.height, $scope.taskItemFile1.width);
       return formatService.deleteUnMarkShape(taskMarkRecords);
     }
 

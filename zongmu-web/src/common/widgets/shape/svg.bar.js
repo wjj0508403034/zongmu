@@ -43,7 +43,11 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
 
       $scope.isShapeHide = function(shape) {
         if(shape) {
-          return !shape.$$timeline.inRange($scope.frameIndex);
+          var isHide = !shape.$$timeline.inRange($scope.frameIndex);
+          if(isHide){
+            shape.unselect();
+          }
+          return isHide;
         }
         return true;
       };

@@ -189,8 +189,8 @@ angular.module('huoyun-ui').definedObject("Shape", function() {
   function initShape() {
     $logger && $logger.debug("start init shape ...");
     if(obj.points && obj.points.length > 0) {
-      $logger && $logger.debug("init shape ->start draw polyline ...");
       obj.readonly = true;
+      $logger && $logger.debug("init shape ->start draw polyline ...");
       if(obj.type && obj.type === "RECT" && obj.points.length > 1) {
         drawingRect(obj.points[0], obj.points[1]);
       } else {
@@ -416,7 +416,12 @@ angular.module('huoyun-ui').definedObject("Shape", function() {
     },
 
     canDraw: function() {
-      return this.getStoryBoard() !== null && !this.readonly;
+      if( this.getStoryBoard() !== null && !this.readonly ){
+        console.log(this.points);
+        return true;
+      }
+
+      return false;
     },
 
     setScope: function(val) {
