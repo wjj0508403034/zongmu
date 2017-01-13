@@ -2193,15 +2193,6 @@ zongmu.factory('formatService', function() {
   };
 });
 'use strict';
-
-zongmu.controller("helpController", ["$scope", function($scope) {
-  initView();
-
-  function initView() {
-    $scope.setTitle("帮助中心");
-  }
-}]);
-'use strict';
 /*
  * 首页 - 任务中心
  */
@@ -2621,6 +2612,15 @@ zongmu.controller("taskCenterController", ['$scope', 'taskService', 'dialog', 'e
     }
   }
 ]);
+'use strict';
+
+zongmu.controller("helpController", ["$scope", function($scope) {
+  initView();
+
+  function initView() {
+    $scope.setTitle("帮助中心");
+  }
+}]);
 'use strict';
 
 zongmu.controller("attrsDialogController", ['$scope', 'dialog', 'tagService',
@@ -9171,6 +9171,7 @@ zongmu.controller("reviewRecordsController", ["$scope", "reviewRecordService",
     initView() && initData();
 
     function initView() {
+      $scope.selectAll = false;
       breadCrumbProvider.setHistories([{
         text: "审核记录",
         href: "reviews.html"
@@ -9249,6 +9250,7 @@ zongmu.controller("reviewRecordsController", ["$scope", "reviewRecordService",
       reviewRecordService.queryReviewRecords(pageIndex, $scope.queryParams.getData())
         .then(function(result) {
           $scope.hideLoading();
+          $scope.selectAll = false;
           $scope.tasks = result.content;
           $scope.pageData = {
             totalPage: result.totalPages,
@@ -9272,6 +9274,7 @@ zongmu.controller("reviewRecordsController", ["$scope", "reviewRecordService",
     });
 
     $scope.$on("tableIndexChanged", function(paginationScope, index) {
+      $scope.selectAll = false;
       pageIndex = index;
       initData();
     });

@@ -129,6 +129,14 @@ public class AssetViewTagServiceImpl implements AssetViewTagService {
 		AssetViewTagItem item = this.assetViewTagItemRepo.findOne(id);
 		if (item != null) {
 			this.assetViewTagItemRepo.delete(id);
+			if(item.isDefault()){
+				List<AssetViewTagItem> items = this.assetViewTagItemRepo.getItems(item.getAssetViewTagId());
+				if(items.size() > 0){
+					AssetViewTagItem newItem = items.get(0);
+					newItem.setDefault(true);
+					this.assetViewTagItemRepo.save(newItem);
+				}
+			}
 		}
 	}
 

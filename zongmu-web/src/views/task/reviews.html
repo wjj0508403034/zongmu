@@ -274,7 +274,7 @@
             <div class="asset-record-list">
               <div widgets-table columns="columns" dataset="tasks" page-data="pageData" empty-text="没有审核记录" batch="{{enableBatch}}">
                 <div head-template column-index="0">
-                  <div widgets-checkbox on-checked="$parent.$parent.onSelectedAll()" on-unchecked="$parent.$parent.onUnSelectedAll()"></div>
+                  <div widgets-checkbox ng-model="$parent.$parent.selectAll" on-checked="$parent.$parent.onSelectedAll()" on-unchecked="$parent.$parent.onUnSelectedAll()"></div>
                 </div>
                 <div cell-template column-index="0">
                   <div widgets-checkbox ng-model="rowData.isSelected"></div>
