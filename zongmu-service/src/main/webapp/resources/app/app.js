@@ -4063,7 +4063,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       var $timeline = huoyun.newObject("Timeline");
       $timeline.data = [];
       $timeline.startIndex = minIndex;
-      $timeline.endIndex = frameIndexInfo.endIndex;
+      $timeline.endIndex = maxIndex;
 
       groups.forEach(function (group, groupIndex) {
         $timeline.data[group.frameIndex] = [];
@@ -4242,7 +4242,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       var find = null;
 
       [1, 2, 3, 4].forEach(function (it, index) {
-        if (it != videoIndex) {
+        //if (it != videoIndex) {
           $scope["tempShapes" + it].forEach(function (itShape, itIndex) {
             if (itShape.shapeId === shape.shapeId) {
               if (find === null) {
@@ -4251,7 +4251,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
               itShape.setSelected();
             }
           });
-        }
+        //}
       });
 
       if (find) {
@@ -4925,6 +4925,1869 @@ zongmu.controller("viewTagUpdateDialogController", ['$scope', 'dialog', 'assetSe
             result: {
               viewTags: viewTags
             }
+          });
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("algorithmCreateController", ["$scope", "algorithmService", "dialog", "passwordUtils",
+  function($scope, algorithmService, dialog, passwordUtils) {
+    var params = $scope.ngDialogData;
+    $scope.isNew = true;
+
+    if(params && params.algorithm) {
+      $scope.name = params.algorithm.name;
+      $scope.isNew = false;
+    }
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.name) {
+        dialog.showError("请填写算法名称");
+        return;
+      }
+
+      if(!passwordUtils.checkTag($scope.name)) {
+        dialog.showError("名称只能有中划线下划线英文字母中文字母或者数字组成!");
+        return;
+      }
+
+      if(!$scope.isNew) {
+        algorithmService.updateAlgorithm(params.algorithm.id, {
+          name: $scope.name
+        }).then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+      } else {
+        algorithmService.createAlgorithm({
+          name: $scope.name
+        }).then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+      }
+
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("algorithmDetailController", ['$q', '$scope', 'algorithmService', 'dialog',
+  'breadCrumb', 'colorGroupService', 'colorTagService', 'tagService', "viewTagService",
+  function($q, $scope, algorithmService, dialog, breadCrumbProvider, colorGroupService,
+    colorTagService, tagService, viewTagService) {
+    var algorithmId = $.url().param("algorithmId");
+    initView() && initData();
+
+    function initView() {
+      $scope.setTitle("算法详细信息");
+      if(!algorithmId) {
+        dialog.showError("参数错误！");
+        return;
+      }
+
+      breadCrumbProvider.setHistories([{
+        text: "算法设置",
+        href: "algorithm.html"
+      }, {
+        text: "算法详细信息",
+        href: "#"
+      }]);
+
+      $scope.colorColumns = [{
+        name: "name",
+        text: "颜色名称"
+      }, {
+        name: "color",
+        text: "颜色"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      $scope.tagColumns = [{
+        name: "name",
+        text: "属性名称"
+      }, {
+        name: "type",
+        text: "类型"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      $scope.viewTagColumns = [{
+        name: "name",
+        text: "属性名称"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      return true;
+    }
+
+    function initData() {
+      algorithmService.getAlgorithm(algorithmId)
+        .then(function(algorithm) {
+          $scope.algorithm = algorithm;
+        });
+    }
+
+    $scope.onSetTagsButtonClick = function() {
+      $scope.isEdit = true;
+    };
+
+    $scope.onSaveButtonClick = function() {
+      var tagIds = [];
+      $scope.tags.forEach(function(it) {
+        if(it.isSelected) {
+          tagIds.push(it.id);
+        }
+      });
+
+      algorithmService.setTags(algorithmId, {
+        hasColor: $scope.hasColor,
+        tagIds: tagIds.join(";")
+      }).then(function() {
+        dialog.showInfo("关联成功").then(function() {
+          initData();
+        })
+      });
+    };
+
+    $scope.onCancelButtonClick = function() {
+      $scope.isEdit = false;
+    };
+
+    $scope.onCreateTagsButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "tag.create.html",
+        controller: "tagCreateController",
+        params: {
+          algorithmId: algorithmId
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onCreateViewTagsButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "view.tag.create.dialog.html",
+        controller: "viewTagCreateController",
+        params: {
+          algorithmId: algorithmId
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onViewViewTagButtonClicked = function(viewTag) {
+      window.location.href = `viewTag.detail.html?viewTagId=${viewTag.id}&algorithmId=${algorithmId}`;
+    };
+
+    $scope.onDeleteViewTagButtonClicked = function(viewTag) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条场景属性吗？",
+        onConfirm: function() {
+          viewTagService.delete(viewTag.id)
+            .then(function() {
+              initData();
+            });
+        }
+      });
+    };
+
+    $scope.onEditViewTagButtonClicked = function(viewTag) {
+      dialog.showCustom({
+        templateUrl: "view.tag.update.dialog.html",
+        controller: "viewTagUpdateController",
+        params: {
+          viewTag: viewTag
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onEditTagButtonClicked = function(tag) {
+      dialog.showCustom({
+        templateUrl: "tag.create.html",
+        controller: "tagCreateController",
+        params: {
+          tag: tag
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onDeleteTagButtonClicked = function(tag) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          tagService.deleteTag(tag.id)
+            .then(function() {
+              initData();
+            });
+        }
+      });
+    };
+
+    $scope.onViewTagButtonClicked = function(tag) {
+      window.location.href = "tag.detail.html?tagId=" + tag.id + "&algorithmId=" + $scope.algorithm.id;
+    };
+
+    $scope.onCreateColorButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "color.group.dialog.html",
+        controller: "colorGroupDialogController",
+        params: {
+          algorithm: $scope.algorithm
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onCreateColorTagButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "color.create.html",
+        controller: "colorCreateController",
+        params: {
+          group: $scope.algorithm.colorGroup
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onUpdateButtonClick = function(color) {
+      dialog.showCustom({
+        templateUrl: "color.create.html",
+        controller: "colorCreateController",
+        params: {
+          color: color,
+          group: $scope.algorithm.colorGroup
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(color) {
+      dialog.showConfirm({
+        title: "删除提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          deleteColor(color.id);
+        }
+      })
+    };
+
+    function deleteColor(colorId) {
+      colorTagService.deleteColorTag(colorId)
+        .then(function() {
+          initData();
+          /* dialog.showInfo("删除成功!").then(function() {
+             initData();
+           });*/
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("algorithmSettingController", ["$scope", "algorithmService", "dialog", "breadCrumb",
+  function($scope, algorithmService, dialog, breadCrumbProvider) {
+    initView();
+    initData();
+
+    $scope.onUpdateButtonClick = function(algorithm) {
+      dialog.showCustom({
+        templateUrl: "algorithm.create.html",
+        controller: "algorithmCreateController",
+        params: {
+          algorithm: algorithm
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onCreateButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "algorithm.create.html",
+        controller: "algorithmCreateController",
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onViewButtonClick = function(algorithm) {
+      window.location.href = "algorithm.detail.html?algorithmId=" + algorithm.id;
+    };
+
+    $scope.onDeleteButtonClick = function(algorithm) {
+      dialog.showConfirm({
+        title: "删除提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          deleteAlgorithm(algorithm.id);
+        }
+      })
+    };
+
+    function deleteAlgorithm(algorithmId) {
+      algorithmService.deleteAlgorithm(algorithmId)
+        .then(function() {
+          initData();
+          //        dialog.showInfo("删除成功!").then(function() {
+          //          initData();
+          //        });
+        });
+    }
+
+    function initView() {
+      $scope.title = "算法设置";
+      $scope.columns = [{
+        name: "name",
+        text: "名称"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      breadCrumbProvider.setHistories([{
+        text: "算法设置",
+        href: "#"
+      }]);
+    }
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...");
+      algorithmService.getAlgorithms()
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.dataset = data;
+        });
+    }
+
+  }
+]);
+'use strict';
+
+zongmu.controller("assetTagCreateController", ["$scope", "assetService", "enumService", "dialog",
+  function($scope, assetService, enumService, dialog) {
+
+    init();
+
+    function init() {
+      $scope.category = "ROAD";
+      $scope.categories = enumService.getTagCategories();
+    }
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.value) {
+        dialog.showError("请填写属性值!");
+        return;
+      }
+
+      var data = {
+        category: $scope.category,
+        value: $scope.value
+      };
+      assetService.batchCreateAssetTags(data)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("assetTagController", ["$scope", "assetService", "dialog", "breadCrumb",
+  function($scope, assetService, dialog, breadCrumbProvider) {
+    initView();
+    initData();
+
+    $scope.createTag = function() {
+      dialog.showCustom({
+        templateUrl: "asset.tag.create.html",
+        controller: "assetTagCreateController",
+        onConfirm: function() {
+          refresh();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(tagItem) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          assetService.deleteAssetTag(tagItem.id)
+            .then(function() {
+              refresh();
+              //            dialog.showInfo("删除成功!").then(function() {
+              //              refresh();
+              //            });
+            });
+        }
+      });
+
+    };
+
+    $scope.onSetDefaultTagButtonClicked = function(tagItem) {
+      assetService.setDefaultAssetTag(tagItem.id)
+        .then(function() {
+          refresh();
+        });
+    };
+
+    function initView() {
+      $scope.title = "视频属性设置";
+      breadCrumbProvider.setHistories([{
+        text: "视频属性设置",
+        href: "#"
+      }]);
+      $scope.columns = [{
+        name: "name",
+        text: "名称"
+      }, {
+        name: "default",
+        text: "默认值"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+    }
+
+    function initData() {
+      refresh();
+    }
+
+    function refresh() {
+      $scope.roadTags = [];
+      $scope.weatherTags = [];
+      assetService.getAssetTags()
+        .then(function(data) {
+          data.forEach(function(it) {
+            if(it.category === "ROAD") {
+              $scope.roadTags.push(it);
+            } else if(it.category === "WEATHER") {
+              $scope.weatherTags.push(it);
+            }
+          });
+        });
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("assetViewTagCreateController", ["$scope", "assetViewTagService", "dialog","passwordUtils",
+  function($scope, assetViewTagService, dialog,passwordUtils) {
+
+    var params = $scope.ngDialogData || {};
+    if(params.tag) {
+      $scope.value = params.tag.name;
+    }
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.value) {
+        dialog.showError("请填写属性值!");
+        return;
+      }
+      
+      if(!passwordUtils.checkTag($scope.value)){
+        dialog.showError("属性只能有中划线下划线英文字母中文字母或者数字组成!");
+        return;
+      }
+
+      var data = {
+        name: $scope.value
+      };
+
+      if(params.tag) {
+        assetViewTagService.update(params.tag.id, data)
+          .then(function(res) {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      } else {
+        assetViewTagService.create(data)
+          .then(function(res) {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      }
+
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("assetViewTagDetailController", ["$scope", "assetViewTagService", "dialog", "breadCrumb",
+  function($scope, assetViewTagService, dialog, breadCrumbProvider) {
+    var tagId = $.url().param("tagId");
+    initView();
+    initData();
+
+    $scope.createTag = function() {
+      dialog.showCustom({
+        templateUrl: "asset.view.tag.item.create.html",
+        controller: "assetViewTagItemCreateController",
+        params: {
+          assetViewTagId: +tagId
+        },
+        onConfirm: function() {
+          refresh();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(item) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          assetViewTagService.deleteTagItem(item.id)
+            .then(function() {
+              refresh();
+            });
+        }
+      });
+
+    };
+
+    $scope.onSetDefaultTagButtonClicked = function(tagItem) {
+      assetViewTagService.setItemDefault(tagItem.id)
+        .then(function() {
+          refresh();
+        });
+    };
+
+    function initView() {
+      $scope.title = "视频属性设置";
+      breadCrumbProvider.setHistories([{
+        text: "视频属性设置",
+        href: "asset.view.tag.html"
+      }, {
+        text: "详细设置",
+        href: "#"
+      }]);
+      $scope.columns = [{
+        name: "name",
+        text: "名称"
+      }, {
+        name: "isDefault",
+        text: "默认值"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+    }
+
+    function initData() {
+      refresh();
+    }
+
+    function refresh() {
+      assetViewTagService.getViewTag(tagId)
+        .then(function(data) {
+          $scope.tag = data;
+        });
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("assetViewTagItemCreateController", ["$scope", "assetViewTagService", "dialog",
+  function($scope, assetViewTagService, dialog) {
+    var params = $scope.ngDialogData;
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.value) {
+        dialog.showError("请填写属性值!");
+        return;
+      }
+
+//    if(!passwordUtils.batchCheckTag($scope.value)) {
+//      dialog.showError("属性只能有中划线下划线英文字母中文字母或者数字组成!");
+//      return;
+//    }
+
+      var data = {
+        assetViewTagId: params.assetViewTagId,
+        items: $scope.value.split(";").filter(function(it) {
+          return it;
+        })
+      };
+      assetViewTagService.batchCreateItems(data)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("assetViewTagController", ["$scope", "assetViewTagService", "dialog", "breadCrumb",
+  function($scope, assetViewTagService, dialog, breadCrumbProvider) {
+    initView();
+    initData();
+
+    $scope.createTag = function() {
+      dialog.showCustom({
+        templateUrl: "asset.view.tag.create.html",
+        controller: "assetViewTagCreateController",
+        onConfirm: function() {
+          refresh();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(item) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          assetViewTagService.deleteAssetViewTag(item.id)
+            .then(function() {
+              refresh();
+            });
+        }
+      });
+
+    };
+
+    $scope.onViewTagButtonClicked = function(item) {
+      window.location.href=`asset.view.tag.detail.html?tagId=${item.id}`;
+    };
+    
+    $scope.onUpdateViewTagButtonClicked = function(item){
+      dialog.showCustom({
+        templateUrl: "asset.view.tag.create.html",
+        controller: "assetViewTagCreateController",
+        params: {
+          tag: item
+        },
+        onConfirm: function() {
+          refresh();
+        }
+      });
+    };
+
+    function initView() {
+      $scope.title = "视频属性设置";
+      breadCrumbProvider.setHistories([{
+        text: "视频属性设置",
+        href: "#"
+      }]);
+      $scope.columns = [{
+        name: "name",
+        text: "名称"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+    }
+
+    function initData() {
+      refresh();
+    }
+
+    function refresh() {
+      assetViewTagService.getAll()
+        .then(function(data) {
+          $scope.items = data;
+        });
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("colorCreateController", ["$scope", "colorTagService", "dialog", function($scope, colorTagService, dialog) {
+  var params = $scope.ngDialogData;
+
+  initView();
+
+  function initView() {
+    if(params && params.color) {
+      $scope.name = params.color.name;
+      $scope.color = params.color.color;
+    }
+  }
+
+  $scope.onSaveButtonClick = function() {
+    if(!$scope.name) {
+      dialog.showError("请填写属性名称");
+      return;
+    }
+
+    if(!$scope.color) {
+      dialog.showError("请选择颜色");
+      return;
+    }
+
+    var colorTag = {
+      name: $scope.name,
+      color: $scope.color,
+      colorGroupId: params.group.id
+    };
+
+    if(params && params.color) {
+      colorTagService.updateColorTag(params.color.id, colorTag)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    } else {
+      colorTagService.createColorTag(colorTag)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    }
+
+  };
+}]);
+'use strict';
+
+zongmu.controller("colorGroupDialogController", ["$scope", "colorGroupService", "dialog",
+  function($scope, colorGroupService, dialog) {
+    var params = $scope.ngDialogData;
+
+    initView();
+
+    function initView() {
+      if(params.algorithm.colorGroup) {
+        $scope.name = params.algorithm.colorGroup.name;
+      }
+    }
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.name) {
+        dialog.showError("名称不能为空！");
+        return;
+      }
+
+      var group = {
+        name: $scope.name,
+        algorithmId: params.algorithm.id
+      };
+
+      if(params.algorithm.colorGroup) {
+        colorGroupService.update(params.algorithm.id, group)
+          .then(function() {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      } else {
+        colorGroupService.create(group)
+          .then(function() {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      }
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("colorSettingController", ["$scope", "colorTagService", "dialog", "breadCrumb",
+  function($scope, colorTagService, dialog, breadCrumbProvider) {
+    initView();
+    initData();
+
+    $scope.onUpdateButtonClick = function(color) {
+      dialog.showCustom({
+        templateUrl: "color.create.html",
+        controller: "colorCreateController",
+        params: {
+          color: color
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onCreateButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "color.create.html",
+        controller: "colorCreateController",
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(color) {
+      dialog.showConfirm({
+        title: "删除提示",
+        message: "确认要删除此条记录么？",
+        onConfirm: function() {
+          deleteColor(color.id);
+        }
+      })
+    };
+
+    function deleteColor(colorId) {
+      colorTagService.deleteColorTag(colorId)
+        .then(function() {
+          dialog.showInfo("删除成功!").then(function() {
+            initData();
+          });
+        });
+    }
+
+    function initView() {
+      $scope.title = "颜色属性设置";
+      $scope.columns = [{
+        name: "name",
+        text: "名称"
+      }, {
+        name: "color",
+        text: "颜色"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      breadCrumbProvider.setHistories([{
+        text: "颜色属性设置",
+        href: "#"
+      }]);
+    }
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...");
+      colorTagService.getColorTags()
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.colorTags = data;
+        });
+    }
+
+  }
+]);
+'use strict';
+
+zongmu.controller("reasonCreateController", ["$scope", "rejectReasonService", "dialog", function($scope, rejectReasonService, dialog) {
+  var params = $scope.ngDialogData;
+
+  $scope.onSaveButtonClick = function() {
+    if (!$scope.value) {
+      dialog.showError("请填写原因描述");
+      return;
+    }
+
+    rejectReasonService.createReason($scope.value)
+      .then(function(res) {
+        $scope.closeThisDialog({
+          key: 'ok'
+        });
+      });
+  };
+}]);
+'use strict';
+
+zongmu.controller("reasonSettingController", ["$scope", "rejectReasonService", "dialog", "breadCrumb",
+  function($scope, rejectReasonService, dialog, breadCrumbProvider) {
+    initView();
+    initData();
+
+    $scope.onCreateButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "reason.create.html",
+        controller: "reasonCreateController",
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(reason) {
+      dialog.showConfirm({
+        title: "删除提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          deleteReason(reason.id);
+        }
+      })
+    };
+
+    function deleteReason(reasonId) {
+      rejectReasonService.deleteReason(reasonId)
+        .then(function() {
+          initData();
+          //        dialog.showInfo("删除成功!").then(function() {
+          //          initData();
+          //        });
+        });
+    }
+
+    function initView() {
+      $scope.title = "审批拒绝原因设置";
+      $scope.columns = [{
+        name: "description",
+        text: "描述"
+      }, {
+        name: "default",
+        text: "默认值"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      breadCrumbProvider.setHistories([{
+        text: "原因设置",
+        href: "#"
+      }]);
+    }
+
+    function initData() {
+      $scope.showLoading();
+      $scope.setLoadingText("正在加载数据，请稍后...");
+      rejectReasonService.getReasons()
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.reasons = data;
+        });
+    }
+
+    $scope.onSetDefaultButtonClick = function(reason) {
+      $scope.showLoading();
+      $scope.setLoadingText("正在保存数据，请稍后...");
+      rejectReasonService.setDefault(reason.id)
+        .then(function(data) {
+          initData();
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("settingController", ["$scope", function($scope) {
+  $scope.setTitle("设置");
+  
+  $scope.sidebar = [{
+    name: "setting-general",
+    text: "基本设置",
+    icon: "tasks",
+    items: [{
+      name: "asset-tag-settings",
+      text: "视频属性设置",
+      href: "asset.view.tag.html"
+    }, {
+      name: "reject-reason-settings",
+      text: "原因设置",
+      href: "reason.html"
+    }, {
+      name: "algorithm-settings",
+      text: "算法设置",
+      href: "algorithm.html"
+    }, {
+      name: "train-settings",
+      text: "训练设置",
+      href: "train.html"
+    }]
+  }, {
+    name: "user-profile",
+    text: "权限设置",
+    icon: "user",
+    items: [{
+      name: "user-list",
+      text: "用户列表",
+      href: "users.html"
+    }, {
+      name: "black-user-list",
+      text: "黑名单",
+      href: "user.black.list.html"
+    }]
+  }];
+
+  initData();
+
+  function initData() {
+    var role = Cookies.get("role");
+    if(role === "REVIEW") {
+      hideGroups(["user-profile"]);
+    }
+  }
+
+  $scope.hideSideItems = function(names) {
+    hideGroupItems(names);
+  }
+
+  $scope.hideSideGroups = function(groups) {
+    hideGroups(groups);
+  };
+
+  function hideGroups(groups) {
+    $scope.sidebar.forEach(function(group) {
+      if(groups.indexOf(group.name) !== -1) {
+        group.visibility = false;
+      } else {
+        delete group.visibility;
+      }
+    });
+  }
+
+  function hideGroupItems(names) {
+    $scope.sidebar.forEach(function(group) {
+      group.items.forEach(function(it) {
+        if(names.indexOf(it.name) !== -1) {
+          it.visibility = false;
+        } else {
+          delete it.visibility;
+        }
+      });
+    });
+  }
+}]);
+'use strict';
+
+zongmu.controller("tagCreateController", ["$scope", "tagService", "enumService",
+  function($scope, tagService, enumService) {
+
+    var params = $scope.ngDialogData;
+
+    initView();
+
+    function initView() {
+      $scope.controlTypes = enumService.getTagControlTypes();
+      if(params && params.tag) {
+        $scope.isEdit = true;
+        $scope.type = params.tag.type;
+        $scope.name = params.tag.name;
+        $scope.algorithmId = params.tag.algorithmId;
+      } else {
+        $scope.type = "DROPDOWNBOX";
+        $scope.algorithmId = params.algorithmId;
+      }
+    }
+
+    $scope.onSaveButtonClick = function() {
+      var data = {
+        name: $scope.name,
+        type: $scope.type,
+        algorithmId: $scope.algorithmId
+      };
+      if(params && params.tag) {
+        tagService.updateTag(params.tag.id, data)
+          .then(function(res) {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      } else {
+        tagService.createTag(data)
+          .then(function(res) {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      }
+
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("tagDefaultValueController", ["$scope", "tagService", "dialog",
+  function($scope, tagService, dialog) {
+    var params = $scope.ngDialogData;
+    initView();
+
+    function initView() {
+      $scope.tag = angular.copy(params.tag);
+      $scope.selectTagItem = null;
+      if ($scope.tag.type === 'DROPDOWNBOX' || $scope.tag.type === 'RADIOBUTTON') {
+        var results = $scope.tag.items.filter(function(it) {
+          return it.default;
+        });
+
+        if (results.length > 0) {
+          $scope.selectTagItem = results[0];
+        }
+      }
+    }
+
+    $scope.onSaveButtonClick = function() {
+      var tagItems = [];
+      if ($scope.tag.type === 'DROPDOWNBOX' || $scope.tag.type === 'RADIOBUTTON') {
+        if (!$scope.selectTagItem) {
+          dialog.showError("请选择一个默认值。");
+          return;
+        } else {
+          tagItems.push($scope.selectTagItem);
+        }
+      } else if ($scope.tag.type === 'CHECKBOX') {
+        angular.forEach($scope.tag.items, function(item, index) {
+          if (item.default) {
+            tagItems.push(item);
+          }
+        });
+      }
+
+      if (tagItems.length > 0) {
+        tagService.setMultiDefaultValues($scope.tag.id, tagItems)
+          .then(function(res) {
+            $scope.closeThisDialog({
+              key: 'ok'
+            });
+          });
+      }
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("tagDetailController", ['$q', '$scope', 'tagService', 'dialog', 'breadCrumb',
+  function($q, $scope, tagService, dialog, breadCrumbProvider) {
+    var tagId = $.url().param("tagId");
+    var algorithmId = $.url().param("algorithmId");
+
+    initView() && initData();
+    var tagsMap = {};
+
+    function initView() {
+      $scope.setTitle("属性详细信息");
+      if(!tagId) {
+        dialog.showError("参数错误！");
+        return;
+      }
+
+      breadCrumbProvider.setHistories([{
+        text: "算法设置",
+        href: "algorithm.html"
+      }, {
+        text: "算法详细信息",
+        href: "algorithm.detail.html?algorithmId=" + algorithmId
+      }, {
+        text: "属性详细信息",
+        href: "#"
+      }]);
+
+      $scope.columns = [{
+        name: "value",
+        text: "值"
+      }, {
+        name: "default",
+        text: "默认值"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      return true;
+    }
+
+    function initData() {
+      tagService.getTag(tagId)
+        .then(function(tag) {
+          $scope.tag = tag;
+          $scope.defaultValues = [];
+          tag.items.forEach(function(it) {
+            if(it.default) {
+              $scope.defaultValues.push(it);
+            }
+          });
+        });
+    }
+
+    $scope.onCreateItemsButtonClicked = function() {
+      dialog.showCustom({
+        templateUrl: "tag.value.create.html",
+        controller: "tagValueCreateController",
+        params: {
+          tag: $scope.tag
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onSetDefaultValueClicked = function() {
+      dialog.showCustom({
+        templateUrl: "tag.defaultvalue.html",
+        controller: "tagDefaultValueController",
+        params: {
+          tag: $scope.tag
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onSetDefaultButtonClick = function(tagItem) {
+      $scope.showLoading();
+      $scope.setLoadingText("正在保存数据，请稍后...");
+      tagService.setTagDefaultValue(tagItem.tagId, tagItem)
+        .then(function(res) {
+          initData();
+        });
+    };
+
+    $scope.onDeleteTagItemButtonClicked = function(tagItem) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确定要删除么？",
+        onConfirm: function() {
+          tagService.deleteTagItem(tagItem.id)
+            .then(function() {
+              initData();
+            });
+        }
+      });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("tagController", ["$scope", "tagService", "dialog", "breadCrumb",
+  function($scope, tagService, dialog, breadCrumbProvider) {
+    initView();
+    initData();
+
+    $scope.createTag = function() {
+      dialog.showCustom({
+        templateUrl: "tag.create.html",
+        controller: "tagCreateController",
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    function initView() {
+      $scope.title = "属性设置";
+      breadCrumbProvider.setHistories([{
+        text: "标注属性设置",
+        href: "#"
+      }]);
+      $scope.columns = [{
+        name: "name",
+        text: "属性名称"
+      }, {
+        name: "type",
+        text: "类型"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+    }
+
+    function initData() {
+      tagService.getTags()
+        .then(function(data) {
+          $scope.dataSource = data;
+        });
+    }
+
+    $scope.onViewTagButtonClicked = function(tag) {
+      window.location.href = "tag.detail.html?tagId=" + tag.id;
+    };
+
+    $scope.onEditTagButtonClicked = function(tag) {
+      dialog.showCustom({
+        templateUrl: "tag.create.html",
+        controller: "tagCreateController",
+        params: {
+          tag: tag
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onDeleteTagButtonClicked = function(tag) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确定要删除么？",
+        onConfirm: function() {
+          tagService.deleteTag(tag.id)
+            .then(function() {
+              dialog.showInfo("删除成功。").then(function() {
+                initData();
+              });
+            });
+        }
+      });
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("tagValueCreateController", ["$scope", "tagService", "dialog", function($scope, tagService, dialog) {
+  var params = $scope.ngDialogData;
+
+  $scope.onSaveButtonClick = function() {
+    if(!$scope.value){
+      dialog.showError("请填写属性值");
+      return;
+    }
+    
+    var tagItems = $scope.value.split(";");
+    if (params && params.tag && params.tag.id) {
+      tagService.batchAddTagItem(params.tag.id, tagItems)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    } else {
+      dialog.showError("参数错误");
+    }
+  };
+}]);
+'use strict';
+
+zongmu.controller("trainCreateController", ["$scope", "trainService", "dialog", "breadCrumb",
+  function($scope, trainService, dialog, breadCrumbProvider) {
+    var trainId = $.url().param("trainId");
+    initView() && initData();
+
+    function initView() {
+      var text = trainId ? "修改训练设置文档" : "新建训练设置文档";
+      $scope.title = text;
+      breadCrumbProvider.setHistories([{
+        text: "训练设置",
+        href: "train.html"
+      }, {
+        text: text,
+        href: "#"
+      }]);
+      $scope.train = {};
+      return true;
+    }
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.train.subject) {
+        dialog.showError("文档名称不能为空。");
+        return;
+      }
+
+      if(!$scope.train.body) {
+        dialog.showError("文档内容不能为空。");
+        return;
+      }
+
+      $scope.setLoadingText("正在保存，请稍后...");
+      $scope.showLoading();
+      if(trainId) {
+        trainService.updateTrain(trainId, $scope.train)
+          .then(function() {
+            $scope.hideLoading();
+            window.location.href = "train.html";
+          });
+      } else {
+        trainService.createTrain($scope.train)
+          .then(function() {
+            $scope.hideLoading();
+            window.location.href = "train.html";
+          });
+      }
+    }
+
+    $scope.onCancelButtonClick = function() {
+      history.back();
+    };
+
+    function initData() {
+      if(trainId) {
+        $scope.setLoadingText("正在加载，请稍后...");
+        $scope.showLoading();
+        trainService.getTrain(trainId)
+          .then(function(train) {
+            $scope.hideLoading();
+            $scope.train = train;
+          });
+      }
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("trainSettingController", ["$scope", "trainService", "dialog", "breadCrumb",
+  function($scope, trainService, dialog, breadCrumbProvider) {
+    initView();
+    initData();
+
+    $scope.createTrain = function() {
+      window.location.href = "train.create.html";
+    };
+
+    $scope.onUpdateButtonClicked = function(train) {
+      window.location.href = "train.create.html?trainId=" + train.id;
+    };
+
+    $scope.onDeleteButtonClicked = function(train) {
+      dialog.showConfirm({
+        title: "删除提示",
+        message: "确认要删除此条记录么？",
+        onConfirm: function() {
+          deleteTrain(train.id);
+        }
+      });
+    };
+
+    function deleteTrain(trainId) {
+      $scope.setLoadingText("正在删除，请稍后...");
+      $scope.showLoading();
+      trainService.deleteTrain(trainId)
+        .then(function() {
+          refresh();
+        });
+    }
+
+    function initView() {
+      $scope.title = "训练设置";
+      breadCrumbProvider.setHistories([{
+        text: "训练设置",
+        href: "#"
+      }]);
+      $scope.columns = [{
+        name: "subject",
+        text: "标题"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+    }
+
+    function initData() {
+      refresh();
+    }
+
+    function refresh() {
+      $scope.setLoadingText("正在加载，请稍后...");
+      $scope.showLoading();
+      trainService.getTrains()
+        .then(function(data) {
+          $scope.hideLoading();
+          $scope.dataSource = data;
+        });
+    }
+  }
+]);
+'use strict';
+
+zongmu.controller("blackUserListController", ["$scope", "userService", "dialog", "breadCrumb",
+  function($scope, userService, dialog, breadCrumbProvider) {
+    var pageIndex = 0;
+    initView();
+    initData();
+
+    function initView() {
+      $scope.title = "黑名单列表";
+      $scope.columns = [{
+        name: "email",
+        text: "账户"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      breadCrumbProvider.setHistories([{
+        text: "黑名单列表",
+        href: "#"
+      }]);
+    }
+
+    function initData() {
+      userService.getBlackUserList(pageIndex)
+        .then(function(result) {
+          $scope.users = result.content;
+          $scope.pageData = {
+            totalPage: result.totalPages,
+            pageIndex: result.number
+          };
+        });
+    }
+
+    $scope.$on("tableIndexChanged", function(paginationScope, index) {
+      pageIndex = index;
+      initData();
+    });
+
+    $scope.onViewButtonClick = function(user) {
+      window.location.href = "users.detail.html?userId=" + user.id;
+    };
+
+    $scope.onRemoveBlackButtonClick = function(user) {
+      userService.removeBlackList(user.id)
+        .then(function() {
+          dialog.showInfo("移除黑名单成功！")
+            .then(function() {
+              initData();
+            });
+        });
+    };
+
+  }
+]);
+'use strict';
+
+zongmu.controller("userDetailController", ["$scope", "userService", "dialog", "breadCrumb",
+  function($scope, userService, dialog, breadCrumbProvider) {
+    var userId = $.url().param("userId");
+    initView();
+    initData();
+
+    function initView() {
+      $scope.title = "用户详细信息";
+      breadCrumbProvider.setHistories([{
+        text: "用户列表",
+        href: "users.html"
+      }, {
+        text: "详细信息",
+        href: "#"
+      }]);
+    }
+
+    function initData() {
+      userService.getUser(userId)
+        .then(function(data) {
+          $scope.user = data;
+        });
+    }
+
+    $scope.onRoleButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: 'users.role.html',
+        controller: "userRoleDialogController",
+        params: {
+          user: $scope.user
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    }
+
+  }
+]);
+'use strict';
+
+zongmu.controller("userListController", ["$scope", "userService", "dialog", "breadCrumb",
+  function($scope, userService, dialog, breadCrumbProvider) {
+    var pageIndex = 0;
+    var tabIndex = 0;
+    initView();
+    initData();
+
+    function initView() {
+      $scope.title = "用户列表";
+      $scope.columns = [{
+        name: "email",
+        text: "账户"
+      }, {
+        name: "businessRole",
+        text: "角色"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      breadCrumbProvider.setHistories([{
+        text: "用户列表",
+        href: "#"
+      }]);
+
+      $scope.tabs = [{
+        name: "all",
+        text: "全部",
+        active: true
+      }, {
+        name: "ADMIN",
+        text: "管理员"
+      }, {
+        name: "FINANCE",
+        text: "财务人员"
+      }, {
+        name: "REVIEW",
+        text: "审核人员"
+      }, {
+        name: "UPLOAD",
+        text: "路测人员"
+      }, {
+        name: "NORMAL",
+        text: "普通用户"
+      }, {
+        name: "SUPER",
+        text: "高级用户"
+      }];
+    }
+
+    function initData() {
+      userService.getUserList(pageIndex, tabIndex)
+        .then(function(result) {
+          $scope.users = result.content;
+          $scope.pageData = {
+            totalPage: result.totalPages,
+            pageIndex: result.number
+          };
+        });
+    }
+
+    $scope.canShow = function(user) {
+      if(user.id === 1){
+        return false;
+      }
+      
+      if(Cookies.get("role") === 'ADMIN' && Cookies.get("username") === user.email){
+        return false;
+      }
+      
+      return true;
+    };
+
+    $scope.$on("onTabChanged", function(tabScope, item, index) {
+      pageIndex = 0;
+      tabIndex = index;
+      initData();
+    });
+
+    $scope.$on("tableIndexChanged", function(paginationScope, index) {
+      pageIndex = index;
+      initData();
+    });
+
+    $scope.onViewButtonClick = function(user) {
+      window.location.href = "users.detail.html?userId=" + user.id;
+    };
+
+    $scope.onPermissionButtonClick = function(user) {
+      dialog.showCustom({
+        templateUrl: 'users.role.html',
+        controller: "userRoleDialogController",
+        params: {
+          user: user
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onAddBlackButtonClick = function(user) {
+      userService.addBlackList(user.id)
+        .then(function() {
+          dialog.showInfo("拉入黑名单成功！")
+            .then(function() {
+              initData();
+            });
+        });
+    };
+
+  }
+]);
+'use strict';
+
+zongmu.controller("userRoleDialogController", ["$scope", "userService", "dialog", "enumService",
+  function($scope, userService, dialog, enumService) {
+    var params = $scope.ngDialogData;
+
+    initView();
+
+    function initView() {
+      $scope.roles = enumService.getBusinessRoles();
+      $scope.role = params.user.businessRole;
+    }
+
+    $scope.onSaveButtonClick = function() {
+      userService.setUserRole(params.user.id, $scope.role)
+        .then(function() {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("viewTagCreateController", ["$scope", "viewTagService", "dialog",
+  function($scope, viewTagService, dialog) {
+    var params = $scope.ngDialogData;
+    init();
+
+    function init() {}
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.value) {
+        dialog.showError("请填写属性值!");
+        return;
+      }
+
+      var data = {
+        algorithmId: +params.algorithmId,
+        name: $scope.value
+      };
+      viewTagService.create(data)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("viewTagUpdateController", ["$scope", "viewTagService", "dialog",
+  function($scope, viewTagService, dialog) {
+    var params = $scope.ngDialogData;
+    init();
+
+    function init() {
+      $scope.value = params.viewTag.name;
+    }
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.value) {
+        dialog.showError("请填写属性值!");
+        return;
+      }
+
+      var data = {
+        name: $scope.value
+      };
+      viewTagService.update(params.viewTag.id, data)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
+          });
+        });
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("viewTagDetailController", ["$scope", "viewTagService", "dialog", "breadCrumb",
+  function($scope, viewTagService, dialog, breadCrumbProvider) {
+    var viewTagId = $.url().param("viewTagId");
+    var algorithmId = $.url().param("algorithmId");
+    initView() && initData();
+
+    function initView() {
+      $scope.title = "用户详细信息";
+      breadCrumbProvider.setHistories([{
+        text: "算法设置",
+        href: "algorithm.html"
+      }, {
+        text: "算法详细信息",
+        href: "algorithm.detail.html?algorithmId=" + algorithmId
+      }, {
+        text: "场景属性详细信息",
+        href: "#"
+      }]);
+
+      $scope.columns = [{
+        name: "name",
+        text: "值"
+      }, {
+        name: "op",
+        text: "操作"
+      }];
+
+      return true;
+    }
+
+    function initData() {
+      viewTagService.getViewTag(viewTagId)
+        .then(function(data) {
+          $scope.viewTag = data;
+        });
+    }
+
+    $scope.onCreateViewTagsButtonClick = function() {
+      dialog.showCustom({
+        templateUrl: "viewTag.item.create.html",
+        controller: "NewViewTagItemCreateController",
+        params: {
+          viewTagId: +viewTagId
+        },
+        onConfirm: function() {
+          initData();
+        }
+      });
+    };
+
+    $scope.onDeleteButtonClick = function(item) {
+      dialog.showConfirm({
+        title: "提示",
+        message: "确认删除此条属性吗？",
+        onConfirm: function() {
+          viewTagService.deleteTagItem(item.id)
+            .then(function() {
+              initData();
+            });
+        }
+      });
+    };
+
+    $scope.onUpdateButtonClick = function() {
+
+    };
+  }
+]);
+'use strict';
+
+zongmu.controller("NewViewTagItemCreateController", ["$scope", "viewTagService", "dialog",
+  function($scope, viewTagService, dialog) {
+    var params = $scope.ngDialogData;
+
+    $scope.onSaveButtonClick = function() {
+      if(!$scope.value) {
+        dialog.showError("请填写属性值!");
+        return;
+      }
+
+      var data = {
+        names: $scope.value.split(";").filter(function(it) {
+          return it;
+        })
+      };
+      viewTagService.batchCreateItems(params.viewTagId, data)
+        .then(function(res) {
+          $scope.closeThisDialog({
+            key: 'ok'
           });
         });
     };
@@ -7714,1869 +9577,6 @@ zongmu.controller("chooseTaskPriorityController", ['$scope', 'dialog', 'taskServ
         });
     };
 
-  }
-]);
-'use strict';
-
-zongmu.controller("algorithmCreateController", ["$scope", "algorithmService", "dialog", "passwordUtils",
-  function($scope, algorithmService, dialog, passwordUtils) {
-    var params = $scope.ngDialogData;
-    $scope.isNew = true;
-
-    if(params && params.algorithm) {
-      $scope.name = params.algorithm.name;
-      $scope.isNew = false;
-    }
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.name) {
-        dialog.showError("请填写算法名称");
-        return;
-      }
-
-      if(!passwordUtils.checkTag($scope.name)) {
-        dialog.showError("名称只能有中划线下划线英文字母中文字母或者数字组成!");
-        return;
-      }
-
-      if(!$scope.isNew) {
-        algorithmService.updateAlgorithm(params.algorithm.id, {
-          name: $scope.name
-        }).then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-      } else {
-        algorithmService.createAlgorithm({
-          name: $scope.name
-        }).then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-      }
-
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("algorithmDetailController", ['$q', '$scope', 'algorithmService', 'dialog',
-  'breadCrumb', 'colorGroupService', 'colorTagService', 'tagService', "viewTagService",
-  function($q, $scope, algorithmService, dialog, breadCrumbProvider, colorGroupService,
-    colorTagService, tagService, viewTagService) {
-    var algorithmId = $.url().param("algorithmId");
-    initView() && initData();
-
-    function initView() {
-      $scope.setTitle("算法详细信息");
-      if(!algorithmId) {
-        dialog.showError("参数错误！");
-        return;
-      }
-
-      breadCrumbProvider.setHistories([{
-        text: "算法设置",
-        href: "algorithm.html"
-      }, {
-        text: "算法详细信息",
-        href: "#"
-      }]);
-
-      $scope.colorColumns = [{
-        name: "name",
-        text: "颜色名称"
-      }, {
-        name: "color",
-        text: "颜色"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      $scope.tagColumns = [{
-        name: "name",
-        text: "属性名称"
-      }, {
-        name: "type",
-        text: "类型"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      $scope.viewTagColumns = [{
-        name: "name",
-        text: "属性名称"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      return true;
-    }
-
-    function initData() {
-      algorithmService.getAlgorithm(algorithmId)
-        .then(function(algorithm) {
-          $scope.algorithm = algorithm;
-        });
-    }
-
-    $scope.onSetTagsButtonClick = function() {
-      $scope.isEdit = true;
-    };
-
-    $scope.onSaveButtonClick = function() {
-      var tagIds = [];
-      $scope.tags.forEach(function(it) {
-        if(it.isSelected) {
-          tagIds.push(it.id);
-        }
-      });
-
-      algorithmService.setTags(algorithmId, {
-        hasColor: $scope.hasColor,
-        tagIds: tagIds.join(";")
-      }).then(function() {
-        dialog.showInfo("关联成功").then(function() {
-          initData();
-        })
-      });
-    };
-
-    $scope.onCancelButtonClick = function() {
-      $scope.isEdit = false;
-    };
-
-    $scope.onCreateTagsButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "tag.create.html",
-        controller: "tagCreateController",
-        params: {
-          algorithmId: algorithmId
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onCreateViewTagsButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "view.tag.create.dialog.html",
-        controller: "viewTagCreateController",
-        params: {
-          algorithmId: algorithmId
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onViewViewTagButtonClicked = function(viewTag) {
-      window.location.href = `viewTag.detail.html?viewTagId=${viewTag.id}&algorithmId=${algorithmId}`;
-    };
-
-    $scope.onDeleteViewTagButtonClicked = function(viewTag) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条场景属性吗？",
-        onConfirm: function() {
-          viewTagService.delete(viewTag.id)
-            .then(function() {
-              initData();
-            });
-        }
-      });
-    };
-
-    $scope.onEditViewTagButtonClicked = function(viewTag) {
-      dialog.showCustom({
-        templateUrl: "view.tag.update.dialog.html",
-        controller: "viewTagUpdateController",
-        params: {
-          viewTag: viewTag
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onEditTagButtonClicked = function(tag) {
-      dialog.showCustom({
-        templateUrl: "tag.create.html",
-        controller: "tagCreateController",
-        params: {
-          tag: tag
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onDeleteTagButtonClicked = function(tag) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          tagService.deleteTag(tag.id)
-            .then(function() {
-              initData();
-            });
-        }
-      });
-    };
-
-    $scope.onViewTagButtonClicked = function(tag) {
-      window.location.href = "tag.detail.html?tagId=" + tag.id + "&algorithmId=" + $scope.algorithm.id;
-    };
-
-    $scope.onCreateColorButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "color.group.dialog.html",
-        controller: "colorGroupDialogController",
-        params: {
-          algorithm: $scope.algorithm
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onCreateColorTagButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "color.create.html",
-        controller: "colorCreateController",
-        params: {
-          group: $scope.algorithm.colorGroup
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onUpdateButtonClick = function(color) {
-      dialog.showCustom({
-        templateUrl: "color.create.html",
-        controller: "colorCreateController",
-        params: {
-          color: color,
-          group: $scope.algorithm.colorGroup
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(color) {
-      dialog.showConfirm({
-        title: "删除提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          deleteColor(color.id);
-        }
-      })
-    };
-
-    function deleteColor(colorId) {
-      colorTagService.deleteColorTag(colorId)
-        .then(function() {
-          initData();
-          /* dialog.showInfo("删除成功!").then(function() {
-             initData();
-           });*/
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("algorithmSettingController", ["$scope", "algorithmService", "dialog", "breadCrumb",
-  function($scope, algorithmService, dialog, breadCrumbProvider) {
-    initView();
-    initData();
-
-    $scope.onUpdateButtonClick = function(algorithm) {
-      dialog.showCustom({
-        templateUrl: "algorithm.create.html",
-        controller: "algorithmCreateController",
-        params: {
-          algorithm: algorithm
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onCreateButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "algorithm.create.html",
-        controller: "algorithmCreateController",
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onViewButtonClick = function(algorithm) {
-      window.location.href = "algorithm.detail.html?algorithmId=" + algorithm.id;
-    };
-
-    $scope.onDeleteButtonClick = function(algorithm) {
-      dialog.showConfirm({
-        title: "删除提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          deleteAlgorithm(algorithm.id);
-        }
-      })
-    };
-
-    function deleteAlgorithm(algorithmId) {
-      algorithmService.deleteAlgorithm(algorithmId)
-        .then(function() {
-          initData();
-          //        dialog.showInfo("删除成功!").then(function() {
-          //          initData();
-          //        });
-        });
-    }
-
-    function initView() {
-      $scope.title = "算法设置";
-      $scope.columns = [{
-        name: "name",
-        text: "名称"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      breadCrumbProvider.setHistories([{
-        text: "算法设置",
-        href: "#"
-      }]);
-    }
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...");
-      algorithmService.getAlgorithms()
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.dataset = data;
-        });
-    }
-
-  }
-]);
-'use strict';
-
-zongmu.controller("assetTagCreateController", ["$scope", "assetService", "enumService", "dialog",
-  function($scope, assetService, enumService, dialog) {
-
-    init();
-
-    function init() {
-      $scope.category = "ROAD";
-      $scope.categories = enumService.getTagCategories();
-    }
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.value) {
-        dialog.showError("请填写属性值!");
-        return;
-      }
-
-      var data = {
-        category: $scope.category,
-        value: $scope.value
-      };
-      assetService.batchCreateAssetTags(data)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("assetTagController", ["$scope", "assetService", "dialog", "breadCrumb",
-  function($scope, assetService, dialog, breadCrumbProvider) {
-    initView();
-    initData();
-
-    $scope.createTag = function() {
-      dialog.showCustom({
-        templateUrl: "asset.tag.create.html",
-        controller: "assetTagCreateController",
-        onConfirm: function() {
-          refresh();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(tagItem) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          assetService.deleteAssetTag(tagItem.id)
-            .then(function() {
-              refresh();
-              //            dialog.showInfo("删除成功!").then(function() {
-              //              refresh();
-              //            });
-            });
-        }
-      });
-
-    };
-
-    $scope.onSetDefaultTagButtonClicked = function(tagItem) {
-      assetService.setDefaultAssetTag(tagItem.id)
-        .then(function() {
-          refresh();
-        });
-    };
-
-    function initView() {
-      $scope.title = "视频属性设置";
-      breadCrumbProvider.setHistories([{
-        text: "视频属性设置",
-        href: "#"
-      }]);
-      $scope.columns = [{
-        name: "name",
-        text: "名称"
-      }, {
-        name: "default",
-        text: "默认值"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-    }
-
-    function initData() {
-      refresh();
-    }
-
-    function refresh() {
-      $scope.roadTags = [];
-      $scope.weatherTags = [];
-      assetService.getAssetTags()
-        .then(function(data) {
-          data.forEach(function(it) {
-            if(it.category === "ROAD") {
-              $scope.roadTags.push(it);
-            } else if(it.category === "WEATHER") {
-              $scope.weatherTags.push(it);
-            }
-          });
-        });
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("assetViewTagCreateController", ["$scope", "assetViewTagService", "dialog","passwordUtils",
-  function($scope, assetViewTagService, dialog,passwordUtils) {
-
-    var params = $scope.ngDialogData || {};
-    if(params.tag) {
-      $scope.value = params.tag.name;
-    }
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.value) {
-        dialog.showError("请填写属性值!");
-        return;
-      }
-      
-      if(!passwordUtils.checkTag($scope.value)){
-        dialog.showError("属性只能有中划线下划线英文字母中文字母或者数字组成!");
-        return;
-      }
-
-      var data = {
-        name: $scope.value
-      };
-
-      if(params.tag) {
-        assetViewTagService.update(params.tag.id, data)
-          .then(function(res) {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      } else {
-        assetViewTagService.create(data)
-          .then(function(res) {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      }
-
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("assetViewTagDetailController", ["$scope", "assetViewTagService", "dialog", "breadCrumb",
-  function($scope, assetViewTagService, dialog, breadCrumbProvider) {
-    var tagId = $.url().param("tagId");
-    initView();
-    initData();
-
-    $scope.createTag = function() {
-      dialog.showCustom({
-        templateUrl: "asset.view.tag.item.create.html",
-        controller: "assetViewTagItemCreateController",
-        params: {
-          assetViewTagId: +tagId
-        },
-        onConfirm: function() {
-          refresh();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(item) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          assetViewTagService.deleteTagItem(item.id)
-            .then(function() {
-              refresh();
-            });
-        }
-      });
-
-    };
-
-    $scope.onSetDefaultTagButtonClicked = function(tagItem) {
-      assetViewTagService.setItemDefault(tagItem.id)
-        .then(function() {
-          refresh();
-        });
-    };
-
-    function initView() {
-      $scope.title = "视频属性设置";
-      breadCrumbProvider.setHistories([{
-        text: "视频属性设置",
-        href: "asset.view.tag.html"
-      }, {
-        text: "详细设置",
-        href: "#"
-      }]);
-      $scope.columns = [{
-        name: "name",
-        text: "名称"
-      }, {
-        name: "isDefault",
-        text: "默认值"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-    }
-
-    function initData() {
-      refresh();
-    }
-
-    function refresh() {
-      assetViewTagService.getViewTag(tagId)
-        .then(function(data) {
-          $scope.tag = data;
-        });
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("assetViewTagItemCreateController", ["$scope", "assetViewTagService", "dialog",
-  function($scope, assetViewTagService, dialog) {
-    var params = $scope.ngDialogData;
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.value) {
-        dialog.showError("请填写属性值!");
-        return;
-      }
-
-//    if(!passwordUtils.batchCheckTag($scope.value)) {
-//      dialog.showError("属性只能有中划线下划线英文字母中文字母或者数字组成!");
-//      return;
-//    }
-
-      var data = {
-        assetViewTagId: params.assetViewTagId,
-        items: $scope.value.split(";").filter(function(it) {
-          return it;
-        })
-      };
-      assetViewTagService.batchCreateItems(data)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("assetViewTagController", ["$scope", "assetViewTagService", "dialog", "breadCrumb",
-  function($scope, assetViewTagService, dialog, breadCrumbProvider) {
-    initView();
-    initData();
-
-    $scope.createTag = function() {
-      dialog.showCustom({
-        templateUrl: "asset.view.tag.create.html",
-        controller: "assetViewTagCreateController",
-        onConfirm: function() {
-          refresh();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(item) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          assetViewTagService.deleteAssetViewTag(item.id)
-            .then(function() {
-              refresh();
-            });
-        }
-      });
-
-    };
-
-    $scope.onViewTagButtonClicked = function(item) {
-      window.location.href=`asset.view.tag.detail.html?tagId=${item.id}`;
-    };
-    
-    $scope.onUpdateViewTagButtonClicked = function(item){
-      dialog.showCustom({
-        templateUrl: "asset.view.tag.create.html",
-        controller: "assetViewTagCreateController",
-        params: {
-          tag: item
-        },
-        onConfirm: function() {
-          refresh();
-        }
-      });
-    };
-
-    function initView() {
-      $scope.title = "视频属性设置";
-      breadCrumbProvider.setHistories([{
-        text: "视频属性设置",
-        href: "#"
-      }]);
-      $scope.columns = [{
-        name: "name",
-        text: "名称"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-    }
-
-    function initData() {
-      refresh();
-    }
-
-    function refresh() {
-      assetViewTagService.getAll()
-        .then(function(data) {
-          $scope.items = data;
-        });
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("colorCreateController", ["$scope", "colorTagService", "dialog", function($scope, colorTagService, dialog) {
-  var params = $scope.ngDialogData;
-
-  initView();
-
-  function initView() {
-    if(params && params.color) {
-      $scope.name = params.color.name;
-      $scope.color = params.color.color;
-    }
-  }
-
-  $scope.onSaveButtonClick = function() {
-    if(!$scope.name) {
-      dialog.showError("请填写属性名称");
-      return;
-    }
-
-    if(!$scope.color) {
-      dialog.showError("请选择颜色");
-      return;
-    }
-
-    var colorTag = {
-      name: $scope.name,
-      color: $scope.color,
-      colorGroupId: params.group.id
-    };
-
-    if(params && params.color) {
-      colorTagService.updateColorTag(params.color.id, colorTag)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    } else {
-      colorTagService.createColorTag(colorTag)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    }
-
-  };
-}]);
-'use strict';
-
-zongmu.controller("colorGroupDialogController", ["$scope", "colorGroupService", "dialog",
-  function($scope, colorGroupService, dialog) {
-    var params = $scope.ngDialogData;
-
-    initView();
-
-    function initView() {
-      if(params.algorithm.colorGroup) {
-        $scope.name = params.algorithm.colorGroup.name;
-      }
-    }
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.name) {
-        dialog.showError("名称不能为空！");
-        return;
-      }
-
-      var group = {
-        name: $scope.name,
-        algorithmId: params.algorithm.id
-      };
-
-      if(params.algorithm.colorGroup) {
-        colorGroupService.update(params.algorithm.id, group)
-          .then(function() {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      } else {
-        colorGroupService.create(group)
-          .then(function() {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      }
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("colorSettingController", ["$scope", "colorTagService", "dialog", "breadCrumb",
-  function($scope, colorTagService, dialog, breadCrumbProvider) {
-    initView();
-    initData();
-
-    $scope.onUpdateButtonClick = function(color) {
-      dialog.showCustom({
-        templateUrl: "color.create.html",
-        controller: "colorCreateController",
-        params: {
-          color: color
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onCreateButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "color.create.html",
-        controller: "colorCreateController",
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(color) {
-      dialog.showConfirm({
-        title: "删除提示",
-        message: "确认要删除此条记录么？",
-        onConfirm: function() {
-          deleteColor(color.id);
-        }
-      })
-    };
-
-    function deleteColor(colorId) {
-      colorTagService.deleteColorTag(colorId)
-        .then(function() {
-          dialog.showInfo("删除成功!").then(function() {
-            initData();
-          });
-        });
-    }
-
-    function initView() {
-      $scope.title = "颜色属性设置";
-      $scope.columns = [{
-        name: "name",
-        text: "名称"
-      }, {
-        name: "color",
-        text: "颜色"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      breadCrumbProvider.setHistories([{
-        text: "颜色属性设置",
-        href: "#"
-      }]);
-    }
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...");
-      colorTagService.getColorTags()
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.colorTags = data;
-        });
-    }
-
-  }
-]);
-'use strict';
-
-zongmu.controller("reasonCreateController", ["$scope", "rejectReasonService", "dialog", function($scope, rejectReasonService, dialog) {
-  var params = $scope.ngDialogData;
-
-  $scope.onSaveButtonClick = function() {
-    if (!$scope.value) {
-      dialog.showError("请填写原因描述");
-      return;
-    }
-
-    rejectReasonService.createReason($scope.value)
-      .then(function(res) {
-        $scope.closeThisDialog({
-          key: 'ok'
-        });
-      });
-  };
-}]);
-'use strict';
-
-zongmu.controller("reasonSettingController", ["$scope", "rejectReasonService", "dialog", "breadCrumb",
-  function($scope, rejectReasonService, dialog, breadCrumbProvider) {
-    initView();
-    initData();
-
-    $scope.onCreateButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "reason.create.html",
-        controller: "reasonCreateController",
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(reason) {
-      dialog.showConfirm({
-        title: "删除提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          deleteReason(reason.id);
-        }
-      })
-    };
-
-    function deleteReason(reasonId) {
-      rejectReasonService.deleteReason(reasonId)
-        .then(function() {
-          initData();
-          //        dialog.showInfo("删除成功!").then(function() {
-          //          initData();
-          //        });
-        });
-    }
-
-    function initView() {
-      $scope.title = "审批拒绝原因设置";
-      $scope.columns = [{
-        name: "description",
-        text: "描述"
-      }, {
-        name: "default",
-        text: "默认值"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      breadCrumbProvider.setHistories([{
-        text: "原因设置",
-        href: "#"
-      }]);
-    }
-
-    function initData() {
-      $scope.showLoading();
-      $scope.setLoadingText("正在加载数据，请稍后...");
-      rejectReasonService.getReasons()
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.reasons = data;
-        });
-    }
-
-    $scope.onSetDefaultButtonClick = function(reason) {
-      $scope.showLoading();
-      $scope.setLoadingText("正在保存数据，请稍后...");
-      rejectReasonService.setDefault(reason.id)
-        .then(function(data) {
-          initData();
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("settingController", ["$scope", function($scope) {
-  $scope.setTitle("设置");
-  
-  $scope.sidebar = [{
-    name: "setting-general",
-    text: "基本设置",
-    icon: "tasks",
-    items: [{
-      name: "asset-tag-settings",
-      text: "视频属性设置",
-      href: "asset.view.tag.html"
-    }, {
-      name: "reject-reason-settings",
-      text: "原因设置",
-      href: "reason.html"
-    }, {
-      name: "algorithm-settings",
-      text: "算法设置",
-      href: "algorithm.html"
-    }, {
-      name: "train-settings",
-      text: "训练设置",
-      href: "train.html"
-    }]
-  }, {
-    name: "user-profile",
-    text: "权限设置",
-    icon: "user",
-    items: [{
-      name: "user-list",
-      text: "用户列表",
-      href: "users.html"
-    }, {
-      name: "black-user-list",
-      text: "黑名单",
-      href: "user.black.list.html"
-    }]
-  }];
-
-  initData();
-
-  function initData() {
-    var role = Cookies.get("role");
-    if(role === "REVIEW") {
-      hideGroups(["user-profile"]);
-    }
-  }
-
-  $scope.hideSideItems = function(names) {
-    hideGroupItems(names);
-  }
-
-  $scope.hideSideGroups = function(groups) {
-    hideGroups(groups);
-  };
-
-  function hideGroups(groups) {
-    $scope.sidebar.forEach(function(group) {
-      if(groups.indexOf(group.name) !== -1) {
-        group.visibility = false;
-      } else {
-        delete group.visibility;
-      }
-    });
-  }
-
-  function hideGroupItems(names) {
-    $scope.sidebar.forEach(function(group) {
-      group.items.forEach(function(it) {
-        if(names.indexOf(it.name) !== -1) {
-          it.visibility = false;
-        } else {
-          delete it.visibility;
-        }
-      });
-    });
-  }
-}]);
-'use strict';
-
-zongmu.controller("tagCreateController", ["$scope", "tagService", "enumService",
-  function($scope, tagService, enumService) {
-
-    var params = $scope.ngDialogData;
-
-    initView();
-
-    function initView() {
-      $scope.controlTypes = enumService.getTagControlTypes();
-      if(params && params.tag) {
-        $scope.isEdit = true;
-        $scope.type = params.tag.type;
-        $scope.name = params.tag.name;
-        $scope.algorithmId = params.tag.algorithmId;
-      } else {
-        $scope.type = "DROPDOWNBOX";
-        $scope.algorithmId = params.algorithmId;
-      }
-    }
-
-    $scope.onSaveButtonClick = function() {
-      var data = {
-        name: $scope.name,
-        type: $scope.type,
-        algorithmId: $scope.algorithmId
-      };
-      if(params && params.tag) {
-        tagService.updateTag(params.tag.id, data)
-          .then(function(res) {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      } else {
-        tagService.createTag(data)
-          .then(function(res) {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      }
-
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("tagDefaultValueController", ["$scope", "tagService", "dialog",
-  function($scope, tagService, dialog) {
-    var params = $scope.ngDialogData;
-    initView();
-
-    function initView() {
-      $scope.tag = angular.copy(params.tag);
-      $scope.selectTagItem = null;
-      if ($scope.tag.type === 'DROPDOWNBOX' || $scope.tag.type === 'RADIOBUTTON') {
-        var results = $scope.tag.items.filter(function(it) {
-          return it.default;
-        });
-
-        if (results.length > 0) {
-          $scope.selectTagItem = results[0];
-        }
-      }
-    }
-
-    $scope.onSaveButtonClick = function() {
-      var tagItems = [];
-      if ($scope.tag.type === 'DROPDOWNBOX' || $scope.tag.type === 'RADIOBUTTON') {
-        if (!$scope.selectTagItem) {
-          dialog.showError("请选择一个默认值。");
-          return;
-        } else {
-          tagItems.push($scope.selectTagItem);
-        }
-      } else if ($scope.tag.type === 'CHECKBOX') {
-        angular.forEach($scope.tag.items, function(item, index) {
-          if (item.default) {
-            tagItems.push(item);
-          }
-        });
-      }
-
-      if (tagItems.length > 0) {
-        tagService.setMultiDefaultValues($scope.tag.id, tagItems)
-          .then(function(res) {
-            $scope.closeThisDialog({
-              key: 'ok'
-            });
-          });
-      }
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("tagDetailController", ['$q', '$scope', 'tagService', 'dialog', 'breadCrumb',
-  function($q, $scope, tagService, dialog, breadCrumbProvider) {
-    var tagId = $.url().param("tagId");
-    var algorithmId = $.url().param("algorithmId");
-
-    initView() && initData();
-    var tagsMap = {};
-
-    function initView() {
-      $scope.setTitle("属性详细信息");
-      if(!tagId) {
-        dialog.showError("参数错误！");
-        return;
-      }
-
-      breadCrumbProvider.setHistories([{
-        text: "算法设置",
-        href: "algorithm.html"
-      }, {
-        text: "算法详细信息",
-        href: "algorithm.detail.html?algorithmId=" + algorithmId
-      }, {
-        text: "属性详细信息",
-        href: "#"
-      }]);
-
-      $scope.columns = [{
-        name: "value",
-        text: "值"
-      }, {
-        name: "default",
-        text: "默认值"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      return true;
-    }
-
-    function initData() {
-      tagService.getTag(tagId)
-        .then(function(tag) {
-          $scope.tag = tag;
-          $scope.defaultValues = [];
-          tag.items.forEach(function(it) {
-            if(it.default) {
-              $scope.defaultValues.push(it);
-            }
-          });
-        });
-    }
-
-    $scope.onCreateItemsButtonClicked = function() {
-      dialog.showCustom({
-        templateUrl: "tag.value.create.html",
-        controller: "tagValueCreateController",
-        params: {
-          tag: $scope.tag
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onSetDefaultValueClicked = function() {
-      dialog.showCustom({
-        templateUrl: "tag.defaultvalue.html",
-        controller: "tagDefaultValueController",
-        params: {
-          tag: $scope.tag
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onSetDefaultButtonClick = function(tagItem) {
-      $scope.showLoading();
-      $scope.setLoadingText("正在保存数据，请稍后...");
-      tagService.setTagDefaultValue(tagItem.tagId, tagItem)
-        .then(function(res) {
-          initData();
-        });
-    };
-
-    $scope.onDeleteTagItemButtonClicked = function(tagItem) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确定要删除么？",
-        onConfirm: function() {
-          tagService.deleteTagItem(tagItem.id)
-            .then(function() {
-              initData();
-            });
-        }
-      });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("tagController", ["$scope", "tagService", "dialog", "breadCrumb",
-  function($scope, tagService, dialog, breadCrumbProvider) {
-    initView();
-    initData();
-
-    $scope.createTag = function() {
-      dialog.showCustom({
-        templateUrl: "tag.create.html",
-        controller: "tagCreateController",
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    function initView() {
-      $scope.title = "属性设置";
-      breadCrumbProvider.setHistories([{
-        text: "标注属性设置",
-        href: "#"
-      }]);
-      $scope.columns = [{
-        name: "name",
-        text: "属性名称"
-      }, {
-        name: "type",
-        text: "类型"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-    }
-
-    function initData() {
-      tagService.getTags()
-        .then(function(data) {
-          $scope.dataSource = data;
-        });
-    }
-
-    $scope.onViewTagButtonClicked = function(tag) {
-      window.location.href = "tag.detail.html?tagId=" + tag.id;
-    };
-
-    $scope.onEditTagButtonClicked = function(tag) {
-      dialog.showCustom({
-        templateUrl: "tag.create.html",
-        controller: "tagCreateController",
-        params: {
-          tag: tag
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onDeleteTagButtonClicked = function(tag) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确定要删除么？",
-        onConfirm: function() {
-          tagService.deleteTag(tag.id)
-            .then(function() {
-              dialog.showInfo("删除成功。").then(function() {
-                initData();
-              });
-            });
-        }
-      });
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("tagValueCreateController", ["$scope", "tagService", "dialog", function($scope, tagService, dialog) {
-  var params = $scope.ngDialogData;
-
-  $scope.onSaveButtonClick = function() {
-    if(!$scope.value){
-      dialog.showError("请填写属性值");
-      return;
-    }
-    
-    var tagItems = $scope.value.split(";");
-    if (params && params.tag && params.tag.id) {
-      tagService.batchAddTagItem(params.tag.id, tagItems)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    } else {
-      dialog.showError("参数错误");
-    }
-  };
-}]);
-'use strict';
-
-zongmu.controller("trainCreateController", ["$scope", "trainService", "dialog", "breadCrumb",
-  function($scope, trainService, dialog, breadCrumbProvider) {
-    var trainId = $.url().param("trainId");
-    initView() && initData();
-
-    function initView() {
-      var text = trainId ? "修改训练设置文档" : "新建训练设置文档";
-      $scope.title = text;
-      breadCrumbProvider.setHistories([{
-        text: "训练设置",
-        href: "train.html"
-      }, {
-        text: text,
-        href: "#"
-      }]);
-      $scope.train = {};
-      return true;
-    }
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.train.subject) {
-        dialog.showError("文档名称不能为空。");
-        return;
-      }
-
-      if(!$scope.train.body) {
-        dialog.showError("文档内容不能为空。");
-        return;
-      }
-
-      $scope.setLoadingText("正在保存，请稍后...");
-      $scope.showLoading();
-      if(trainId) {
-        trainService.updateTrain(trainId, $scope.train)
-          .then(function() {
-            $scope.hideLoading();
-            window.location.href = "train.html";
-          });
-      } else {
-        trainService.createTrain($scope.train)
-          .then(function() {
-            $scope.hideLoading();
-            window.location.href = "train.html";
-          });
-      }
-    }
-
-    $scope.onCancelButtonClick = function() {
-      history.back();
-    };
-
-    function initData() {
-      if(trainId) {
-        $scope.setLoadingText("正在加载，请稍后...");
-        $scope.showLoading();
-        trainService.getTrain(trainId)
-          .then(function(train) {
-            $scope.hideLoading();
-            $scope.train = train;
-          });
-      }
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("trainSettingController", ["$scope", "trainService", "dialog", "breadCrumb",
-  function($scope, trainService, dialog, breadCrumbProvider) {
-    initView();
-    initData();
-
-    $scope.createTrain = function() {
-      window.location.href = "train.create.html";
-    };
-
-    $scope.onUpdateButtonClicked = function(train) {
-      window.location.href = "train.create.html?trainId=" + train.id;
-    };
-
-    $scope.onDeleteButtonClicked = function(train) {
-      dialog.showConfirm({
-        title: "删除提示",
-        message: "确认要删除此条记录么？",
-        onConfirm: function() {
-          deleteTrain(train.id);
-        }
-      });
-    };
-
-    function deleteTrain(trainId) {
-      $scope.setLoadingText("正在删除，请稍后...");
-      $scope.showLoading();
-      trainService.deleteTrain(trainId)
-        .then(function() {
-          refresh();
-        });
-    }
-
-    function initView() {
-      $scope.title = "训练设置";
-      breadCrumbProvider.setHistories([{
-        text: "训练设置",
-        href: "#"
-      }]);
-      $scope.columns = [{
-        name: "subject",
-        text: "标题"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-    }
-
-    function initData() {
-      refresh();
-    }
-
-    function refresh() {
-      $scope.setLoadingText("正在加载，请稍后...");
-      $scope.showLoading();
-      trainService.getTrains()
-        .then(function(data) {
-          $scope.hideLoading();
-          $scope.dataSource = data;
-        });
-    }
-  }
-]);
-'use strict';
-
-zongmu.controller("blackUserListController", ["$scope", "userService", "dialog", "breadCrumb",
-  function($scope, userService, dialog, breadCrumbProvider) {
-    var pageIndex = 0;
-    initView();
-    initData();
-
-    function initView() {
-      $scope.title = "黑名单列表";
-      $scope.columns = [{
-        name: "email",
-        text: "账户"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      breadCrumbProvider.setHistories([{
-        text: "黑名单列表",
-        href: "#"
-      }]);
-    }
-
-    function initData() {
-      userService.getBlackUserList(pageIndex)
-        .then(function(result) {
-          $scope.users = result.content;
-          $scope.pageData = {
-            totalPage: result.totalPages,
-            pageIndex: result.number
-          };
-        });
-    }
-
-    $scope.$on("tableIndexChanged", function(paginationScope, index) {
-      pageIndex = index;
-      initData();
-    });
-
-    $scope.onViewButtonClick = function(user) {
-      window.location.href = "users.detail.html?userId=" + user.id;
-    };
-
-    $scope.onRemoveBlackButtonClick = function(user) {
-      userService.removeBlackList(user.id)
-        .then(function() {
-          dialog.showInfo("移除黑名单成功！")
-            .then(function() {
-              initData();
-            });
-        });
-    };
-
-  }
-]);
-'use strict';
-
-zongmu.controller("userDetailController", ["$scope", "userService", "dialog", "breadCrumb",
-  function($scope, userService, dialog, breadCrumbProvider) {
-    var userId = $.url().param("userId");
-    initView();
-    initData();
-
-    function initView() {
-      $scope.title = "用户详细信息";
-      breadCrumbProvider.setHistories([{
-        text: "用户列表",
-        href: "users.html"
-      }, {
-        text: "详细信息",
-        href: "#"
-      }]);
-    }
-
-    function initData() {
-      userService.getUser(userId)
-        .then(function(data) {
-          $scope.user = data;
-        });
-    }
-
-    $scope.onRoleButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: 'users.role.html',
-        controller: "userRoleDialogController",
-        params: {
-          user: $scope.user
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    }
-
-  }
-]);
-'use strict';
-
-zongmu.controller("userListController", ["$scope", "userService", "dialog", "breadCrumb",
-  function($scope, userService, dialog, breadCrumbProvider) {
-    var pageIndex = 0;
-    var tabIndex = 0;
-    initView();
-    initData();
-
-    function initView() {
-      $scope.title = "用户列表";
-      $scope.columns = [{
-        name: "email",
-        text: "账户"
-      }, {
-        name: "businessRole",
-        text: "角色"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      breadCrumbProvider.setHistories([{
-        text: "用户列表",
-        href: "#"
-      }]);
-
-      $scope.tabs = [{
-        name: "all",
-        text: "全部",
-        active: true
-      }, {
-        name: "ADMIN",
-        text: "管理员"
-      }, {
-        name: "FINANCE",
-        text: "财务人员"
-      }, {
-        name: "REVIEW",
-        text: "审核人员"
-      }, {
-        name: "UPLOAD",
-        text: "路测人员"
-      }, {
-        name: "NORMAL",
-        text: "普通用户"
-      }, {
-        name: "SUPER",
-        text: "高级用户"
-      }];
-    }
-
-    function initData() {
-      userService.getUserList(pageIndex, tabIndex)
-        .then(function(result) {
-          $scope.users = result.content;
-          $scope.pageData = {
-            totalPage: result.totalPages,
-            pageIndex: result.number
-          };
-        });
-    }
-
-    $scope.canShow = function(user) {
-      if(user.id === 1){
-        return false;
-      }
-      
-      if(Cookies.get("role") === 'ADMIN' && Cookies.get("username") === user.email){
-        return false;
-      }
-      
-      return true;
-    };
-
-    $scope.$on("onTabChanged", function(tabScope, item, index) {
-      pageIndex = 0;
-      tabIndex = index;
-      initData();
-    });
-
-    $scope.$on("tableIndexChanged", function(paginationScope, index) {
-      pageIndex = index;
-      initData();
-    });
-
-    $scope.onViewButtonClick = function(user) {
-      window.location.href = "users.detail.html?userId=" + user.id;
-    };
-
-    $scope.onPermissionButtonClick = function(user) {
-      dialog.showCustom({
-        templateUrl: 'users.role.html',
-        controller: "userRoleDialogController",
-        params: {
-          user: user
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onAddBlackButtonClick = function(user) {
-      userService.addBlackList(user.id)
-        .then(function() {
-          dialog.showInfo("拉入黑名单成功！")
-            .then(function() {
-              initData();
-            });
-        });
-    };
-
-  }
-]);
-'use strict';
-
-zongmu.controller("userRoleDialogController", ["$scope", "userService", "dialog", "enumService",
-  function($scope, userService, dialog, enumService) {
-    var params = $scope.ngDialogData;
-
-    initView();
-
-    function initView() {
-      $scope.roles = enumService.getBusinessRoles();
-      $scope.role = params.user.businessRole;
-    }
-
-    $scope.onSaveButtonClick = function() {
-      userService.setUserRole(params.user.id, $scope.role)
-        .then(function() {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("viewTagCreateController", ["$scope", "viewTagService", "dialog",
-  function($scope, viewTagService, dialog) {
-    var params = $scope.ngDialogData;
-    init();
-
-    function init() {}
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.value) {
-        dialog.showError("请填写属性值!");
-        return;
-      }
-
-      var data = {
-        algorithmId: +params.algorithmId,
-        name: $scope.value
-      };
-      viewTagService.create(data)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("viewTagUpdateController", ["$scope", "viewTagService", "dialog",
-  function($scope, viewTagService, dialog) {
-    var params = $scope.ngDialogData;
-    init();
-
-    function init() {
-      $scope.value = params.viewTag.name;
-    }
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.value) {
-        dialog.showError("请填写属性值!");
-        return;
-      }
-
-      var data = {
-        name: $scope.value
-      };
-      viewTagService.update(params.viewTag.id, data)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("viewTagDetailController", ["$scope", "viewTagService", "dialog", "breadCrumb",
-  function($scope, viewTagService, dialog, breadCrumbProvider) {
-    var viewTagId = $.url().param("viewTagId");
-    var algorithmId = $.url().param("algorithmId");
-    initView() && initData();
-
-    function initView() {
-      $scope.title = "用户详细信息";
-      breadCrumbProvider.setHistories([{
-        text: "算法设置",
-        href: "algorithm.html"
-      }, {
-        text: "算法详细信息",
-        href: "algorithm.detail.html?algorithmId=" + algorithmId
-      }, {
-        text: "场景属性详细信息",
-        href: "#"
-      }]);
-
-      $scope.columns = [{
-        name: "name",
-        text: "值"
-      }, {
-        name: "op",
-        text: "操作"
-      }];
-
-      return true;
-    }
-
-    function initData() {
-      viewTagService.getViewTag(viewTagId)
-        .then(function(data) {
-          $scope.viewTag = data;
-        });
-    }
-
-    $scope.onCreateViewTagsButtonClick = function() {
-      dialog.showCustom({
-        templateUrl: "viewTag.item.create.html",
-        controller: "NewViewTagItemCreateController",
-        params: {
-          viewTagId: +viewTagId
-        },
-        onConfirm: function() {
-          initData();
-        }
-      });
-    };
-
-    $scope.onDeleteButtonClick = function(item) {
-      dialog.showConfirm({
-        title: "提示",
-        message: "确认删除此条属性吗？",
-        onConfirm: function() {
-          viewTagService.deleteTagItem(item.id)
-            .then(function() {
-              initData();
-            });
-        }
-      });
-    };
-
-    $scope.onUpdateButtonClick = function() {
-
-    };
-  }
-]);
-'use strict';
-
-zongmu.controller("NewViewTagItemCreateController", ["$scope", "viewTagService", "dialog",
-  function($scope, viewTagService, dialog) {
-    var params = $scope.ngDialogData;
-
-    $scope.onSaveButtonClick = function() {
-      if(!$scope.value) {
-        dialog.showError("请填写属性值!");
-        return;
-      }
-
-      var data = {
-        names: $scope.value.split(";").filter(function(it) {
-          return it;
-        })
-      };
-      viewTagService.batchCreateItems(params.viewTagId, data)
-        .then(function(res) {
-          $scope.closeThisDialog({
-            key: 'ok'
-          });
-        });
-    };
   }
 ]);
 'use strict';

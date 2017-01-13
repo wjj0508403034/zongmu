@@ -1715,6 +1715,7 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
       $scope.isShapeHide = function(shape) {
         if(shape) {
           var isHide = !shape.$$timeline.inRange($scope.frameIndex);
+          console.log("@@@@" + isHide);
           if(isHide){
             shape.unselect();
           }
@@ -1733,12 +1734,12 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
         });
         // 同一摄像头的Id号也要显示
         ($scope.names || []).forEach(function(name) {
-          if(shapeNames.indexOf(name) === -1) {
-            res.push(name);
-          }
-          // if(res.indexOf(name) === -1){
+          // if(shapeNames.indexOf(name) === -1) {
           //   res.push(name);
           // }
+          if(res.indexOf(name) === -1){
+            res.push(name);
+          }
         });
         return res;
       };
@@ -3057,7 +3058,9 @@ angular.module('huoyun-ui').definedObject("Timeline", function() {
    * 计算当前帧在不在时间线范围内，如果在的话，就差值画图形，如果不在，则删除该图形
    */
   function frameIndexInRange(index) {
-
+    console.log("@@@@Index"+index);
+    console.log("@@@@startIndex"+obj.startIndex);
+    console.log("@@@@endIndex"+obj.endIndex);
     if(typeof index === "number" && typeof obj.startIndex === "number" && index >= obj.startIndex) {
       if(obj.endIndex) {
         return index <= obj.endIndex;

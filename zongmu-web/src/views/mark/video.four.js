@@ -297,7 +297,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       var $timeline = huoyun.newObject("Timeline");
       $timeline.data = [];
       $timeline.startIndex = minIndex;
-      $timeline.endIndex = frameIndexInfo.endIndex;
+      $timeline.endIndex = maxIndex;
 
       groups.forEach(function (group, groupIndex) {
         $timeline.data[group.frameIndex] = [];
@@ -476,7 +476,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       var find = null;
 
       [1, 2, 3, 4].forEach(function (it, index) {
-        if (it != videoIndex) {
+        //if (it != videoIndex) {
           $scope["tempShapes" + it].forEach(function (itShape, itIndex) {
             if (itShape.shapeId === shape.shapeId) {
               if (find === null) {
@@ -485,7 +485,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
               itShape.setSelected();
             }
           });
-        }
+        //}
       });
 
       if (find) {
