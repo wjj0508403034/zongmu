@@ -1734,12 +1734,12 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
         });
         // 同一摄像头的Id号也要显示
         ($scope.names || []).forEach(function(name) {
-          // if(shapeNames.indexOf(name) === -1) {
-          //   res.push(name);
-          // }
-          if(res.indexOf(name) === -1){
+          if(shapeNames.indexOf(name) === -1) {
             res.push(name);
           }
+          // if(res.indexOf(name) === -1){
+          //   res.push(name);
+          // }
         });
         return res;
       };
