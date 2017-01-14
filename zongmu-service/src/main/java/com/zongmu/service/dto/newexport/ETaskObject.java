@@ -119,13 +119,18 @@ public class ETaskObject extends AbstractXML {
 			if (preShape.matchTaskItemEnd()) {
 				for (EShapeObject oldShape : oldShapeList) {
 					if (oldShape.matchTaskItemStart()) {
-						if (!preShape.isMerged() && preShape.match(oldShape)) {
+						if (!oldShape.isMerged() && !preShape.isMerged() && preShape.match(oldShape)) {
 							preShape.setMerged(true);
+							oldShape.setMerged(true);
 							oldShape.merge(preShape);
 						}
 					}
 				}
 			}
+		}
+		
+		for (EShapeObject oldShape : oldShapeList) {
+			oldShape.setMerged(false);
 		}
 	}
 
