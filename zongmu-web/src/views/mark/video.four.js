@@ -478,7 +478,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       [1, 2, 3, 4].forEach(function (it, index) {
         //if (it != videoIndex) {
           $scope["tempShapes" + it].forEach(function (itShape, itIndex) {
-            if (itShape.shapeId === shape.shapeId) {
+            if (itShape !== shape && itShape.shapeId === shape.shapeId) {
               if (find === null) {
                 find = itShape;
               }

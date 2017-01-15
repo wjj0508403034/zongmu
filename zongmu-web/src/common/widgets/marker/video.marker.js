@@ -82,7 +82,6 @@ angular.module("huoyun-ui").definedObject("Video", function() {
 
     obj.dom.onloadedmetadata = function(e) {
       $log && $log.debug("Video metadata is loaded");
-      console.log(arguments);
       obj.duration = this.duration;
       angular.forEach(onMetadataLoadedCallbacks || [], function(callback, index) {
         callback.apply(this, [this.duration]);

@@ -44,7 +44,6 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
       $scope.isShapeHide = function(shape) {
         if(shape) {
           var isHide = !shape.$$timeline.inRange($scope.frameIndex);
-          console.log("@@@@" + isHide);
           if(isHide){
             shape.unselect();
           }

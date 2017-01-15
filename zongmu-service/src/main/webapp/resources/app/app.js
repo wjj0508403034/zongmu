@@ -3,7 +3,7 @@
 var zongmu = angular.module("zongmu", ["huoyun-ui", "ngDialog"]);
 zongmu.constant("serviceUrl", "/service/");
 // http://192.168.100.31:8083/
-zongmu.constant("mediaServiceUrl", "http://192.168.100.31:8083/");
+zongmu.constant("mediaServiceUrl", "http://localhost:8083/");
 //"aliyun"
 zongmu.constant("appEnv", "");
 
@@ -4244,7 +4244,7 @@ zongmu.controller("markFourVideoController", ['$q', '$scope', 'dialog', 'taskRec
       [1, 2, 3, 4].forEach(function (it, index) {
         //if (it != videoIndex) {
           $scope["tempShapes" + it].forEach(function (itShape, itIndex) {
-            if (itShape.shapeId === shape.shapeId) {
+            if (itShape !== shape && itShape.shapeId === shape.shapeId) {
               if (find === null) {
                 find = itShape;
               }
@@ -6793,6 +6793,60 @@ zongmu.controller("NewViewTagItemCreateController", ["$scope", "viewTagService",
     };
   }
 ]);
+'use strict';
+
+zongmu.controller("trainController", ["$scope", "trainService", function($scope, trainService) {
+  var trainId = $.url().param("trainId");
+  initView();
+  initData();
+
+  function initView() {
+    $scope.setTitle("任务训练");
+    $scope.sidebar = [{
+      name: "train-general",
+      text: "训练教程",
+      icon: "tasks",
+      items: []
+    }];
+  }
+
+  function initData() {
+    $scope.showLoading();
+    trainService.getTrains()
+      .then(function(data) {
+        if(data.length === 0) {
+          $scope.hideLoading();
+        } else {
+          data.forEach(function(it, index) {
+            $scope.sidebar[0].items.push({
+              name: it.id + "",
+              text: it.subject,
+              href: "index.html?trainId=" + it.id
+            });
+
+            if(!trainId && index === 0) {
+              trainId = it.id;
+            }
+
+            $scope.currentItem = trainId;
+
+            if(+trainId === it.id) {
+              getTrain(it.id);
+            }
+          })
+        }
+      });
+  }
+
+  function getTrain(trainId) {
+    trainService.getTrain(trainId)
+      .then(function(train) {
+        $scope.hideLoading();
+        $scope.content = train.body;
+      });
+  }
+
+}]);
 'use strict';
 
 zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService",
@@ -9582,60 +9636,6 @@ zongmu.controller("chooseTaskPriorityController", ['$scope', 'dialog', 'taskServ
 
   }
 ]);
-'use strict';
-
-zongmu.controller("trainController", ["$scope", "trainService", function($scope, trainService) {
-  var trainId = $.url().param("trainId");
-  initView();
-  initData();
-
-  function initView() {
-    $scope.setTitle("任务训练");
-    $scope.sidebar = [{
-      name: "train-general",
-      text: "训练教程",
-      icon: "tasks",
-      items: []
-    }];
-  }
-
-  function initData() {
-    $scope.showLoading();
-    trainService.getTrains()
-      .then(function(data) {
-        if(data.length === 0) {
-          $scope.hideLoading();
-        } else {
-          data.forEach(function(it, index) {
-            $scope.sidebar[0].items.push({
-              name: it.id + "",
-              text: it.subject,
-              href: "index.html?trainId=" + it.id
-            });
-
-            if(!trainId && index === 0) {
-              trainId = it.id;
-            }
-
-            $scope.currentItem = trainId;
-
-            if(+trainId === it.id) {
-              getTrain(it.id);
-            }
-          })
-        }
-      });
-  }
-
-  function getTrain(trainId) {
-    trainService.getTrain(trainId)
-      .then(function(train) {
-        $scope.hideLoading();
-        $scope.content = train.body;
-      });
-  }
-
-}]);
 'use strict';
 
 zongmu.controller("activeUserController", ["$scope", "userService", "dialog", "$timeout",

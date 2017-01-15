@@ -23,9 +23,9 @@ public class ReviewRecordSpec {
 			@Override
 			public Predicate toPredicate(Root<ReviewRecord> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();
-				if (user.getBusinessRole() != BusinessRole.ADMIN) {
-					predicates.add(userPredicate(root, query, cb, user.getId()));
-				}
+//				if (user.getBusinessRole() != BusinessRole.ADMIN) {
+//					predicates.add(userPredicate(root, query, cb, user.getId()));
+//				}
 
 				predicates.add(TaskItemSpec.taskNamePredicate(root, query, cb, params.getTaskName()));
 				predicates.add(TaskItemSpec.taskItemNoPredicate(root, query, cb, params.getTaskItemNo()));

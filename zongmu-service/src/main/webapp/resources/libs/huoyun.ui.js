@@ -1152,7 +1152,6 @@ angular.module("huoyun-ui").definedObject("Video", function() {
 
     obj.dom.onloadedmetadata = function(e) {
       $log && $log.debug("Video metadata is loaded");
-      console.log(arguments);
       obj.duration = this.duration;
       angular.forEach(onMetadataLoadedCallbacks || [], function(callback, index) {
         callback.apply(this, [this.duration]);
@@ -1715,7 +1714,6 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
       $scope.isShapeHide = function(shape) {
         if(shape) {
           var isHide = !shape.$$timeline.inRange($scope.frameIndex);
-          console.log("@@@@" + isHide);
           if(isHide){
             shape.unselect();
           }
@@ -2816,7 +2814,6 @@ angular.module('huoyun-ui').definedObject("Shape", function() {
 
     canDraw: function() {
       if( this.getStoryBoard() !== null && !this.readonly ){
-        console.log(this.points);
         return true;
       }
 
@@ -3058,9 +3055,6 @@ angular.module('huoyun-ui').definedObject("Timeline", function() {
    * 计算当前帧在不在时间线范围内，如果在的话，就差值画图形，如果不在，则删除该图形
    */
   function frameIndexInRange(index) {
-    console.log("@@@@Index"+index);
-    console.log("@@@@startIndex"+obj.startIndex);
-    console.log("@@@@endIndex"+obj.endIndex);
     if(typeof index === "number" && typeof obj.startIndex === "number" && index >= obj.startIndex) {
       if(obj.endIndex) {
         return index <= obj.endIndex;

@@ -69,7 +69,6 @@ public class EShapeObject extends AbstractXML {
 						}
 					}
 				}
-
 			}
 		}
 

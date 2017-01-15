@@ -11,19 +11,33 @@ public class EChannelObject extends AbstractXML implements Comparable<EChannelOb
 
 	private Long taskItemFileId;
 	private String fileName;
-
+	private FrameIndexRange endRange;
+	private FrameIndexRange startRange;
 	private List<EGeometryObject> geometries = new ArrayList<>();
 
 	public boolean match(EChannelObject nextChannelObj) {
-		for (EGeometryObject thisObj : this.getGeometries()) {
-			for (EGeometryObject obj : nextChannelObj.getGeometries()) {
-				if (thisObj.isSame(obj)) {
-					return true;
-				}
+		if(this.getGeometries().size() > 0 && nextChannelObj.getGeometries().size() > 0){
+			EGeometryObject preObj = this.getGeometries().get(this.getGeometries().size() - 1);
+			EGeometryObject nextObj = nextChannelObj.getGeometries().get(0);
+			if(preObj.isSame(nextObj)){
+				return true;
 			}
+			
+			
 		}
+//		for (EGeometryObject thisObj : this.getGeometries()) {
+//			for (EGeometryObject obj : nextChannelObj.getGeometries()) {
+//				if (thisObj.isSame(obj)) {
+//					return true;
+//				}
+//			}
+//		}
 		return false;
 	}
+	
+//	private boolean inRange(long index,FrameIndexRange startRange,FrameIndexRange endRange){
+//		if(startRange.in(startIndex, endIndex))
+//	}
 
 	public List<EGeometryObject> getGeometries() {
 		return geometries;
@@ -107,6 +121,22 @@ public class EChannelObject extends AbstractXML implements Comparable<EChannelOb
 		}
 		
 		return -1;
+	}
+
+	public FrameIndexRange getEndRange() {
+		return endRange;
+	}
+
+	public FrameIndexRange getStartRange() {
+		return startRange;
+	}
+
+	public void setEndRange(FrameIndexRange endRange) {
+		this.endRange = endRange;
+	}
+
+	public void setStartRange(FrameIndexRange startRange) {
+		this.startRange = startRange;
 	}
 
 }
