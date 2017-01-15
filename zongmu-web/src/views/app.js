@@ -3,9 +3,9 @@
 var zongmu = angular.module("zongmu", ["huoyun-ui", "ngDialog"]);
 zongmu.constant("serviceUrl", "/service/");
 // http://192.168.100.31:8083/
-zongmu.constant("mediaServiceUrl", "http://localhost:8083/");
+zongmu.constant("mediaServiceUrl", "http://118.178.195.17:8083/");
 //"aliyun"
-zongmu.constant("appEnv", "");
+zongmu.constant("appEnv", "aliyun");
 
 zongmu.config(["applicationProvider", "navProvider", "pageProvider", "footbarProvider",
   "$httpProvider", "$logProvider", "httpErrorProvider", "serviceUrl",

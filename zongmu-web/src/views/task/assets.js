@@ -187,6 +187,7 @@ zongmu.controller("assetController", ["$scope", "assetService", "breadCrumb", "e
     };
 
     $scope.onSearchButtonClick = function() {
+      pageIndex = 0;
       initData()
         //    var filter = "";
         //

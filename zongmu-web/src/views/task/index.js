@@ -217,6 +217,7 @@ zongmu.controller("myTasksController", ["$scope", "taskRecordService", "breadCru
     };
 
     $scope.onSearchButtonClick = function() {
+      pageIndex = 0;
       initData();
     };
 

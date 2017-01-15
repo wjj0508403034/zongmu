@@ -52,22 +52,33 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
         return true;
       };
 
+      function isShapeInRange(shape){
+        return shape.$$timeline.inRange($scope.frameIndex);
+      }
+
       $scope.getShapeNames = function(shape) {
         var res = [];
         var shapeNames = [];
+        var removeShapeNames = [];
         $scope.shapes.forEach(function(xShape) {
           if(xShape.shapeId !== shape.shapeId) {
-            shapeNames.push(xShape.shapeId);
+            if(!isShapeInRange(xShape)){
+              shapeNames.push(xShape.shapeId);
+            }else{
+              removeShapeNames.push(xShape.shapeId);
+            }
           }
         });
         // 同一摄像头的Id号也要显示
         ($scope.names || []).forEach(function(name) {
-          if(shapeNames.indexOf(name) === -1) {
-            res.push(name);
-          }
-          // if(res.indexOf(name) === -1){
+          // if(shapeNames.indexOf(name) === -1) {
           //   res.push(name);
           // }
+          if(res.indexOf(name) === -1){
+            if(removeShapeNames.indexOf(name) === -1){
+              res.push(name);
+            }
+          }
         });
         return res;
       };

@@ -1,9 +1,9 @@
 'use strict';
 
-zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService",
-  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService) {
+zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService","appEnv",
+  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService,appEnv) {
     var assetNo = $.url().param("assetNo");
-
+    $scope.appEnv = appEnv;
     initView() && initData();
 
     $scope.onSearchButtonClick = function() {

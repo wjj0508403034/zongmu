@@ -37,6 +37,9 @@
   position: absolute;
   left: 25px;
   right: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .widgets-checkbox[disabled="disabled"]>.checkbox-icon {

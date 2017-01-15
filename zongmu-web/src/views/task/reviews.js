@@ -220,6 +220,7 @@ zongmu.controller("reviewRecordsController", ["$scope", "reviewRecordService",
     };
 
     $scope.onSearchButtonClick = function() {
+      pageIndex = 0;
       initData();
     };
 

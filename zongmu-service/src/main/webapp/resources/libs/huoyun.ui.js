@@ -1722,22 +1722,33 @@ angular.module('huoyun-ui').directive("widgetsSvgBar", ["huoyunUtil", "$log", "d
         return true;
       };
 
+      function isShapeInRange(shape){
+        return shape.$$timeline.inRange($scope.frameIndex);
+      }
+
       $scope.getShapeNames = function(shape) {
         var res = [];
         var shapeNames = [];
+        var removeShapeNames = [];
         $scope.shapes.forEach(function(xShape) {
           if(xShape.shapeId !== shape.shapeId) {
-            shapeNames.push(xShape.shapeId);
+            if(!isShapeInRange(xShape)){
+              shapeNames.push(xShape.shapeId);
+            }else{
+              removeShapeNames.push(xShape.shapeId);
+            }
           }
         });
         // 同一摄像头的Id号也要显示
         ($scope.names || []).forEach(function(name) {
-          if(shapeNames.indexOf(name) === -1) {
-            res.push(name);
-          }
-          // if(res.indexOf(name) === -1){
+          // if(shapeNames.indexOf(name) === -1) {
           //   res.push(name);
           // }
+          if(res.indexOf(name) === -1){
+            if(removeShapeNames.indexOf(name) === -1){
+              res.push(name);
+            }
+          }
         });
         return res;
       };
@@ -3543,7 +3554,7 @@ angular.module('huoyun-ui').provider("application", function() {
 });
 angular.module("huoyun-ui").run(["$templateCache", function($templateCache) {$templateCache.put("widgets/breadcrumb/breadcrumb.html","<div class=\"widgets-bread-crumb\"><ul><li ng-repeat=\"item in items\"><a title=\"{{item.text}}\" ng-href=\"{{item.href}}\" ng-if=\"!$last\">{{item.text}}</a> <i class=\"fa fa-angle-right\" ng-if=\"!$last\"></i> <span title=\"{{item.text}}\" class=\"last-bread-crumb\" ng-if=\"$last\">{{item.text}}</span></li></ul></div>");
 $templateCache.put("widgets/button/button.html","<div class=\"widgets-button\">{{text}}</div>");
-$templateCache.put("widgets/checkbox/checkbox.html","<div class=\"widgets-checkbox\" ng-click=\"onCheckboxClicked()\" dis=\"dis\"><div class=\"checkbox-icon\"><i class=\"fa fa-square-o uncheck-font\" aria-hidden=\"true\"></i> <i class=\"fa fa-check-square check-font\" aria-hidden=\"true\"></i></div><div class=\"checkbox-content\">{{content}}</div></div>");
+$templateCache.put("widgets/checkbox/checkbox.html","<div class=\"widgets-checkbox\" ng-click=\"onCheckboxClicked()\" dis=\"dis\"><div class=\"checkbox-icon\"><i class=\"fa fa-square-o uncheck-font\" aria-hidden=\"true\"></i> <i class=\"fa fa-check-square check-font\" aria-hidden=\"true\"></i></div><div class=\"checkbox-content\" title=\"{{content}}\">{{content}}</div></div>");
 $templateCache.put("widgets/colorpicker/color.picker.html","<div class=\"widgets-color-picker\"><input class=\"color-button\"></div>");
 $templateCache.put("widgets/cursor/cursor.html","<div class=\"widgets-cursor\"><div class=\"widgets-cursor-line-h\"></div><div class=\"widgets-cursor-line-v\"></div></div>");
 $templateCache.put("widgets/dialog/confirm.html","<div class=\"widgets-dialog-confirm\"><div class=\"header-bar\"><div class=\"header-bar-container\"><i class=\"icon fa fa-info\"></i> <span>{{ngDialogData.title}}</span></div></div><div class=\"dialog-content\">{{ngDialogData.message}}</div><div class=\"dialog-tools-bar\"><div class=\"dialog-tools-bar-container\"><div widgets-button=\"\" text=\"取消\" huoyun-append-class=\"btn-gray\" ng-click=\"closeThisDialog(\'cancel\')\"></div><div widgets-button=\"\" text=\"确定\" ng-click=\"closeThisDialog(\'ok\')\"></div></div></div></div>");

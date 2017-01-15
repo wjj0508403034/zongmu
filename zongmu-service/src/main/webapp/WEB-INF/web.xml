@@ -42,5 +42,9 @@
 		<error-code>401</error-code>
 		<location>/page/user/login.html</location>
 	</error-page>
+	
+	<session-config>
+      <session-timeout>300</session-timeout>
+	</session-config>
 
 </web-app>

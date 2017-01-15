@@ -151,7 +151,7 @@
               </div>
               <div cell-template column-index="4">
                 <div widgets-link-button text="删除" ng-click="$superScope.onDeleteButtonClick(rowData)"></div>
-                <div ng-if="rowData.taskType === 'VIDEO'" widgets-link-button text="导出数据" ng-click="$superScope.onExportButtonClick(rowData)"></div>
+                <div ng-if="$superScope.appEnv !== 'aliyun' && rowData.taskType === 'VIDEO'" widgets-link-button text="导出数据" ng-click="$superScope.onExportButtonClick(rowData)"></div>
               </div>
             </div>
           </div>

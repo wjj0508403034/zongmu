@@ -350,6 +350,7 @@ zongmu.controller("taskCenterController", ['$scope', 'taskService', 'dialog', 'e
     };
 
     $scope.onSearchButtonClick = function() {
+      pageIndex = 0;
       load();
       //    filter = "";
       //    if($scope.s.name) {
