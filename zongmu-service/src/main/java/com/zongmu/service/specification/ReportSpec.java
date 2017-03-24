@@ -47,7 +47,8 @@ public class ReportSpec extends AbstractSpec {
 				}
 				predicates.add(AssetSpec.videoLengthPredicate(root, query, cb, params.getRecordLength()));
 				predicates.add(AssetSpec.assetViewTagIdsPredicate(root, query, cb, params.getAssetViewItemIds()));
-				predicates.add(TaskItemSpec.taskViewTagsPredicate(root, query, cb, params.getViewTagItemMap()));
+				//predicates.add(TaskItemSpec.taskMainViewTagPredicate(root, query, cb,viewTagItemId));
+				predicates.add(TaskItemSpec.taskViewTagsPredicate(root, query, cb, params.getViewTagItemMap(),viewTagItemId));
 				List<Predicate> list2 = taskItemStatusPredicate(root, query, cb, params.getTaskItemStatus());
 				if (list2 != null) {
 					predicates.addAll(list2);

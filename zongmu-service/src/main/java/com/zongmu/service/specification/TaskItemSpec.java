@@ -108,23 +108,52 @@ public class TaskItemSpec {
 	}
 
 	public static Predicate taskViewTagsPredicate(Root<TaskItem> root, CriteriaQuery<?> query, CriteriaBuilder cb,
-			Map<Long, ArrayList<Long>> viewTagMap) {
+			Map<Long, ArrayList<Long>> viewTagMap,Long viewTagItemId) {
 		if (viewTagMap == null || viewTagMap.isEmpty()) {
 			return null;
 		}
 
 		Subquery<Long> taskItemXViewTagQuery = query.subquery(Long.class);
 		List<Predicate> list = new ArrayList<>();
+		
+		//Subquery<Long> taskItemXViewTagQuery3 = query.subquery(Long.class);
+		Root<TaskItemXViewTag> taskItemXViewTagRoot3 = taskItemXViewTagQuery.from(TaskItemXViewTag.class);
+		taskItemXViewTagQuery.select(taskItemXViewTagRoot3.get("taskItemId").as(Long.class));
+		Predicate predicate3 = cb.equal(taskItemXViewTagRoot3.get("viewTagItemId").as(Long.class), viewTagItemId);
+		list.add(predicate3);
+		
 		for (Long viewTagId : viewTagMap.keySet()) {
 			ArrayList<Long> viewTagItemIds = viewTagMap.get(viewTagId);
 			Root<TaskItemXViewTag> taskItemXViewTagRoot = taskItemXViewTagQuery.from(TaskItemXViewTag.class);
 			taskItemXViewTagQuery.select(taskItemXViewTagRoot.get("taskItemId").as(Long.class));
 			//Predicate predicate1 =cb.equal(taskItemXViewTagRoot.get("viewTagId").as(Long.class),viewTagId);
 			Predicate predicate2 = taskItemXViewTagRoot.get("viewTagItemId").as(Long.class).in(viewTagItemIds);
+			Predicate predicatex = cb.equal(taskItemXViewTagRoot3.get("taskItemId").as(Long.class), taskItemXViewTagRoot.get("taskItemId").as(Long.class));
+			list.add(predicatex);
 			list.add(predicate2);
 		}
 
-		return root.get("id").as(Long.class).in(taskItemXViewTagQuery.where(toPredicateArray(list)));
+		Subquery<Long> taskItemIdQuery =taskItemXViewTagQuery.where(toPredicateArray(list));
+		taskItemIdQuery = taskItemIdQuery.groupBy(taskItemXViewTagRoot3.get("taskItemId").as(Long.class));
+		return root.get("id").as(Long.class).in(taskItemIdQuery);
+	}
+	
+	public static Predicate taskMainViewTagPredicate(Root<TaskItem> root, CriteriaQuery<?> query, CriteriaBuilder cb,
+			Long viewTagItemId) {
+
+		Subquery<Long> taskItemXViewTagQuery = query.subquery(Long.class);
+		Root<TaskItemXViewTag> taskItemXViewTagRoot = taskItemXViewTagQuery.from(TaskItemXViewTag.class);
+		taskItemXViewTagQuery.select(taskItemXViewTagRoot.get("taskItemId").as(Long.class));
+		Predicate predicate = cb.equal(taskItemXViewTagRoot.get("viewTagItemId").as(Long.class), viewTagItemId);
+		//taskItemXViewTagQuery.where(predicate);
+		
+
+		Subquery<Long> taskItemXViewTagQuery2= query.subquery(Long.class);
+		Root<TaskItemXViewTag> taskItemXViewTagRoot2 = taskItemXViewTagQuery2.from(TaskItemXViewTag.class);
+		taskItemXViewTagQuery2.select(taskItemXViewTagRoot2.get("taskItemId").as(Long.class));
+		Predicate predicate2 = taskItemXViewTagRoot2.get("taskItemId").as(Long.class).in(taskItemXViewTagQuery.where(predicate));
+
+		return root.get("id").as(Long.class).in(taskItemXViewTagQuery2.where(predicate2));
 	}
 
 	private static Predicate[] toPredicateArray(List<Predicate> list) {

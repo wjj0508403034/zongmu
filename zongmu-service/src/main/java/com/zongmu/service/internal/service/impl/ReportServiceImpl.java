@@ -99,12 +99,22 @@ public class ReportServiceImpl implements ReportService {
 		Long pictureTotal = 0l;
 		for (ViewTagItem tagItem : viewTag.getItems()) {
 			headers.add(new Header(tagItem.getId().toString(), tagItem.getName()));
-			Long sumVideo = this.taskService.calcVideoTotalLength(algorithmId, tagItem.getId(), reportSearchParam);
+			Long sumVideo = null;
+			Long countPic = null;
+			if(reportSearchParam.inViewTagRange(viewTag.getId(), tagItem.getId())){
+				sumVideo = this.taskService.calcVideoTotalLength(algorithmId, tagItem.getId(), reportSearchParam);
+				countPic = this.taskService.calcPictureTotalCount(algorithmId, tagItem.getId(), reportSearchParam);
+			}
+			
 			if (sumVideo == null) {
 				sumVideo = 0l;
 			}
+			
+			if(countPic == null){
+				countPic = 0l;
+			}
 			videoRowData.getData().put(tagItem.getId().toString(), sumVideo);
-			Long countPic = this.taskService.calcPictureTotalCount(algorithmId, tagItem.getId(), reportSearchParam);
+			//countPic = this.taskService.calcPictureTotalCount(algorithmId, tagItem.getId(), reportSearchParam);
 			picRowData.getData().put(tagItem.getId().toString(), countPic);
 			videoTotal += sumVideo;
 			pictureTotal += countPic;

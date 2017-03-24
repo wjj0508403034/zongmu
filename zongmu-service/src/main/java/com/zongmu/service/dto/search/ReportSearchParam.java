@@ -8,32 +8,41 @@ import java.util.Map;
 public class ReportSearchParam {
 
 	private String assetName;
-	
+
 	private String assetNo;
-	
+
 	private Long algorithmId;
-	
+
 	private List<Long> assetViewItemIds = new ArrayList<>();
-	
-	private Map<Long,ArrayList<Long>> viewTagItemMap = new HashMap<Long,ArrayList<Long>>();
-	
+
+	private Map<Long, ArrayList<Long>> viewTagItemMap = new HashMap<Long, ArrayList<Long>>();
+
 	private String taskName;
-	
+
 	private String taskItemNo;
-	
+
 	private DateRange assetRecordDate;
-	
+
 	private Compare recordLength;
-	
+
 	private List<SearchTaskStatus> taskItemStatus = new ArrayList<>();
-	
+
 	private SearchTaskStatus taskStatus;
-	
+
 	private DateRange taskDate;
-	
+
 	private DateRange uploadDate;
-	
+
 	private DateRange taskFinishDate;
+
+	public boolean inViewTagRange(Long viewTagId, Long viewTagItemId) {
+		if(this.viewTagItemMap.containsKey(viewTagId)){
+			List<Long> list = this.viewTagItemMap.get(viewTagId);
+			return list.contains(viewTagItemId);
+		}
+		
+		return true;
+	}
 
 	public String getAssetName() {
 		return assetName;
@@ -115,11 +124,11 @@ public class ReportSearchParam {
 		this.taskFinishDate = taskFinishDate;
 	}
 
-	public Map<Long,ArrayList<Long>> getViewTagItemMap() {
+	public Map<Long, ArrayList<Long>> getViewTagItemMap() {
 		return viewTagItemMap;
 	}
 
-	public void setViewTagItemMap(Map<Long,ArrayList<Long>> viewTagItemMap) {
+	public void setViewTagItemMap(Map<Long, ArrayList<Long>> viewTagItemMap) {
 		this.viewTagItemMap = viewTagItemMap;
 	}
 
