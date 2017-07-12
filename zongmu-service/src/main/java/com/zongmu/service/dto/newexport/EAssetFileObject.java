@@ -55,11 +55,10 @@ public class EAssetFileObject extends AbstractXML {
 	}
 
 	public String getTagName() {
-		String tagName = null;
+		String tagName = "channel0";
 		if (StringUtils.equalsIgnoreCase(this.getFileName(), "front.avi")) {
 			tagName = "channel0";
 		}
-
 		if (StringUtils.equalsIgnoreCase(this.getFileName(), "left.avi")) {
 			tagName = "channel1";
 		}

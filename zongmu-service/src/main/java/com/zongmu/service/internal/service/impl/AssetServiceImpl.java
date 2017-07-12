@@ -253,9 +253,9 @@ public class AssetServiceImpl implements AssetService {
 	@Override
 	public void setUploadFileData(String assetNo, FileData fileData) throws BusinessException {
 		Asset asset = this.getSimpleAsset(assetNo);
-
-		asset.setRecordLength(
-				this.calcDuration(fileData.getVideoInfo().getFps(), fileData.getVideoInfo().getFramesCount()));
+		float duration = this.calcDuration(fileData.getVideoInfo().getFps(), fileData.getVideoInfo().getFramesCount());
+		asset.setRecordLength(duration);
+		fileData.getVideoInfo().setDuration(duration);
 		this.assetRepo.save(asset);
 		this.createAssetFile(asset, fileData);
 	}

@@ -23,6 +23,9 @@ public interface TaskRecordRepository extends PagingAndSortingRepository<TaskRec
 	@Modifying
 	@Query("delete from TaskRecord t where t.taskItemNo = ?1")
 	void deleteTaskRecords(String taskItemNo);
+	
+	@Query("select t.id from TaskRecord t where t.taskRecordNo = ?1")
+	List<Long> getTaskRecordIdsByTaskItemNo(String taskItemNo);
 
 	@Query("select t from TaskRecord t where t.taskItemNo = ?1 order by t.id desc")
 	List<TaskRecord> getTaskRecords(String taskItemNo);

@@ -364,11 +364,15 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		taskItem.setStatus(TaskItemStatus.NEW);
 		this.taskService.saveTaskItem(taskItem);
 		this.deleteTaskRecord(taskItem);
-		this.taskMarkRecordService.deleteRecords(record.getId());
+		//this.taskMarkRecordService.deleteRecords(record.getId());
 	}
 
 	@Override
 	public void deleteTaskRecord(TaskItem taskItem) {
+		List<Long> taskRecordIds = this.taskRecordRepo.getTaskRecordIdsByTaskItemNo(taskItem.getTaskItemNo());
+		for(Long taskRecordId : taskRecordIds){
+			this.taskMarkRecordService.deleteRecords(taskRecordId);
+		}
 		this.taskRecordRepo.deleteTaskRecords(taskItem.getTaskItemNo());
 		this.reviewRecordService.deleteReviewRecords(taskItem);
 	}

@@ -1,6 +1,8 @@
 package com.zongmu.service.internal.service.mark.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,14 @@ public class TaskMarkRecordServiceImpl implements TaskMarkRecordService {
 
 	private void saveRecord(TaskMarkRecord taskMarkRecord) {
 		TaskMarkRecord newRecord = this.taskMarkRecordRepo.save(taskMarkRecord);
+		
+		Map<Long,TaskMarkRecordRefTag> map = new HashMap<>();
 		for (TaskMarkRecordRefTag refTag : taskMarkRecord.getTags()) {
+			if(!map.containsKey(refTag.getTagItemId())){
+				map.put(refTag.getTagItemId(), refTag);
+			}
+		}
+		for (TaskMarkRecordRefTag refTag : map.values()) {
 			refTag.setTaskMarkRecordId(newRecord.getId());
 			this.recordRefTagService.save(refTag);
 		}
