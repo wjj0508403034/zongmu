@@ -91,4 +91,5 @@ public class ErrorCode {
 	public final static String TASK_NAME_DUP = "30006";
 	public final static String LOGIN_USER_IS_LOCKEZD = "30007";
 	public final static String Task_Time_Interval_Is_Negative = "30008";
+	public final static String Read_Image_Height_And_Width_Failed = "30009";
 }

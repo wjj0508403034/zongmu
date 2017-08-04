@@ -83,6 +83,11 @@ public class NewExportServiceImpl {
 
 	@Autowired
 	private ReviewRecordService reviewRecordService;
+	
+	public EAssetObject picTasks(String assetNo, String taskNo) throws BusinessException {
+		Asset asset = this.assetService.getAssetWithFiles(assetNo);
+		Task task = this.taskService.getSimpleTask(taskNo);
+	}
 
 	public EAssetObject tasks(String assetNo, String taskNo) throws BusinessException {
 		Asset asset = this.assetService.getAssetWithFiles(assetNo);

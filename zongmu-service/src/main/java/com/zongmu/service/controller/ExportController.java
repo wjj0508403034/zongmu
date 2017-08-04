@@ -67,4 +67,15 @@ public class ExportController {
 		exportService.assets(assetNo);
 		return object;
 	}
+	
+	@RequestMapping(value = "/new/assets/pic/{assetNo}/{taskNo}", method = RequestMethod.POST)
+	@ResponseBody
+	public EAssetObject picTasks(@PathVariable("assetNo") String assetNo, @PathVariable("taskNo") String taskNo)
+			throws BusinessException {
+		EAssetObject object = newExportServiceImpl.tasks(assetNo, taskNo);
+		exportService.assetViewTags(assetNo);
+		exportService.algorithms(assetNo);
+		exportService.assets(assetNo);
+		return object;
+	}
 }
