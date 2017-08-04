@@ -166,5 +166,15 @@ public class ViewTagServiceImpl implements ViewTagService {
 		}
 		return tags;
 	}
+	
+	@Override
+	public List<ViewTag> getSimpleAllViewTags(){
+		return this.viewTagRepo.getAllViewTags();
+	}
+
+	@Override
+	public List<ViewTagItem> getAllViewTagItems() {
+		return this.viewTagItemRepo.all();
+	}
 
 }

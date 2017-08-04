@@ -195,7 +195,11 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public List<TaskItem> getTaskItemsByTaskId(Long taskId) {
-		return this.taskItemRepo.getTaskItems(taskId);
+		List<TaskItem> taskItems = this.taskItemRepo.getTaskItems(taskId);
+		for (TaskItem taskItem : taskItems) {
+			taskItem.setTaskItemFiles(this.taskItemFileRepo.getTaskItemFiles(taskItem.getTaskItemNo()));
+		}
+		return taskItems;
 	}
 
 	@Override
@@ -353,7 +357,7 @@ public class TaskServiceImpl implements TaskService {
 		if (taskItem == null) {
 			throw new BusinessException(ErrorCode.TASKITEM_NOT_FOUND);
 		}
-		
+
 		Long rejectTaskCount = this.taskRecordService.countRejectRecords();
 		if (rejectTaskCount >= 10) {
 			throw new BusinessException(ErrorCode.REJECT_TASK_COUNT_LARGER_THAN_10);
@@ -362,10 +366,10 @@ public class TaskServiceImpl implements TaskService {
 		if (taskItem.getStatus() != TaskItemStatus.NEW) {
 			throw new BusinessException(ErrorCode.Task_Accept_By_Others);
 		}
-		
+
 		taskItem.setStatus(TaskItemStatus.INPROGRESS);
 		this.saveTaskItem(taskItem);
-		
+
 		if (taskItem.getTaskRecordNo() == null) {
 			TaskRecord taskRecord = this.taskRecordService.createNewTaskRecord(taskItem);
 			taskItem.setTaskRecordNo(taskRecord.getTaskRecordNo());

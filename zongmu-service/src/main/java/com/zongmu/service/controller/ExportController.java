@@ -72,10 +72,6 @@ public class ExportController {
 	@ResponseBody
 	public EAssetObject picTasks(@PathVariable("assetNo") String assetNo, @PathVariable("taskNo") String taskNo)
 			throws BusinessException {
-		EAssetObject object = newExportServiceImpl.tasks(assetNo, taskNo);
-		exportService.assetViewTags(assetNo);
-		exportService.algorithms(assetNo);
-		exportService.assets(assetNo);
-		return object;
+		return newExportServiceImpl.picTasks(assetNo, taskNo);
 	}
 }

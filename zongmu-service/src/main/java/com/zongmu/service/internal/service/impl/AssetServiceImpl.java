@@ -137,8 +137,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 
 		asset.setFtpFolder(this.getAssetFolder(asset.getAssetNo()));
-		asset.setFullFtpFolder("ftp://" + this.ftpProperties.getFtpServiceUrl()
-				+ asset.getFtpFolder());
+		asset.setFullFtpFolder("ftp://" + this.ftpProperties.getFtpServiceUrl() + asset.getFtpFolder());
 		return asset;
 	}
 
@@ -161,8 +160,7 @@ public class AssetServiceImpl implements AssetService {
 
 	@Transactional
 	@Override
-	public void updateAssetViewTags(String assetNo, AssetViewTagParam tagParam)
-			throws BusinessException {
+	public void updateAssetViewTags(String assetNo, AssetViewTagParam tagParam) throws BusinessException {
 		Asset asset = this.assetRepo.getAsset(assetNo);
 		if (asset == null) {
 			throw new BusinessException(ErrorCode.ASSET_NOT_FOUND);
@@ -174,8 +172,7 @@ public class AssetServiceImpl implements AssetService {
 			this.asset2AssetViewTagRepo.save(viewTag);
 		}
 
-		this.taskService.updateAssetViewTagForAllTasks(asset,
-				tagParam.getItems());
+		this.taskService.updateAssetViewTagForAllTasks(asset, tagParam.getItems());
 	}
 
 	private int getLocalTime(DateTime dateTime) {
@@ -188,8 +185,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public void attachFileToAsset(String assetNo, MultipartFile file)
-			throws BusinessException {
+	public void attachFileToAsset(String assetNo, MultipartFile file) throws BusinessException {
 		Asset asset = this.getSimpleAsset(assetNo);
 		AssetFile assetFile = new AssetFile();
 		assetFile.setAssetNo(asset.getAssetNo());
@@ -212,18 +208,15 @@ public class AssetServiceImpl implements AssetService {
 		this.saveAndUpload(asset, assetFile, file);
 	}
 
-	private BufferedImage getBufferedImage(MultipartFile file)
-			throws BusinessException {
+	private BufferedImage getBufferedImage(MultipartFile file) throws BusinessException {
 		try {
 			return ImageIO.read(file.getInputStream());
 		} catch (IOException e) {
-			throw new BusinessException(
-					ErrorCode.Read_Image_Height_And_Width_Failed);
+			throw new BusinessException(ErrorCode.Read_Image_Height_And_Width_Failed);
 		}
 	}
 
-	private void saveAndUpload(Asset asset, AssetFile assetFile,
-			MultipartFile file) {
+	private void saveAndUpload(Asset asset, AssetFile assetFile, MultipartFile file) {
 		boolean result = this.fileService.saveFile(assetFile, file);
 		if (result) {
 			assetFile.setAssetFileStatus(AssetFileStatus.UPLOADSUCCESS);
@@ -255,8 +248,7 @@ public class AssetServiceImpl implements AssetService {
 				}
 
 			} else {
-				this.threadPoolService.run(new UploadFileToFtp(
-						applicationContext, assetFile));
+				this.threadPoolService.run(new UploadFileToFtp(applicationContext, assetFile));
 			}
 
 		} else {
@@ -266,8 +258,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public void setUploadPicData(String assetNo, PicData[] picDatas)
-			throws BusinessException {
+	public void setUploadPicData(String assetNo, PicData[] picDatas) throws BusinessException {
 		Asset asset = this.getSimpleAsset(assetNo);
 
 		for (PicData picData : picDatas) {
@@ -276,11 +267,9 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public void setUploadFileData(String assetNo, FileData fileData)
-			throws BusinessException {
+	public void setUploadFileData(String assetNo, FileData fileData) throws BusinessException {
 		Asset asset = this.getSimpleAsset(assetNo);
-		float duration = this.calcDuration(fileData.getVideoInfo().getFps(),
-				fileData.getVideoInfo().getFramesCount());
+		float duration = this.calcDuration(fileData.getVideoInfo().getFps(), fileData.getVideoInfo().getFramesCount());
 		asset.setRecordLength(duration);
 		fileData.getVideoInfo().setDuration(duration);
 		this.assetRepo.save(asset);
@@ -288,19 +277,17 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public void setFourUploadFileData(String assetNo, FileData[] fileDatas)
-			throws BusinessException {
+	public void setFourUploadFileData(String assetNo, FileData[] fileDatas) throws BusinessException {
 		Asset asset = this.getSimpleAsset(assetNo);
 		if (fileDatas.length != 4) {
 			throw new BusinessException(ErrorCode.File_Must_be_Four);
 		}
-		asset.setRecordLength(this.calcDuration(fileDatas[0].getVideoInfo()
-				.getFps(), fileDatas[0].getVideoInfo().getFramesCount()));
+		asset.setRecordLength(
+				this.calcDuration(fileDatas[0].getVideoInfo().getFps(), fileDatas[0].getVideoInfo().getFramesCount()));
 		this.assetRepo.save(asset);
 		for (FileData fileData : fileDatas) {
 			fileData.getVideoInfo().setDuration(
-					this.calcDuration(fileData.getVideoInfo().getFps(),
-							fileData.getVideoInfo().getFramesCount()));
+					this.calcDuration(fileData.getVideoInfo().getFps(), fileData.getVideoInfo().getFramesCount()));
 			this.createAssetFile(asset, fileData);
 		}
 	}
@@ -350,8 +337,7 @@ public class AssetServiceImpl implements AssetService {
 
 	@Override
 	public void retryFtpUpload() {
-		List<AssetFile> assetFiles = this.assetFileRepo
-				.getFtpUploadFailedFiles(AssetFileStatus.FTPUPLOADFAILED);
+		List<AssetFile> assetFiles = this.assetFileRepo.getFtpUploadFailedFiles(AssetFileStatus.FTPUPLOADFAILED);
 
 		for (AssetFile assetFile : assetFiles) {
 			logger.info("Start retry Ftp Upload ...");
@@ -367,16 +353,14 @@ public class AssetServiceImpl implements AssetService {
 				// this.threadPoolService.run(new
 				// UploadFileToFtp(applicationContext, assetFile));
 			} else {
-				logger.warn("Asset file not in this machine. "
-						+ assetFile.getAssetFileNo());
+				logger.warn("Asset file not in this machine. " + assetFile.getAssetFileNo());
 			}
 		}
 	}
 
 	@Override
 	public void afterUploadFTP(AssetFile assetFile, boolean success) {
-		assetFile.setAssetFileStatus(success ? AssetFileStatus.FTPUPLOADSUCCESS
-				: AssetFileStatus.FTPUPLOADFAILED);
+		assetFile.setAssetFileStatus(success ? AssetFileStatus.FTPUPLOADSUCCESS : AssetFileStatus.FTPUPLOADFAILED);
 		this.assetFileRepo.save(assetFile);
 		if (success) {
 			this.fileService.deleteFile(assetFile);
@@ -415,8 +399,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public void updateStatus(String assetFileNo, AssetFileStatus status)
-			throws BusinessException {
+	public void updateStatus(String assetFileNo, AssetFileStatus status) throws BusinessException {
 		AssetFile assetFile = this.getAssetFile(assetFileNo);
 		assetFile.setAssetFileStatus(status);
 		assetFile.setUpdateTime(DateTime.now());
@@ -424,8 +407,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	private AssetFile getAssetFile(String assetFileNo) throws BusinessException {
-		AssetFile assetFile = this.assetFileRepo
-				.getAssetFileByAssetFileNo(assetFileNo);
+		AssetFile assetFile = this.assetFileRepo.getAssetFileByAssetFileNo(assetFileNo);
 		if (assetFile == null) {
 			throw new BusinessException(ErrorCode.ASSET_FILE_NOT_FOUND);
 		}
@@ -455,9 +437,7 @@ public class AssetServiceImpl implements AssetService {
 
 		for (Asset asset : assets) {
 			asset.setFtpFolder(this.getAssetFolder(asset.getAssetNo()));
-			asset.setFullFtpFolder("ftp://"
-					+ this.ftpProperties.getFtpServiceUrl()
-					+ asset.getFtpFolder());
+			asset.setFullFtpFolder("ftp://" + this.ftpProperties.getFtpServiceUrl() + asset.getFtpFolder());
 		}
 		return assets;
 	}
@@ -480,13 +460,17 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
+	public List<AssetFile> getAssetFilesByAssetNo(String assetNo) {
+		return this.assetFileRepo.getAssetFiles(assetNo);
+	}
+
+	@Override
 	public Asset getAssetDetail(String assetNo) throws BusinessException {
 		Asset asset = this.assetRepo.getAsset(assetNo);
 		if (asset == null) {
 			throw new BusinessException(ErrorCode.ASSET_NOT_FOUND);
 		}
-		asset.setWeatherTag(this.assetTagService.getAssetTag(asset
-				.getWeatherTagId()));
+		asset.setWeatherTag(this.assetTagService.getAssetTag(asset.getWeatherTagId()));
 		asset.setRoadTag(this.assetTagService.getAssetTag(asset.getRoadTagId()));
 		// for (Asset2AssetViewTag viewTag : asset.getViewTags()) {
 		// viewTag.setAssetId(asset.getId());
@@ -495,18 +479,15 @@ public class AssetServiceImpl implements AssetService {
 		asset.setViewTags(this.getAssetViewTags(asset.getId()));
 		asset.setAssetFiles(this.getAssetFiles(asset));
 		asset.setFtpFolder(this.getAssetFolder(asset.getAssetNo()));
-		asset.setFullFtpFolder("ftp://" + this.ftpProperties.getFtpServiceUrl()
-				+ asset.getFtpFolder());
+		asset.setFullFtpFolder("ftp://" + this.ftpProperties.getFtpServiceUrl() + asset.getFtpFolder());
 		return asset;
 	}
 
 	@Override
 	public List<Asset2AssetViewTag> getAssetViewTags(Long assetId) {
-		List<Asset2AssetViewTag> tags = this.asset2AssetViewTagRepo
-				.getListByAssetId(assetId);
+		List<Asset2AssetViewTag> tags = this.asset2AssetViewTagRepo.getListByAssetId(assetId);
 		for (Asset2AssetViewTag tag : tags) {
-			tag.setViewTag(assetViewTagService.getAssetViewTag(tag
-					.getAssetViewTagId()));
+			tag.setViewTag(assetViewTagService.getAssetViewTag(tag.getAssetViewTagId()));
 		}
 		return tags;
 	}
@@ -516,8 +497,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public void setStatus(String assetNo, Status status)
-			throws BusinessException {
+	public void setStatus(String assetNo, Status status) throws BusinessException {
 		Asset asset = this.getAssetByAssetNo(assetNo);
 		asset.setStatus(status);
 		this.assetRepo.save(asset);
@@ -539,20 +519,16 @@ public class AssetServiceImpl implements AssetService {
 
 	@Transactional
 	@Override
-	public void setAssetTags(String assetNo, AssetTagParam tagParam)
-			throws BusinessException {
+	public void setAssetTags(String assetNo, AssetTagParam tagParam) throws BusinessException {
 		Asset asset = this.getAssetByAssetNo(assetNo);
-		AssetTag weatherTag = this.assetTagService.getAssetTag(tagParam
-				.getWeatherTagId());
-		AssetTag roadTag = this.assetTagService.getAssetTag(tagParam
-				.getRoadTagId());
+		AssetTag weatherTag = this.assetTagService.getAssetTag(tagParam.getWeatherTagId());
+		AssetTag roadTag = this.assetTagService.getAssetTag(tagParam.getRoadTagId());
 		if (weatherTag == null || roadTag == null) {
 			throw new BusinessException(ErrorCode.ASSET_TAG_UPDATE_FAILED);
 		}
 		asset.setRoadTagId(tagParam.getRoadTagId());
 		asset.setWeatherTagId(tagParam.getWeatherTagId());
-		this.taskService.updateAssetTags(assetNo, tagParam.getRoadTagId(),
-				tagParam.getWeatherTagId());
+		this.taskService.updateAssetTags(assetNo, tagParam.getRoadTagId(), tagParam.getWeatherTagId());
 
 		this.assetRepo.save(asset);
 	}
@@ -560,8 +536,7 @@ public class AssetServiceImpl implements AssetService {
 	private Specification<Asset> query(final QueryParams queryParams) {
 		return new Specification<Asset>() {
 			@Override
-			public Predicate toPredicate(Root<Asset> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Asset> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> whereList = new ArrayList<>();
 				for (Filter filter : queryParams.getFilters()) {
 					Predicate predicate = filter.toPredicate(root, query, cb);
@@ -594,19 +569,14 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public Page<Asset> queryAssets(AssetSearchParam assetSearchParam,
-			Pageable pageable) {
+	public Page<Asset> queryAssets(AssetSearchParam assetSearchParam, Pageable pageable) {
 		AssetSpecification assetSpecification = new AssetSpecification();
-		Page<Asset> assets = this.assetRepo.findAll(
-				assetSpecification.search(assetSearchParam), pageable);
+		Page<Asset> assets = this.assetRepo.findAll(assetSpecification.search(assetSearchParam), pageable);
 		for (Asset asset : assets) {
 			asset.setFtpFolder(this.getAssetFolder(asset.getAssetNo()));
-			asset.setFullFtpFolder("ftp://"
-					+ this.ftpProperties.getFtpServiceUrl()
-					+ asset.getFtpFolder());
+			asset.setFullFtpFolder("ftp://" + this.ftpProperties.getFtpServiceUrl() + asset.getFtpFolder());
 			if (asset.getAssetType() == AssetType.PICTURE) {
-				asset.setPictureCount(this.assetFileRepo
-						.getAssetFilesCount(asset.getAssetNo()));
+				asset.setPictureCount(this.assetFileRepo.getAssetFilesCount(asset.getAssetNo()));
 			}
 		}
 
@@ -619,8 +589,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	@Override
-	public void setAssetFileStatus(AssetFile assetFile,
-			AssetFileStatus assetFileStatus) {
+	public void setAssetFileStatus(AssetFile assetFile, AssetFileStatus assetFileStatus) {
 		assetFile.setAssetFileStatus(assetFileStatus);
 		this.assetFileRepo.save(assetFile);
 

@@ -31,4 +31,8 @@ public interface ViewTagService {
 	List<ViewTag> getAllViewTags() throws BusinessException;
 
 	void deleteViewTagsByAlgorithm(Long id);
+
+	List<ViewTag> getSimpleAllViewTags();
+
+	List<ViewTagItem> getAllViewTagItems();
 }

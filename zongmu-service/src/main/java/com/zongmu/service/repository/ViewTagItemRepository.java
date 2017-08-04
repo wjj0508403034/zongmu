@@ -20,8 +20,12 @@ public interface ViewTagItemRepository extends PagingAndSortingRepository<ViewTa
 
 	@Query("select count(t) > 0 from ViewTagItem t where t.viewTagId = ?1 and t.name = ?3 and t.id <> ?2")
 	boolean checkExistsOnUpdate(Long viewTagId, Long id, String name);
-	
+
 	@Modifying
 	@Query("delete from ViewTagItem t where t.viewTagId = ?1")
 	void deleteViewTagItemsByViewTagId(Long viewTagId);
+
+	@Query("select t from ViewTagItem t")
+	List<ViewTagItem> all();
+
 }

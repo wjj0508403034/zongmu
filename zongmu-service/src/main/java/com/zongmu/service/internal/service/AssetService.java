@@ -75,4 +75,6 @@ public interface AssetService {
 	Page<Asset> queryAssets(AssetSearchParam assetSearchParam, Pageable pageable);
 	
 	List<AssetFile> getPendingUploadVideoFiles(int count);
+
+	List<AssetFile> getAssetFilesByAssetNo(String assetNo);
 }

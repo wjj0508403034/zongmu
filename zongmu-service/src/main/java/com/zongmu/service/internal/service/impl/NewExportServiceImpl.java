@@ -29,7 +29,10 @@ import com.zongmu.service.dto.newexport.ETaskObject;
 import com.zongmu.service.dto.newexport.ETaskViewTagInfoObject;
 import com.zongmu.service.dto.newexport.ETaskViewTagObject;
 import com.zongmu.service.dto.newexport.FrameIndexRange;
+import com.zongmu.service.dto.newexport.pic.TaskXml;
+import com.zongmu.service.entity.Algorithm;
 import com.zongmu.service.entity.Asset;
+import com.zongmu.service.entity.Asset2AssetViewTag;
 import com.zongmu.service.entity.AssetFile;
 import com.zongmu.service.entity.Tag;
 import com.zongmu.service.entity.TagItem;
@@ -38,6 +41,7 @@ import com.zongmu.service.entity.TaskItem;
 import com.zongmu.service.entity.TaskItemFile;
 import com.zongmu.service.entity.TaskItemXViewTag;
 import com.zongmu.service.entity.TaskRecord;
+import com.zongmu.service.entity.ViewTag;
 import com.zongmu.service.entity.ViewTagItem;
 import com.zongmu.service.entity.mark.ShapeFrameIndexInfo;
 import com.zongmu.service.entity.mark.TaskMarkGroup;
@@ -52,6 +56,7 @@ import com.zongmu.service.internal.service.ReviewRecordService;
 import com.zongmu.service.internal.service.TagService;
 import com.zongmu.service.internal.service.TaskRecordService;
 import com.zongmu.service.internal.service.TaskService;
+import com.zongmu.service.internal.service.ViewTagService;
 import com.zongmu.service.internal.service.mark.TaskMarkRecordService;
 import com.zongmu.service.util.FileService;
 
@@ -84,9 +89,44 @@ public class NewExportServiceImpl {
 	@Autowired
 	private ReviewRecordService reviewRecordService;
 	
+	@Autowired
+	private ViewTagService viewTagService;
+
 	public EAssetObject picTasks(String assetNo, String taskNo) throws BusinessException {
-		Asset asset = this.assetService.getAssetWithFiles(assetNo);
+		Asset asset = this.assetService.getSimpleAsset(assetNo);
+		List<AssetFile> assetFiles = this.assetService.getAssetFilesByAssetNo(assetNo);
+		List<Asset2AssetViewTag> videoTags = this.assetService.getAssetViewTags(asset.getId());
+
 		Task task = this.taskService.getSimpleTask(taskNo);
+		List<TaskItem> taskItems = this.taskService.getTaskItemsByTaskId(task.getId());
+
+		Algorithm algorithm = this.algorithmService.getAlgorithm(task.getAlgorithmId());
+		
+		List<ViewTag> viewTags = this.viewTagService.getSimpleAllViewTags();
+		List<ViewTagItem> viewTagItems = this.viewTagService.getAllViewTagItems();
+		
+		TaskXml taskXml = new TaskXml();
+		taskXml.setAsset(asset);
+		taskXml.setAssetFiles(assetFiles);
+		taskXml.setVideoTags(videoTags);
+
+		taskXml.setTask(task);
+		taskXml.setTaskItems(taskItems);
+		
+		taskXml.setAlgorithm(algorithm);
+		
+		taskXml.setViewTags(viewTags);
+		taskXml.setViewTagItems(viewTagItems);
+		try {
+			Document doc = this.newXDoc();
+			doc.appendChild(taskXml.toXml(doc));
+			this.fileService.saveXmlFile(doc, task, task.getTaskNo() + ".xml");
+		} catch (Exception ex) {
+			logger.error(ExceptionUtils.getStackTrace(ex));
+			throw new BusinessException(ErrorCode.Export_Failed_System);
+		}
+		
+		return null;
 	}
 
 	public EAssetObject tasks(String assetNo, String taskNo) throws BusinessException {
@@ -98,9 +138,9 @@ public class NewExportServiceImpl {
 		if (finishTaskCount != taskCount) {
 			assetObj.setTaskItems(this.taskService.getTaskItemsByTaskId(task.getId()));
 			return assetObj;
-			//throw new BusinessException(ErrorCode.Export_Failed);
+			// throw new BusinessException(ErrorCode.Export_Failed);
 		}
-		
+
 		assetObj.setAssetName(asset.getName());
 		assetObj.setAssetNo(asset.getAssetNo());
 		assetObj.setAssetType(asset.getAssetType());
@@ -247,16 +287,16 @@ public class NewExportServiceImpl {
 		Map<String, EChannelObject> channelMap = new HashMap<>();
 		Long fileId = null;
 		if (task.getAssetType() == AssetType.SINGLE) {
-			if(taskItem.getTaskItemFiles().size() > 0){
+			if (taskItem.getTaskItemFiles().size() > 0) {
 				fileId = taskItem.getTaskItemFiles().get(0).getId();
-			}else{
+			} else {
 				throw new BusinessException(ErrorCode.Export_Failed_System);
 			}
 		}
 		for (TaskMarkGroup group : taskMarkRecord.getGroups()) {
 			if (task.getAssetType() == AssetType.SINGLE) {
 				group.setTaskItemFileId(fileId);
-			}else{
+			} else {
 				fileId = group.getTaskItemFileId();
 			}
 			String taskFileName = this.getTaskFileName(taskItem, fileId);
