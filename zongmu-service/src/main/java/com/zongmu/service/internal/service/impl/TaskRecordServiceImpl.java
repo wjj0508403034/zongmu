@@ -238,6 +238,12 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		}
 		return taskRecords;
 	}
+	
+	@Override
+	public List<TaskRecord> getTaskRecordsByTaskId(Long taskId){
+		return this.taskRecordRepo.getTaskRecordsByTaskId(taskId);
+	}
+	
 
 	@Override
 	public TaskRecord getTaskRecordDetail(String taskRecordNo) throws BusinessException {

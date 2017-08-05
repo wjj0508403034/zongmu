@@ -189,6 +189,16 @@ public class TagServiceImpl implements TagService {
 		}
 		return tags;
 	}
+	
+	@Override
+	public List<Tag> getSimpleTagsByAlgorithm(Long algorithmId){
+		return this.tagRepo.getTagsByAlgorithm(algorithmId);
+	}
+	
+	@Override
+	public List<TagItem> getTagItemsByTagId(Long tagId){
+		return this.tagItemRepo.getTagItems(tagId);
+	}
 
 	@Override
 	public void deleteTagsByAlgorithm(Long algorithmId) {

@@ -29,6 +29,9 @@ public interface TaskRecordRepository extends PagingAndSortingRepository<TaskRec
 
 	@Query("select t from TaskRecord t where t.taskItemNo = ?1 order by t.id desc")
 	List<TaskRecord> getTaskRecords(String taskItemNo);
+	
+	@Query("select t from TaskRecord t where t.taskId = ?1")
+	List<TaskRecord> getTaskRecordsByTaskId(Long taskId);
 
 	@Query("select t from TaskRecord t where t.startTime < ?1 and t.status = ?2")
 	List<TaskRecord> getTimeoutRecords(DateTime startTime, TaskRecordStatus status);

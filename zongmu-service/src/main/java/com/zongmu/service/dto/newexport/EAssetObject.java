@@ -99,7 +99,7 @@ public class EAssetObject extends AbstractXML {
 			tagEle.appendChild(this.createElement(doc, "valueId", ZStringUtil.longToStr(tag.getAssetViewTagItemId())));
 			if (tag.getAssetViewTagItemId() != null) {
 				for (AssetViewTagItem item : tag.getViewTag().getItems()) {
-					if (item.getId() == tag.getAssetViewTagItemId()) {
+					if (item.getId().equals(tag.getAssetViewTagItemId())) {
 						tagEle.appendChild(this.createElement(doc, "value", item.getName()));
 						break;
 					}

@@ -13,4 +13,6 @@ public interface TaskMarkRecordService {
 	Long countByColorTag(Long colorTagId);
 
 	void deleteRecords(Long taskRecordId);
+
+	List<TaskMarkRecord> getSimpleRecords(Long taskRecordId);
 }

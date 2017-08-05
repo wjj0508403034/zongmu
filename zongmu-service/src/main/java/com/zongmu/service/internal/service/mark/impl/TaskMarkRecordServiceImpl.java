@@ -46,6 +46,11 @@ public class TaskMarkRecordServiceImpl implements TaskMarkRecordService {
 
 		return records;
 	}
+	
+	@Override
+	public List<TaskMarkRecord> getSimpleRecords(Long taskRecordId){
+		return this.taskMarkRecordRepo.getRecords(taskRecordId);
+	}
 
 	private List<ShapeFrameIndexInfo> getShapeFrameIndexInfos(Long id) {
 		return this.shapeFrameIndexInfoRepo.query(id);

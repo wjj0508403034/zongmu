@@ -34,6 +34,7 @@ import com.zongmu.service.entity.Algorithm;
 import com.zongmu.service.entity.Asset;
 import com.zongmu.service.entity.Asset2AssetViewTag;
 import com.zongmu.service.entity.AssetFile;
+import com.zongmu.service.entity.ColorGroup;
 import com.zongmu.service.entity.Tag;
 import com.zongmu.service.entity.TagItem;
 import com.zongmu.service.entity.Task;
@@ -52,11 +53,14 @@ import com.zongmu.service.exception.BusinessException;
 import com.zongmu.service.exception.ErrorCode;
 import com.zongmu.service.internal.service.AlgorithmService;
 import com.zongmu.service.internal.service.AssetService;
+import com.zongmu.service.internal.service.ColorGroupService;
 import com.zongmu.service.internal.service.ReviewRecordService;
 import com.zongmu.service.internal.service.TagService;
 import com.zongmu.service.internal.service.TaskRecordService;
 import com.zongmu.service.internal.service.TaskService;
 import com.zongmu.service.internal.service.ViewTagService;
+import com.zongmu.service.internal.service.mark.TaskMarkGroupService;
+import com.zongmu.service.internal.service.mark.TaskMarkRecordRefTagService;
 import com.zongmu.service.internal.service.mark.TaskMarkRecordService;
 import com.zongmu.service.util.FileService;
 
@@ -76,6 +80,9 @@ public class NewExportServiceImpl {
 
 	@Autowired
 	private TaskMarkRecordService taskMarkRecordService;
+	
+	@Autowired
+	private TaskMarkGroupService taskMarkGroupService;
 
 	@Autowired
 	private AlgorithmService algorithmService;
@@ -91,32 +98,64 @@ public class NewExportServiceImpl {
 	
 	@Autowired
 	private ViewTagService viewTagService;
+	
+	@Autowired
+	private TaskMarkRecordRefTagService recordRefTagService;
+	
+	@Autowired
+	private ColorGroupService colorGroupService;
 
 	public EAssetObject picTasks(String assetNo, String taskNo) throws BusinessException {
+		TaskXml taskXml = new TaskXml();
+		
 		Asset asset = this.assetService.getSimpleAsset(assetNo);
 		List<AssetFile> assetFiles = this.assetService.getAssetFilesByAssetNo(assetNo);
 		List<Asset2AssetViewTag> videoTags = this.assetService.getAssetViewTags(asset.getId());
-
+		
+		taskXml.setAsset(asset);
+		taskXml.setAssetFiles(assetFiles);
+		taskXml.setVideoTags(videoTags);
+		
+		
 		Task task = this.taskService.getSimpleTask(taskNo);
-		List<TaskItem> taskItems = this.taskService.getTaskItemsByTaskId(task.getId());
+		List<TaskItem> taskItems = this.taskService.getTaskItemsForExport(task.getId());
+		
+		taskXml.setTask(task);
+		taskXml.setTaskItems(taskItems);
 
 		Algorithm algorithm = this.algorithmService.getAlgorithm(task.getAlgorithmId());
+		
+		taskXml.setAlgorithm(algorithm);
 		
 		List<ViewTag> viewTags = this.viewTagService.getSimpleAllViewTags();
 		List<ViewTagItem> viewTagItems = this.viewTagService.getAllViewTagItems();
 		
-		TaskXml taskXml = new TaskXml();
-		taskXml.setAsset(asset);
-		taskXml.setAssetFiles(assetFiles);
-		taskXml.setVideoTags(videoTags);
-
-		taskXml.setTask(task);
-		taskXml.setTaskItems(taskItems);
-		
-		taskXml.setAlgorithm(algorithm);
-		
 		taskXml.setViewTags(viewTags);
 		taskXml.setViewTagItems(viewTagItems);
+		
+		List<TaskRecord> taskRecords = this.taskRecordService.getTaskRecordsByTaskId(task.getId());
+		for(TaskRecord taskRecord: taskRecords){
+			List<TaskMarkRecord> taskMarkRecords = this.taskMarkRecordService.getSimpleRecords(taskRecord.getId());
+			taskXml.addTaskMarkRecords(taskMarkRecords);
+			
+			for(TaskMarkRecord record : taskMarkRecords ){
+				List<TaskMarkGroup> groups = this.taskMarkGroupService.getGroups(record.getId());
+				taskXml.addGroups(groups);
+				
+				List<TaskMarkRecordRefTag> refTags = this.recordRefTagService.getRefTags(record.getId());
+				taskXml.addRefTags(refTags);
+			}
+		}
+		
+		List<Tag> tags = this.tagService.getSimpleTagsByAlgorithm(algorithm.getId());
+		taskXml.setTags(tags);
+		for(Tag tag: tags){
+			List<TagItem> tagItems = this.tagService.getTagItemsByTagId(tag.getId());
+			taskXml.addTagItems(tagItems);
+		}
+		
+		//ColorGroup colorGroup = this.colorGroupService.getColorGroupDetail(algorithm.getId());
+		
 		try {
 			Document doc = this.newXDoc();
 			doc.appendChild(taskXml.toXml(doc));

@@ -35,4 +35,8 @@ public interface TagService {
 	void deleteTagsByAlgorithm(Long algorithmId);
 
 	void setMultiDefaultValues(Long tagId, List<TagItem> tagItems);
+
+	List<Tag> getSimpleTagsByAlgorithm(Long algorithmId);
+
+	List<TagItem> getTagItemsByTagId(Long tagId);
 }

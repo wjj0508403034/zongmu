@@ -52,4 +52,6 @@ public interface TaskRecordService {
 	Page<TaskRecord> search(Pageable pageable, TaskRecordSearchParam taskRecordSearchParam);
 
 	void clearReviewRecord(String taskRecordNo);
+
+	List<TaskRecord> getTaskRecordsByTaskId(Long taskId);
 }
