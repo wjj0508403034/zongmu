@@ -1,7 +1,7 @@
 'use strict';
 
-zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService","appEnv",
-  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService,appEnv) {
+zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService", "appEnv",
+  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService, appEnv) {
     var assetNo = $.url().param("assetNo");
     $scope.appEnv = appEnv;
     initView() && initData();
@@ -51,7 +51,7 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
         text: "状态"
       }];
 
-      if(!assetNo) {
+      if (!assetNo) {
         dialog.showError("参数错误");
         return false;
       }
@@ -64,10 +64,10 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
       $q.all([assetService.getAsset(assetNo), taskService.getTasksByAssetNo(assetNo)])
         .then(function(res) {
           $scope.asset = res[0];
-          if($scope.asset.viewTags) {
+          if ($scope.asset.viewTags) {
             $scope.asset.viewTags.forEach(function(it) {
               it.viewTag.items.forEach(function(item) {
-                if(item.id === it.assetViewTagItemId) {
+                if (item.id === it.assetViewTagItemId) {
                   it.viewTagItem = item;
                 }
               })
@@ -84,7 +84,7 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
         return it.assetFileStatus === "FTPUPLOADING" || it.assetFileStatus === "COMPRESSING" || it.assetFileStatus === "UPLOADSUCCESS";
       });
 
-      if(items.length > 0) {
+      if (items.length > 0) {
         $timeout(function() {
           getAssetData();
         }, 2000);
@@ -95,10 +95,10 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
       assetService.getAsset(assetNo)
         .then(function(asset) {
           $scope.asset = asset;
-          if($scope.asset.viewTags) {
+          if ($scope.asset.viewTags) {
             $scope.asset.viewTags.forEach(function(it) {
               it.viewTag.items.forEach(function(item) {
-                if(item.id === it.assetViewTagItemId) {
+                if (item.id === it.assetViewTagItemId) {
                   it.viewTagItem = item;
                 }
               })
@@ -122,7 +122,7 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
     }
 
     $scope.onNewTaskButtonClick = function() {
-      if(assetNo) {
+      if (assetNo) {
         window.location.href = "asset.new.html?assetNo=" + assetNo;
       } else {
         dialog.showError("参数错误");
@@ -175,23 +175,24 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
     $scope.onExportButtonClick = function(rowData) {
       $scope.showLoading();
       $scope.setLoadingText("正在导出数据，请稍后...");
-      exportService.exportTask(assetNo, rowData.taskNo)
-        .then(function(data) {
-          $scope.hideLoading();
-          if(data.taskItems.length > 0) {
-            dialog.showCustom({
-              templateUrl: 'export.failed.dialog.html',
-              controller: "exportFailedDialogController",
-              params: {
-                taskItems: data.taskItems
-              },
-              onConfirm: function() {
-              }
-            });
-          } else {
-            dialog.showInfo("导出成功");
-          }
-        });
+      var exportServiceProxy = rowData.taskType === 'VIDEO' ?
+        exportService.exportTask(assetNo, rowData.taskNo) :
+        exportService.exportPicTask(assetNo, rowData.taskNo);
+      exportServiceProxy.then(function(data) {
+        $scope.hideLoading();
+        if (data && data.taskItems.length > 0) {
+          dialog.showCustom({
+            templateUrl: 'export.failed.dialog.html',
+            controller: "exportFailedDialogController",
+            params: {
+              taskItems: data.taskItems
+            },
+            onConfirm: function() {}
+          });
+        } else {
+          dialog.showInfo("导出成功");
+        }
+      });
     };
   }
 ]);

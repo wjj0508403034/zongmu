@@ -22,6 +22,7 @@ import com.zongmu.service.entity.Task;
 import com.zongmu.service.entity.TaskItem;
 import com.zongmu.service.entity.TaskItemFile;
 import com.zongmu.service.entity.TaskItemXViewTag;
+import com.zongmu.service.entity.TaskRecord;
 import com.zongmu.service.entity.ViewTag;
 import com.zongmu.service.entity.ViewTagItem;
 import com.zongmu.service.entity.mark.TaskMarkGroup;
@@ -47,33 +48,36 @@ public class TaskXml extends AbstractXML {
 	private ConcurrentHashMap<Long, ViewTag> viewTagMap = new ConcurrentHashMap<>();
 
 	private ConcurrentHashMap<Long, ViewTagItem> viewTagItemMap = new ConcurrentHashMap<>();
-	
-	private ConcurrentHashMap<Long,List<TaskMarkGroup>> markGroupMap = new ConcurrentHashMap<>();
-	
+
+	/*
+	 * key: TaskItemFileId
+	 */
+	private ConcurrentHashMap<Long, List<TaskMarkGroup>> markGroupMap = new ConcurrentHashMap<>();
+
 	/*
 	 * key: taskMarkRecordId
 	 */
-	private ConcurrentHashMap<Long,List<TaskMarkRecordRefTag>> refTagMap = new ConcurrentHashMap<>(); 
-	
-	/*
-	 * key: id
-	 */
-	private ConcurrentHashMap<Long,TaskMarkRecord> taskmarkrecordMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Long, List<TaskMarkRecordRefTag>> refTagMap = new ConcurrentHashMap<>();
 
 	/*
 	 * key: id
 	 */
-	private ConcurrentHashMap<Long,Tag> tagMap = new ConcurrentHashMap<>();
-	
+	private ConcurrentHashMap<Long, TaskMarkRecord> taskmarkrecordMap = new ConcurrentHashMap<>();
+
 	/*
 	 * key: id
 	 */
-	private ConcurrentHashMap<Long,TagItem> tagItemMap = new ConcurrentHashMap<>();
-	
+	private ConcurrentHashMap<Long, Tag> tagMap = new ConcurrentHashMap<>();
+
 	/*
 	 * key: id
 	 */
-	private ConcurrentHashMap<Long,ColorTag> colorTagMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Long, TagItem> tagItemMap = new ConcurrentHashMap<>();
+
+	/*
+	 * key: id
+	 */
+	private ConcurrentHashMap<Long, ColorTag> colorTagMap = new ConcurrentHashMap<>();
 
 	public Asset getAsset() {
 		return asset;
@@ -153,8 +157,8 @@ public class TaskXml extends AbstractXML {
 		root.appendChild(this.createElement(doc, "shapeSideCount", ZStringUtil.intToStr(this.task.getSideCount())));
 
 		root.appendChild(this.getAlgorithmElement(doc));
-		
-		if(this.asset.getAssetType() != AssetType.PICTURE){
+
+		if (this.asset.getAssetType() != AssetType.PICTURE) {
 			root.appendChild(this.getChannelsElement(doc));
 		}
 
@@ -163,18 +167,18 @@ public class TaskXml extends AbstractXML {
 		root.appendChild(this.getTaskItemsElement(doc));
 		return root;
 	}
-	
-	private Element getChannelsElement(Document doc){
+
+	private Element getChannelsElement(Document doc) {
 		Element root = doc.createElement("channels");
-		
-		for(AssetFile assetFile: this.assetFileMap.values()){
+
+		for (AssetFile assetFile : this.assetFileMap.values()) {
 			root.appendChild(this.getChannelElement(doc, assetFile));
 		}
-		
+
 		return root;
 	}
-	
-	private Element getChannelElement(Document doc,AssetFile assetFile){
+
+	private Element getChannelElement(Document doc, AssetFile assetFile) {
 		Element root = doc.createElement(this.getChannelName(assetFile));
 		root.appendChild(this.createElement(doc, "fileName", assetFile.getFileName()));
 		root.appendChild(this.createElement(doc, "assetFileNo", assetFile.getAssetFileNo()));
@@ -185,7 +189,7 @@ public class TaskXml extends AbstractXML {
 		root.appendChild(this.createElement(doc, "duration", ZStringUtil.floatToStr(assetFile.getDuration())));
 		return root;
 	}
-	
+
 	private String getChannelName(AssetFile assetFile) {
 		if (StringUtils.equalsIgnoreCase(assetFile.getFileName(), "front.avi")) {
 			return "channel0";
@@ -202,13 +206,13 @@ public class TaskXml extends AbstractXML {
 
 		return "channel0";
 	}
-	
-	private String getChannelName(TaskItemFile taskItemFile){
+
+	private String getChannelName(TaskItemFile taskItemFile) {
 		AssetFile assetFile = this.assetFileMap.get(taskItemFile.getAssetFileNo());
-		if(assetFile != null){
+		if (assetFile != null) {
 			return this.getChannelName(assetFile);
 		}
-		
+
 		return "";
 	}
 
@@ -267,34 +271,33 @@ public class TaskXml extends AbstractXML {
 		root.appendChild(this.createElement(doc, "fileSize", ZStringUtil.longToStr(assetFile.getFileSize())));
 		root.appendChild(this.createElement(doc, "width", ZStringUtil.floatToStr(assetFile.getWidth())));
 		root.appendChild(this.createElement(doc, "height", ZStringUtil.floatToStr(assetFile.getHeight())));
-		if(this.asset.getAssetType() != AssetType.PICTURE){
-			root.appendChild(this.createElement(doc, "channel",this.getChannelName(taskItemFile)));
-			root.appendChild(this.createElement(doc, "frameIndex",this.getPictureFrameIndex(taskItem,assetFile)));
+		if (this.asset.getAssetType() != AssetType.PICTURE) {
+			root.appendChild(this.createElement(doc, "channel", this.getChannelName(taskItemFile)));
+			root.appendChild(this.createElement(doc, "frameIndex", this.getPictureFrameIndex(taskItem, assetFile)));
 		}
 		root.appendChild(this.getTaskItemPropertiesElement(doc, taskItem));
 		root.appendChild(this.getShapeObjectsElement(doc, taskItemFile));
 		return root;
 	}
-	
-	private Element getShapeObjectsElement(Document doc, TaskItemFile taskItemFile){
+
+	private Element getShapeObjectsElement(Document doc, TaskItemFile taskItemFile) {
 		Element root = doc.createElement("objects");
 		List<TaskMarkGroup> groups = this.markGroupMap.get(taskItemFile.getId());
-		if(groups != null && groups.size() > 0){
+		if (groups != null && groups.size() > 0) {
 			int counter = 0;
-			for(TaskMarkGroup group: groups){
-				root.appendChild(this.getShapeObjectElement(doc, group,taskItemFile, counter));
+			for (TaskMarkGroup group : groups) {
+				root.appendChild(this.getShapeObjectElement(doc, group, taskItemFile, counter));
 				counter++;
 			}
 		}
 		return root;
 	}
-	
-	private Element getShapeObjectElement(Document doc,TaskMarkGroup group, TaskItemFile taskItemFile, int index){
+
+	private Element getShapeObjectElement(Document doc, TaskMarkGroup group, TaskItemFile taskItemFile, int index) {
 		Element root = doc.createElement("object" + index);
-		
+
 		TaskMarkRecord taskMarkRecord = this.taskmarkrecordMap.get(group.getTaskMarkRecordId());
-		
-		
+
 		root.appendChild(this.createElement(doc, "name", taskMarkRecord.getName()));
 		root.appendChild(this.createElement(doc, "color", taskMarkRecord.getColor()));
 		root.appendChild(this.createElement(doc, "colorTagId", ZStringUtil.longToStr(taskMarkRecord.getColorTagId())));
@@ -303,28 +306,28 @@ public class TaskXml extends AbstractXML {
 		root.appendChild(this.getPointsElement(doc, group));
 		return root;
 	}
-	
-	private Element getShapeObjectPropertiesElement(Document doc,TaskMarkGroup group){
+
+	private Element getShapeObjectPropertiesElement(Document doc, TaskMarkGroup group) {
 		Element root = doc.createElement("properties");
 		List<TaskMarkRecordRefTag> refTags = this.refTagMap.get(group.getTaskMarkRecordId());
 		int counter = 0;
-		for(TaskMarkRecordRefTag refTag: refTags){
+		for (TaskMarkRecordRefTag refTag : refTags) {
 			TagItem tagItem = this.tagItemMap.get(refTag.getTagItemId());
-			if(tagItem != null){
+			if (tagItem != null) {
 				root.appendChild(this.getShapeObjectPropertyElement(doc, tagItem, counter));
 				counter++;
 			}
 		}
 		return root;
 	}
-	
-	private Element getShapeObjectPropertyElement(Document doc,TagItem tagItem, int index){
+
+	private Element getShapeObjectPropertyElement(Document doc, TagItem tagItem, int index) {
 		Element root = doc.createElement("property" + index);
 		root.appendChild(this.createElement(doc, "nameId", ZStringUtil.longToStr(tagItem.getTagId())));
-		
+
 		String name = "";
 		Tag tag = this.tagMap.get(tagItem.getTagId());
-		if(tag != null){
+		if (tag != null) {
 			name = tag.getName();
 		}
 		root.appendChild(this.createElement(doc, "name", name));
@@ -332,34 +335,34 @@ public class TaskXml extends AbstractXML {
 		root.appendChild(this.createElement(doc, "value", tagItem.getValue()));
 		return root;
 	}
-	
-	private Element getPointsElement(Document doc,TaskMarkGroup group){
+
+	private Element getPointsElement(Document doc, TaskMarkGroup group) {
 		Element root = doc.createElement("points");
 		int counter = 0;
-		for(TaskMarkPoint point: group.getPoints()){
-			root.appendChild(this.getPointElement(doc,point,counter));
+		for (TaskMarkPoint point : group.getPoints()) {
+			root.appendChild(this.getPointElement(doc, point, counter));
 			counter++;
 		}
 		return root;
 	}
-	
-	private Element getPointElement(Document doc,TaskMarkPoint point,int index){
+
+	private Element getPointElement(Document doc, TaskMarkPoint point, int index) {
 		Element root = doc.createElement("point" + index);
-		
+
 		root.appendChild(this.createElement(doc, "x", ZStringUtil.floatToStr(point.getX())));
 		root.appendChild(this.createElement(doc, "y", ZStringUtil.floatToStr(point.getY())));
 		return root;
 	}
-	
-	private String getPictureName(TaskItem taskItem, AssetFile assetFile){
-		if(this.asset.getAssetType() != AssetType.PICTURE){
-			return String.format("%s_%d.jpg", assetFile.getFileName(),taskItem.getOrderNo());
+
+	private String getPictureName(TaskItem taskItem, AssetFile assetFile) {
+		if (this.asset.getAssetType() != AssetType.PICTURE) {
+			return String.format("%s_%d.jpg", assetFile.getFileName(), taskItem.getOrderNo());
 		}
-		
+
 		return assetFile.getFileName();
 	}
-	
-	private String getPictureFrameIndex(TaskItem taskItem, AssetFile assetFile){
+
+	private String getPictureFrameIndex(TaskItem taskItem, AssetFile assetFile) {
 		long frameIndex = 1l * this.task.getTimeInterval() * taskItem.getOrderNo() * assetFile.getFps();
 		return ZStringUtil.longToStr(frameIndex);
 	}
@@ -417,21 +420,43 @@ public class TaskXml extends AbstractXML {
 		}
 	}
 
-	public void addGroups(List<TaskMarkGroup> groups) {
-		for(TaskMarkGroup group: groups){
-			List<TaskMarkGroup> temp = this.markGroupMap.get(group.getTaskItemFileId());
-			if(temp == null){
-				temp = new ArrayList<>();
-				this.markGroupMap.put(group.getTaskItemFileId(), temp);
+	public void addGroups(List<TaskMarkGroup> groups, TaskRecord taskRecord) {
+		for (TaskMarkGroup group : groups) {
+			if (group.getTaskItemFileId() == null) {
+				group.setTaskItemFileId(getTaskItemFileId(taskRecord));
 			}
-			temp.add(group);
+
+			if (group.getTaskItemFileId() != null) {
+				List<TaskMarkGroup> temp = this.markGroupMap.get(group.getTaskItemFileId());
+				if (temp == null) {
+					temp = new ArrayList<>();
+					this.markGroupMap.put(group.getTaskItemFileId(), temp);
+				}
+				temp.add(group);
+			}
 		}
 	}
-	
+
+	private Long getTaskItemFileId(TaskRecord taskRecord) {
+		if (taskRecord.getTaskItemId() == null) {
+			return null;
+		}
+
+		for (TaskItem taskItem : this.taskItems) {
+			if (taskRecord.getTaskItemId().longValue() == taskItem.getId()) {
+				if (taskItem.getTaskItemFiles().size() > 0) {
+					return taskItem.getTaskItemFiles().get(0).getId();
+				}
+			}
+		}
+
+		return null;
+	}
+
 	public void addRefTags(List<TaskMarkRecordRefTag> refTags) {
-		for(TaskMarkRecordRefTag refTag: refTags){
+		for (TaskMarkRecordRefTag refTag : refTags) {
 			List<TaskMarkRecordRefTag> temp = this.refTagMap.get(refTag.getTaskMarkRecordId());
-			if(temp == null){
+			if (temp == null) {
 				temp = new ArrayList<>();
 				this.refTagMap.put(refTag.getTaskMarkRecordId(), temp);
 			}
@@ -440,23 +465,21 @@ public class TaskXml extends AbstractXML {
 	}
 
 	public void addTaskMarkRecords(List<TaskMarkRecord> taskMarkRecords) {
-		for(TaskMarkRecord record: taskMarkRecords ){
+		for (TaskMarkRecord record : taskMarkRecords) {
 			this.taskmarkrecordMap.put(record.getId(), record);
 		}
 	}
 
 	public void setTags(List<Tag> tags) {
-		for(Tag tag: tags){
+		for (Tag tag : tags) {
 			this.tagMap.put(tag.getId(), tag);
 		}
 	}
 
 	public void addTagItems(List<TagItem> tagItems) {
-		for(TagItem tagitem: tagItems){
+		for (TagItem tagitem : tagItems) {
 			this.tagItemMap.put(tagitem.getId(), tagitem);
 		}
 	}
-
-	
 
 }

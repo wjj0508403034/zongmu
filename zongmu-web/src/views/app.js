@@ -3,9 +3,9 @@
 var zongmu = angular.module("zongmu", ["huoyun-ui", "ngDialog"]);
 zongmu.constant("serviceUrl", "/service/");
 // http://192.168.100.31:8083/
-zongmu.constant("mediaServiceUrl", "http://118.178.195.17:8083/");
+zongmu.constant("mediaServiceUrl", "http://192.168.100.31:8083/");
 //"aliyun"
-zongmu.constant("appEnv", "aliyun");
+zongmu.constant("appEnv", "");
 
 zongmu.config(["applicationProvider", "navProvider", "pageProvider", "footbarProvider",
   "$httpProvider", "$logProvider", "httpErrorProvider", "serviceUrl",
@@ -26,14 +26,14 @@ zongmu.config(["applicationProvider", "navProvider", "pageProvider", "footbarPro
       applicationProvider.setName("纵目真值标注系统");
       applicationProvider.loginFunc = function() {
         var loginUrl = serviceUrl + "page/user/login.html";
-        if(window.location.pathname !== loginUrl) {
+        if (window.location.pathname !== loginUrl) {
           window.location.href = loginUrl;
         }
       };
 
       applicationProvider.registerFunc = function() {
         var registerUrl = serviceUrl + "page/user/register.html";
-        if(window.location.pathname !== registerUrl) {
+        if (window.location.pathname !== registerUrl) {
           window.location.href = registerUrl;
         }
       };
@@ -109,12 +109,12 @@ zongmu.config(["applicationProvider", "navProvider", "pageProvider", "footbarPro
     function httpErrorHandle(res) {
       var dialog = httpErrorProvider.getDialog();
       $(".widgets-loading-container").css("display", "none");
-      if(res && res.status) {
-        if([401,405].indexOf(res.status) !== -1) {
+      if (res && res.status) {
+        if ([401, 405].indexOf(res.status) !== -1) {
           applicationProvider.setLogin(false);
           window.location.href = serviceUrl + "page/user/login.html";
         } else {
-          if(res.data && res.data.message) {
+          if (res.data && res.data.message) {
             dialog.showError(res.data.message);
           } else {
             dialog.showError("系统错误！");
@@ -154,9 +154,9 @@ zongmu.controller("appController", ["$scope", 'breadCrumb', "dialog", "httpError
     function initView() {
       var items = navProvider.getItems();
       var role = Cookies.get("role");
-      if(role === "ADMIN") {
+      if (role === "ADMIN") {
         items.forEach(function(it) {
-          if(["setting"].indexOf(it.name) !== -1) {
+          if (["setting"].indexOf(it.name) !== -1) {
             it.visibility = true;
           }
         });

@@ -34,7 +34,6 @@ import com.zongmu.service.entity.Algorithm;
 import com.zongmu.service.entity.Asset;
 import com.zongmu.service.entity.Asset2AssetViewTag;
 import com.zongmu.service.entity.AssetFile;
-import com.zongmu.service.entity.ColorGroup;
 import com.zongmu.service.entity.Tag;
 import com.zongmu.service.entity.TagItem;
 import com.zongmu.service.entity.Task;
@@ -80,7 +79,7 @@ public class NewExportServiceImpl {
 
 	@Autowired
 	private TaskMarkRecordService taskMarkRecordService;
-	
+
 	@Autowired
 	private TaskMarkGroupService taskMarkGroupService;
 
@@ -95,67 +94,77 @@ public class NewExportServiceImpl {
 
 	@Autowired
 	private ReviewRecordService reviewRecordService;
-	
+
 	@Autowired
 	private ViewTagService viewTagService;
-	
+
 	@Autowired
 	private TaskMarkRecordRefTagService recordRefTagService;
-	
+
 	@Autowired
 	private ColorGroupService colorGroupService;
 
 	public EAssetObject picTasks(String assetNo, String taskNo) throws BusinessException {
 		TaskXml taskXml = new TaskXml();
-		
+
 		Asset asset = this.assetService.getSimpleAsset(assetNo);
 		List<AssetFile> assetFiles = this.assetService.getAssetFilesByAssetNo(assetNo);
 		List<Asset2AssetViewTag> videoTags = this.assetService.getAssetViewTags(asset.getId());
-		
+
 		taskXml.setAsset(asset);
 		taskXml.setAssetFiles(assetFiles);
 		taskXml.setVideoTags(videoTags);
-		
-		
+
 		Task task = this.taskService.getSimpleTask(taskNo);
+
+		EAssetObject assetObj = new EAssetObject();
+		Long taskCount = this.taskService.countTaskItems(task.getId());
+		Long finishTaskCount = this.reviewRecordService.getFinishTaskCount(task.getId());
+		if (finishTaskCount != taskCount) {
+			assetObj.setTaskItems(this.taskService.getTaskItemsByTaskId(task.getId()));
+			return assetObj;
+			// throw new BusinessException(ErrorCode.Export_Failed);
+		}
+
 		List<TaskItem> taskItems = this.taskService.getTaskItemsForExport(task.getId());
-		
+
 		taskXml.setTask(task);
 		taskXml.setTaskItems(taskItems);
 
 		Algorithm algorithm = this.algorithmService.getAlgorithm(task.getAlgorithmId());
-		
+
 		taskXml.setAlgorithm(algorithm);
-		
+
 		List<ViewTag> viewTags = this.viewTagService.getSimpleAllViewTags();
 		List<ViewTagItem> viewTagItems = this.viewTagService.getAllViewTagItems();
-		
+
 		taskXml.setViewTags(viewTags);
 		taskXml.setViewTagItems(viewTagItems);
-		
+
 		List<TaskRecord> taskRecords = this.taskRecordService.getTaskRecordsByTaskId(task.getId());
-		for(TaskRecord taskRecord: taskRecords){
+		for (TaskRecord taskRecord : taskRecords) {
 			List<TaskMarkRecord> taskMarkRecords = this.taskMarkRecordService.getSimpleRecords(taskRecord.getId());
 			taskXml.addTaskMarkRecords(taskMarkRecords);
-			
-			for(TaskMarkRecord record : taskMarkRecords ){
+
+			for (TaskMarkRecord record : taskMarkRecords) {
 				List<TaskMarkGroup> groups = this.taskMarkGroupService.getGroups(record.getId());
-				taskXml.addGroups(groups);
-				
+				taskXml.addGroups(groups, taskRecord);
+
 				List<TaskMarkRecordRefTag> refTags = this.recordRefTagService.getRefTags(record.getId());
 				taskXml.addRefTags(refTags);
 			}
 		}
-		
+
 		List<Tag> tags = this.tagService.getSimpleTagsByAlgorithm(algorithm.getId());
 		taskXml.setTags(tags);
-		for(Tag tag: tags){
+		for (Tag tag : tags) {
 			List<TagItem> tagItems = this.tagService.getTagItemsByTagId(tag.getId());
 			taskXml.addTagItems(tagItems);
 		}
-		
-		//ColorGroup colorGroup = this.colorGroupService.getColorGroupDetail(algorithm.getId());
-		
+
+		// ColorGroup colorGroup =
+		// this.colorGroupService.getColorGroupDetail(algorithm.getId());
+
 		try {
 			Document doc = this.newXDoc();
 			doc.appendChild(taskXml.toXml(doc));
@@ -164,7 +173,7 @@ public class NewExportServiceImpl {
 			logger.error(ExceptionUtils.getStackTrace(ex));
 			throw new BusinessException(ErrorCode.Export_Failed_System);
 		}
-		
+
 		return null;
 	}
 

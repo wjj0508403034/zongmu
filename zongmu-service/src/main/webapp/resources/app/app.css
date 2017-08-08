@@ -409,6 +409,7 @@ i::after {
 }
 
 
+
 .task-center-page .widgets-table {
   min-height: 400px;
 }
@@ -514,7 +515,6 @@ i::after {
   width: 30%;
   float: left;
 }
-
 .mark-attrs-dialog {
   min-height: 300px;
 }
@@ -1453,7 +1453,7 @@ i::after {
 }
 
 .export-failed-dialog .dialog-content-container {
-  height: 300px;
+  height: 250px;
   overflow: scroll;
 }
 

@@ -7,12 +7,12 @@
     "angular-bootstrap-datetimepicker": "^1.0.1"
   },
   "devDependencies": {
-    "del": "^2.2.0",
-    "event-stream": "^3.3.2",
+    "del": "^2.2.2",
+    "event-stream": "^3.3.4",
     "gulp": "^3.9.1",
-    "gulp-angular-templatecache": "^1.8.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-inject": "^4.1.0",
+    "gulp-angular-templatecache": "^1.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-inject": "^4.2.0",
     "gulp-minify-html": "^1.0.6",
     "gulp-show-me-file": "0.0.2",
     "showdown": "^1.4.2",

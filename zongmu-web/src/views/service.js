@@ -23,12 +23,12 @@ zongmu.factory("assetService", ["$q", "$http", "serviceUrl", function($q, $http,
 
     getAssets: function(pageIndex, filter) {
       var url = baseUrl;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
 
-      if(filter) {
-        if(pageIndex) {
+      if (filter) {
+        if (pageIndex) {
           url += "&filter=" + filter;
 
         } else {
@@ -148,7 +148,7 @@ zongmu.factory("reviewRecordService", ["$q", "$http", "serviceUrl", function($q,
   return {
     queryReviewRecords: function(pageIndex, params) {
       var url = baseUrl + "/queryReviewRecords";
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -160,7 +160,7 @@ zongmu.factory("reviewRecordService", ["$q", "$http", "serviceUrl", function($q,
 
     getMyReviewRecords: function(pageIndex, status) {
       var url = baseUrl + "/my?status=" + status;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "&pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -229,7 +229,7 @@ zongmu.factory("taskRecordService", ["$q", "$http", "serviceUrl", function($q, $
     search: function(pageIndex, param) {
       var dtd = $q.defer();
       var url = `${baseUrl}/search`;
-      if(pageIndex !== undefined && pageIndex !== null) {
+      if (pageIndex !== undefined && pageIndex !== null) {
         url += "?pageIndex=" + pageIndex;
       }
       $http.post(url, param)
@@ -243,7 +243,7 @@ zongmu.factory("taskRecordService", ["$q", "$http", "serviceUrl", function($q, $
     getMyTaskRecords: function(pageIndex, status) {
       var dtd = $q.defer();
       var url = baseUrl + "/my?status=" + status;
-      if(pageIndex) {
+      if (pageIndex) {
         url += "&pageIndex=" + pageIndex;
       }
       $http.get(url).success(function(data) {
@@ -287,7 +287,7 @@ zongmu.factory("taskRecordService", ["$q", "$http", "serviceUrl", function($q, $
     getTaskMarks: function(taskRecordNo, status) {
       var dtd = $q.defer();
       var url = baseUrl + "/" + taskRecordNo + "/taskMarks";
-      if(status !== undefined) {
+      if (status !== undefined) {
         url += "?status=" + status;
       }
       $http.get(url).success(function(data) {
@@ -429,7 +429,7 @@ zongmu.factory("taskService", ["$q", "$http", "serviceUrl", function($q, $http, 
     },
 
     queryTasks: function(pageIndex, param) {
-      if(pageIndex == undefined || pageIndex == null) {
+      if (pageIndex == undefined || pageIndex == null) {
         pageIndex = 0;
       }
       var dtd = $q.defer();
@@ -459,12 +459,12 @@ zongmu.factory("taskService", ["$q", "$http", "serviceUrl", function($q, $http, 
     getTasks: function(pageIndex, filter) {
       var dtd = $q.defer();
       var url = baseUrl;
-      if(pageIndex) {
+      if (pageIndex) {
         url += "?pageIndex=" + pageIndex;
       }
 
-      if(filter) {
-        if(pageIndex) {
+      if (filter) {
+        if (pageIndex) {
           url += "&filter=" + filter;
 
         } else {
@@ -481,7 +481,7 @@ zongmu.factory("taskService", ["$q", "$http", "serviceUrl", function($q, $http, 
     getTask: function(taskNo, pageIndex) {
       var dtd = $q.defer();
       var url = baseUrl + "/" + taskNo;
-      if(pageIndex) {
+      if (pageIndex) {
         url += "?pageIndex=" + pageIndex;
       }
       $http.get(url)
@@ -723,7 +723,7 @@ zongmu.factory("reportService", ["$q", "$http", "serviceUrl", function($q, $http
     getNewBsdReport: function(algorithmId, assetViewItemIds) {
       var dtd = $q.defer();
       var url = `${baseUrl}/newBSD?algorithmId=${algorithmId}`;
-      if(assetViewItemIds) {
+      if (assetViewItemIds) {
         url = `${url}&assetViewItemIds=${assetViewItemIds}`;
       }
       $http.get(url).success(function(data) {
@@ -750,6 +750,14 @@ zongmu.factory("exportService", ["$q", "$http", "serviceUrl", function($q, $http
     exportTask: function(assetNo, taskNo) {
       var dtd = $q.defer();
       var url = `${baseUrl}/new/assets/${assetNo}/${taskNo}`;
+      $http.post(url).success(function(data) {
+        dtd.resolve(data);
+      });
+      return dtd.promise;
+    },
+    exportPicTask: function(assetNo, taskNo) {
+      var dtd = $q.defer();
+      var url = `${baseUrl}/new/assets/pic/${assetNo}/${taskNo}`;
       $http.post(url).success(function(data) {
         dtd.resolve(data);
       });
@@ -841,7 +849,7 @@ zongmu.factory("userPointService", ["$q", "$http", "serviceUrl", function($q, $h
     getMyPoints: function(pageIndex) {
       var dtd = $q.defer();
       var url = baseUrl + "/my";
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
       $http.get(url).success(function(data) {
@@ -1021,7 +1029,7 @@ zongmu.factory("payService", ["$q", "$http", "serviceUrl", function($q, $http, s
   return {
     getList: function(pageIndex, tabIndex) {
       var url = baseUrl + "?payStatus=" + tabIndex;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "&pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -1066,7 +1074,7 @@ zongmu.factory("userService", ["$q", "$http", "serviceUrl", function($q, $http, 
   return {
     getUserList: function(pageIndex, role) {
       var url = baseUrl + "/users?role=" + role;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "&pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -1078,7 +1086,7 @@ zongmu.factory("userService", ["$q", "$http", "serviceUrl", function($q, $http, 
 
     getBlackUserList: function(pageIndex) {
       var url = baseUrl + "/black/users";
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();

@@ -3,7 +3,7 @@
 var zongmu = angular.module("zongmu", ["huoyun-ui", "ngDialog"]);
 zongmu.constant("serviceUrl", "/service/");
 // http://192.168.100.31:8083/
-zongmu.constant("mediaServiceUrl", "http://118.178.195.17:8083/");
+zongmu.constant("mediaServiceUrl", "http://192.168.100.31:8083/");
 //"aliyun"
 zongmu.constant("appEnv", "");
 
@@ -26,14 +26,14 @@ zongmu.config(["applicationProvider", "navProvider", "pageProvider", "footbarPro
       applicationProvider.setName("纵目真值标注系统");
       applicationProvider.loginFunc = function() {
         var loginUrl = serviceUrl + "page/user/login.html";
-        if(window.location.pathname !== loginUrl) {
+        if (window.location.pathname !== loginUrl) {
           window.location.href = loginUrl;
         }
       };
 
       applicationProvider.registerFunc = function() {
         var registerUrl = serviceUrl + "page/user/register.html";
-        if(window.location.pathname !== registerUrl) {
+        if (window.location.pathname !== registerUrl) {
           window.location.href = registerUrl;
         }
       };
@@ -109,12 +109,12 @@ zongmu.config(["applicationProvider", "navProvider", "pageProvider", "footbarPro
     function httpErrorHandle(res) {
       var dialog = httpErrorProvider.getDialog();
       $(".widgets-loading-container").css("display", "none");
-      if(res && res.status) {
-        if([401,405].indexOf(res.status) !== -1) {
+      if (res && res.status) {
+        if ([401, 405].indexOf(res.status) !== -1) {
           applicationProvider.setLogin(false);
           window.location.href = serviceUrl + "page/user/login.html";
         } else {
-          if(res.data && res.data.message) {
+          if (res.data && res.data.message) {
             dialog.showError(res.data.message);
           } else {
             dialog.showError("系统错误！");
@@ -154,9 +154,9 @@ zongmu.controller("appController", ["$scope", 'breadCrumb', "dialog", "httpError
     function initView() {
       var items = navProvider.getItems();
       var role = Cookies.get("role");
-      if(role === "ADMIN") {
+      if (role === "ADMIN") {
         items.forEach(function(it) {
-          if(["setting"].indexOf(it.name) !== -1) {
+          if (["setting"].indexOf(it.name) !== -1) {
             it.visibility = true;
           }
         });
@@ -189,12 +189,12 @@ zongmu.factory("assetService", ["$q", "$http", "serviceUrl", function($q, $http,
 
     getAssets: function(pageIndex, filter) {
       var url = baseUrl;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
 
-      if(filter) {
-        if(pageIndex) {
+      if (filter) {
+        if (pageIndex) {
           url += "&filter=" + filter;
 
         } else {
@@ -314,7 +314,7 @@ zongmu.factory("reviewRecordService", ["$q", "$http", "serviceUrl", function($q,
   return {
     queryReviewRecords: function(pageIndex, params) {
       var url = baseUrl + "/queryReviewRecords";
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -326,7 +326,7 @@ zongmu.factory("reviewRecordService", ["$q", "$http", "serviceUrl", function($q,
 
     getMyReviewRecords: function(pageIndex, status) {
       var url = baseUrl + "/my?status=" + status;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "&pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -395,7 +395,7 @@ zongmu.factory("taskRecordService", ["$q", "$http", "serviceUrl", function($q, $
     search: function(pageIndex, param) {
       var dtd = $q.defer();
       var url = `${baseUrl}/search`;
-      if(pageIndex !== undefined && pageIndex !== null) {
+      if (pageIndex !== undefined && pageIndex !== null) {
         url += "?pageIndex=" + pageIndex;
       }
       $http.post(url, param)
@@ -409,7 +409,7 @@ zongmu.factory("taskRecordService", ["$q", "$http", "serviceUrl", function($q, $
     getMyTaskRecords: function(pageIndex, status) {
       var dtd = $q.defer();
       var url = baseUrl + "/my?status=" + status;
-      if(pageIndex) {
+      if (pageIndex) {
         url += "&pageIndex=" + pageIndex;
       }
       $http.get(url).success(function(data) {
@@ -453,7 +453,7 @@ zongmu.factory("taskRecordService", ["$q", "$http", "serviceUrl", function($q, $
     getTaskMarks: function(taskRecordNo, status) {
       var dtd = $q.defer();
       var url = baseUrl + "/" + taskRecordNo + "/taskMarks";
-      if(status !== undefined) {
+      if (status !== undefined) {
         url += "?status=" + status;
       }
       $http.get(url).success(function(data) {
@@ -595,7 +595,7 @@ zongmu.factory("taskService", ["$q", "$http", "serviceUrl", function($q, $http, 
     },
 
     queryTasks: function(pageIndex, param) {
-      if(pageIndex == undefined || pageIndex == null) {
+      if (pageIndex == undefined || pageIndex == null) {
         pageIndex = 0;
       }
       var dtd = $q.defer();
@@ -625,12 +625,12 @@ zongmu.factory("taskService", ["$q", "$http", "serviceUrl", function($q, $http, 
     getTasks: function(pageIndex, filter) {
       var dtd = $q.defer();
       var url = baseUrl;
-      if(pageIndex) {
+      if (pageIndex) {
         url += "?pageIndex=" + pageIndex;
       }
 
-      if(filter) {
-        if(pageIndex) {
+      if (filter) {
+        if (pageIndex) {
           url += "&filter=" + filter;
 
         } else {
@@ -647,7 +647,7 @@ zongmu.factory("taskService", ["$q", "$http", "serviceUrl", function($q, $http, 
     getTask: function(taskNo, pageIndex) {
       var dtd = $q.defer();
       var url = baseUrl + "/" + taskNo;
-      if(pageIndex) {
+      if (pageIndex) {
         url += "?pageIndex=" + pageIndex;
       }
       $http.get(url)
@@ -889,7 +889,7 @@ zongmu.factory("reportService", ["$q", "$http", "serviceUrl", function($q, $http
     getNewBsdReport: function(algorithmId, assetViewItemIds) {
       var dtd = $q.defer();
       var url = `${baseUrl}/newBSD?algorithmId=${algorithmId}`;
-      if(assetViewItemIds) {
+      if (assetViewItemIds) {
         url = `${url}&assetViewItemIds=${assetViewItemIds}`;
       }
       $http.get(url).success(function(data) {
@@ -916,6 +916,14 @@ zongmu.factory("exportService", ["$q", "$http", "serviceUrl", function($q, $http
     exportTask: function(assetNo, taskNo) {
       var dtd = $q.defer();
       var url = `${baseUrl}/new/assets/${assetNo}/${taskNo}`;
+      $http.post(url).success(function(data) {
+        dtd.resolve(data);
+      });
+      return dtd.promise;
+    },
+    exportPicTask: function(assetNo, taskNo) {
+      var dtd = $q.defer();
+      var url = `${baseUrl}/new/assets/pic/${assetNo}/${taskNo}`;
       $http.post(url).success(function(data) {
         dtd.resolve(data);
       });
@@ -1007,7 +1015,7 @@ zongmu.factory("userPointService", ["$q", "$http", "serviceUrl", function($q, $h
     getMyPoints: function(pageIndex) {
       var dtd = $q.defer();
       var url = baseUrl + "/my";
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
       $http.get(url).success(function(data) {
@@ -1187,7 +1195,7 @@ zongmu.factory("payService", ["$q", "$http", "serviceUrl", function($q, $http, s
   return {
     getList: function(pageIndex, tabIndex) {
       var url = baseUrl + "?payStatus=" + tabIndex;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "&pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -1232,7 +1240,7 @@ zongmu.factory("userService", ["$q", "$http", "serviceUrl", function($q, $http, 
   return {
     getUserList: function(pageIndex, role) {
       var url = baseUrl + "/users?role=" + role;
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "&pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -1244,7 +1252,7 @@ zongmu.factory("userService", ["$q", "$http", "serviceUrl", function($q, $http, 
 
     getBlackUserList: function(pageIndex) {
       var url = baseUrl + "/black/users";
-      if(pageIndex) {
+      if (pageIndex) {
         url = url + "?pageIndex=" + pageIndex;
       }
       var dtd = $q.defer();
@@ -2193,6 +2201,15 @@ zongmu.factory('formatService', function() {
   };
 });
 'use strict';
+
+zongmu.controller("helpController", ["$scope", function($scope) {
+  initView();
+
+  function initView() {
+    $scope.setTitle("帮助中心");
+  }
+}]);
+'use strict';
 /*
  * 首页 - 任务中心
  */
@@ -2613,15 +2630,6 @@ zongmu.controller("taskCenterController", ['$scope', 'taskService', 'dialog', 'e
     }
   }
 ]);
-'use strict';
-
-zongmu.controller("helpController", ["$scope", function($scope) {
-  initView();
-
-  function initView() {
-    $scope.setTitle("帮助中心");
-  }
-}]);
 'use strict';
 
 zongmu.controller("attrsDialogController", ['$scope', 'dialog', 'tagService',
@@ -6796,8 +6804,8 @@ zongmu.controller("NewViewTagItemCreateController", ["$scope", "viewTagService",
 ]);
 'use strict';
 
-zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService","appEnv",
-  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService,appEnv) {
+zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "taskService", "dialog", "$timeout", "breadCrumb", "exportService", "appEnv",
+  function($q, $scope, assetService, taskService, dialog, $timeout, breadCrumbProvider, exportService, appEnv) {
     var assetNo = $.url().param("assetNo");
     $scope.appEnv = appEnv;
     initView() && initData();
@@ -6847,7 +6855,7 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
         text: "状态"
       }];
 
-      if(!assetNo) {
+      if (!assetNo) {
         dialog.showError("参数错误");
         return false;
       }
@@ -6860,10 +6868,10 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
       $q.all([assetService.getAsset(assetNo), taskService.getTasksByAssetNo(assetNo)])
         .then(function(res) {
           $scope.asset = res[0];
-          if($scope.asset.viewTags) {
+          if ($scope.asset.viewTags) {
             $scope.asset.viewTags.forEach(function(it) {
               it.viewTag.items.forEach(function(item) {
-                if(item.id === it.assetViewTagItemId) {
+                if (item.id === it.assetViewTagItemId) {
                   it.viewTagItem = item;
                 }
               })
@@ -6880,7 +6888,7 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
         return it.assetFileStatus === "FTPUPLOADING" || it.assetFileStatus === "COMPRESSING" || it.assetFileStatus === "UPLOADSUCCESS";
       });
 
-      if(items.length > 0) {
+      if (items.length > 0) {
         $timeout(function() {
           getAssetData();
         }, 2000);
@@ -6891,10 +6899,10 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
       assetService.getAsset(assetNo)
         .then(function(asset) {
           $scope.asset = asset;
-          if($scope.asset.viewTags) {
+          if ($scope.asset.viewTags) {
             $scope.asset.viewTags.forEach(function(it) {
               it.viewTag.items.forEach(function(item) {
-                if(item.id === it.assetViewTagItemId) {
+                if (item.id === it.assetViewTagItemId) {
                   it.viewTagItem = item;
                 }
               })
@@ -6918,7 +6926,7 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
     }
 
     $scope.onNewTaskButtonClick = function() {
-      if(assetNo) {
+      if (assetNo) {
         window.location.href = "asset.new.html?assetNo=" + assetNo;
       } else {
         dialog.showError("参数错误");
@@ -6971,23 +6979,24 @@ zongmu.controller("assetDetailController", ["$q", "$scope", "assetService", "tas
     $scope.onExportButtonClick = function(rowData) {
       $scope.showLoading();
       $scope.setLoadingText("正在导出数据，请稍后...");
-      exportService.exportTask(assetNo, rowData.taskNo)
-        .then(function(data) {
-          $scope.hideLoading();
-          if(data.taskItems.length > 0) {
-            dialog.showCustom({
-              templateUrl: 'export.failed.dialog.html',
-              controller: "exportFailedDialogController",
-              params: {
-                taskItems: data.taskItems
-              },
-              onConfirm: function() {
-              }
-            });
-          } else {
-            dialog.showInfo("导出成功");
-          }
-        });
+      var exportServiceProxy = rowData.taskType === 'VIDEO' ?
+        exportService.exportTask(assetNo, rowData.taskNo) :
+        exportService.exportPicTask(assetNo, rowData.taskNo);
+      exportServiceProxy.then(function(data) {
+        $scope.hideLoading();
+        if (data && data.taskItems.length > 0) {
+          dialog.showCustom({
+            templateUrl: 'export.failed.dialog.html',
+            controller: "exportFailedDialogController",
+            params: {
+              taskItems: data.taskItems
+            },
+            onConfirm: function() {}
+          });
+        } else {
+          dialog.showInfo("导出成功");
+        }
+      });
     };
   }
 ]);

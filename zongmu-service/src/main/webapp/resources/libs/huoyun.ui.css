@@ -437,8 +437,7 @@ a:hover {
   border-radius: 5px;
   color: #444;
   font-family: Helvetica, sans-serif;
-  font-size: 1.1em;
-  line-height: 1.5em;
+  font-size: 14px;
   margin: 0 auto;
   max-width: 100%;
   padding: 1em;
@@ -447,10 +446,10 @@ a:hover {
   min-height: 50px;
 }
 
-.widgets-loading-container .widgets-loading-content i{
+.widgets-loading-container .widgets-loading-content i {
   margin-right: 5px;
+  width: 20px;
 }
-
 .widgets-pic-marker {
   position: relative;
   z-index: 1000;
