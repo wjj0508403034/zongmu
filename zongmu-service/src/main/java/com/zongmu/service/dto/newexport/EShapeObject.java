@@ -186,22 +186,21 @@ public class EShapeObject extends AbstractXML {
 	}
 	
 	public String getTagName(String fileName) {
-		String tagName = null;
 		if (StringUtils.equalsIgnoreCase(fileName, "front.avi")) {
-			tagName = "channel0";
+			return "channel0";
 		}
 
 		if (StringUtils.equalsIgnoreCase(fileName, "left.avi")) {
-			tagName = "channel1";
+			return "channel1";
 		}
 		if (StringUtils.equalsIgnoreCase(fileName, "right.avi")) {
-			tagName = "channel2";
+			return "channel2";
 		}
 		if (StringUtils.equalsIgnoreCase(fileName, "rear.avi")) {
-			tagName = "channel3";
+			return "channel3";
 		}
 
-		return tagName;
+		return "channel0";
 	}
 
 	private static void toShapeXml(Document doc, Element root, EAssetObject asset, EShapeObject shapeObject) {

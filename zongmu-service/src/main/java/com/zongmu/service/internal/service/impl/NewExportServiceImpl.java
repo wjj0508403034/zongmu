@@ -417,6 +417,11 @@ public class NewExportServiceImpl {
 				if (StringUtils.containsIgnoreCase(taskItemFile.getPath(), "rear")) {
 					return "rear.avi";
 				}
+				
+				String[] paths = taskItemFile.getPath().split("/");
+				if(paths.length > 0){
+					return paths[paths.length - 1];
+				}
 			}
 		}
 
