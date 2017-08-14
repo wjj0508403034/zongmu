@@ -46,7 +46,7 @@ public class ETaskViewTagInfoObject extends AbstractXML {
 		Element root = doc.createElement("frameSection" + sectionIndex);
 		root.appendChild(this.createElement(doc, "startFrame", calcStartFrame(asset)));
 		root.appendChild(this.createElement(doc, "endFrame", calcEndFrame(asset)));
-		root.appendChild(this.createElement(doc, "startTime", ZStringUtil.floatToStr(this.getStartTime())));
+		root.appendChild(this.createElement(doc, "startTime", ZStringUtil.intToStr(this.getStartTime().intValue())));
 		root.appendChild(this.createElement(doc, "endTime", ZStringUtil.floatToStr(this.getEndTime())));
 		return root;
 	}
