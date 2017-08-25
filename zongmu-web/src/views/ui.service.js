@@ -4,7 +4,7 @@ zongmu.factory('enumService', function() {
   return {
     getHours: function() {
       var hours = [];
-      for(var index = 0; index <= 24; index++) {
+      for (var index = 0; index <= 24; index++) {
         hours.push({
           name: index,
           text: index
@@ -178,7 +178,7 @@ zongmu.factory('enumService', function() {
 zongmu.filter("businessRole", function() {
 
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "ADMIN":
         return "管理员";
       case "FINANCE":
@@ -199,7 +199,7 @@ zongmu.filter("businessRole", function() {
 
 zongmu.filter("sex", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "MAN":
         return "男";
       case "FEMAN":
@@ -218,7 +218,7 @@ zongmu.filter("boolText", function() {
 
 zongmu.filter("tagCategory", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "ROAD":
         return "路况";
       case "WEATHER":
@@ -231,7 +231,7 @@ zongmu.filter("tagCategory", function() {
 
 zongmu.filter("tagControlType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "DROPDOWNBOX":
         return "下拉框";
       case "CHECKBOX":
@@ -246,7 +246,7 @@ zongmu.filter("tagControlType", function() {
 
 zongmu.filter("uploadType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "SINGLE":
         return "一路视频";
       case "FOUR":
@@ -261,7 +261,7 @@ zongmu.filter("uploadType", function() {
 
 zongmu.filter("taskPriority", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case 1:
         return "高";
       case 2:
@@ -276,7 +276,7 @@ zongmu.filter("taskPriority", function() {
 
 zongmu.filter("taskStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "CUTTING":
         return "正在创建...";
       case "CUTTINGFAILURE":
@@ -291,7 +291,7 @@ zongmu.filter("taskStatus", function() {
 
 zongmu.filter("payStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "PENDING":
         return "待支付";
       case "PAYED":
@@ -304,7 +304,7 @@ zongmu.filter("payStatus", function() {
 
 zongmu.filter("taskItemStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "NEW":
         return "新任务";
       case "INPROGRESS":
@@ -325,7 +325,7 @@ zongmu.filter("taskItemStatus", function() {
 
 zongmu.filter("taskRecordStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "INPROGRESS":
         return "标注进行中";
       case "WAITTING":
@@ -344,7 +344,7 @@ zongmu.filter("taskRecordStatus", function() {
 
 zongmu.filter("reviewRecordStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "WAITTING":
         return "待审核";
       case "INPROGRESS":
@@ -361,7 +361,7 @@ zongmu.filter("reviewRecordStatus", function() {
 
 zongmu.filter("uploadStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "UPLOADING":
         return "上传中...";
       case "UPLOADFAILED":
@@ -388,7 +388,7 @@ zongmu.filter("uploadStatus", function() {
 
 zongmu.filter("taskType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "PICTURE":
         return "图片";
       case "VIDEO":
@@ -401,7 +401,7 @@ zongmu.filter("taskType", function() {
 
 zongmu.filter("shapeType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "RECT":
         return "矩形";
       case "POLYLINE":
@@ -417,11 +417,11 @@ zongmu.filter("shapeType", function() {
 zongmu.filter("timeText", function() {
 
   return function(input) {
-    if(input) {
-      if(input < 60) {
+    if (input) {
+      if (input < 60) {
         return input + " 分钟";
       } else {
-        return(input / 60).toFixed(2) + "小时";
+        return (input / 60).toFixed(2) + "小时";
       }
     }
 
@@ -431,8 +431,8 @@ zongmu.filter("timeText", function() {
 
 zongmu.filter("minsToHour", function() {
   return function(input) {
-    if(input) {
-      return(input / 60).toFixed(2);
+    if (input) {
+      return (input / 60).toFixed(2);
     } else {
       return 0;
     }
@@ -441,25 +441,25 @@ zongmu.filter("minsToHour", function() {
 
 zongmu.filter("timeString", function() {
   return function(val) {
-    if(val === undefined || val == null) {
+    if (val === undefined || val == null) {
       return "";
     }
-    if(val === 0) {
+    if (val === 0) {
       return val;
     }
 
-    if(val < 60) {
+    if (val < 60) {
       return `${val.toFixed(0)}秒`;
     }
 
     var sec = val % 60;
     var min = null;
-    if(sec === 0) {
+    if (sec === 0) {
       min = val / 60;
     } else {
       min = ((val - sec) / 60) % 60;
     }
-    if(val < 60 * 60) {
+    if (val < 60 * 60) {
       return `${min.toFixed(0)}分${sec.toFixed(0)}秒`;
     }
 
@@ -496,12 +496,12 @@ zongmu.filter("fileSize", function() {
 
   return function(input) {
     var kSize = input / 1024;
-    if(kSize < 1024) {
+    if (kSize < 1024) {
       return kSize.toFixed(2) + " KB";
     }
 
     var mSize = kSize / 1024;
-    if(mSize < 1024) {
+    if (mSize < 1024) {
       return mSize.toFixed(2) + " MB";
     }
 
@@ -513,7 +513,7 @@ zongmu.filter("fileSize", function() {
 zongmu.filter("joda", function() {
 
   return function(input) {
-    if(typeof input === "number") {
+    if (typeof input === "number") {
       return new Date(input);
     }
 
@@ -536,7 +536,7 @@ zongmu.filter("taskFullName", function() {
 
 zongmu.filter("suffix", function() {
   return function(input, suffix) {
-    if(input) {
+    if (input) {
       return input + suffix;
     }
 
@@ -554,14 +554,14 @@ zongmu.factory('formatService', function() {
     deleteUnMarkShape: function(data) {
       var res = [];
       data.forEach(function(it) {
-        if(it.groups && it.groups.length > 0) {
+        if (it.groups && it.groups.length > 0) {
           res.push(it);
         }
       })
       return res;
     },
 
-    convertToSingle: function(data,height,width) {
+    convertToSingle: function(data, height, width) {
       data.forEach(function(it) {
         (it.groups || []).forEach(function(group) {
           (group.points || []).forEach(function(point) {
@@ -572,7 +572,29 @@ zongmu.factory('formatService', function() {
       });
     },
 
-    convertBackSingle: function(data,height,width) {
+    convertToPicSingle: function(data, height, width) {
+      data.forEach(function(it) {
+        (it.groups || []).forEach(function(group) {
+          (group.points || []).forEach(function(point) {
+            point.x = ((point.x) * width) / (872);
+            point.y = ((point.y) * height) / (500);
+          });
+        });
+      });
+    },
+
+    convertBackPicSingle: function(data, height, width) {
+      (data || []).forEach(function(shape) {
+        Object.keys(shape.$$timeline.data).forEach(function(key) {
+          (shape.$$timeline.data[key] || []).forEach(function(point) {
+            point.x = (point.x * (872)) / width;
+            point.y = (point.y * (500)) / height;
+          });
+        });
+      });
+    },
+
+    convertBackSingle: function(data, height, width) {
       (data || []).forEach(function(shape) {
         Object.keys(shape.$$timeline.data).forEach(function(key) {
           (shape.$$timeline.data[key] || []).forEach(function(point) {
@@ -583,7 +605,7 @@ zongmu.factory('formatService', function() {
       });
     },
 
-    convertToFour: function(data,height,width) {
+    convertToFour: function(data, height, width) {
       data.forEach(function(it) {
         (it.groups || []).forEach(function(group) {
           (group.points || []).forEach(function(point) {
@@ -594,7 +616,7 @@ zongmu.factory('formatService', function() {
       });
     },
 
-    convertBackFour: function(shape,height,width) {
+    convertBackFour: function(shape, height, width) {
       Object.keys(shape.$$timeline.data).forEach(function(key) {
         (shape.$$timeline.data[key] || []).forEach(function(point) {
           point.x = (point.x * (420)) / width;
@@ -673,17 +695,17 @@ zongmu.factory('formatService', function() {
       $shape.count = shape.sideCount;
       $shape.color = shape.color;
       $shape.$$timeline = this.toTimelineViewModel(shape);
-      if(shape.taskItem) {
+      if (shape.taskItem) {
         $shape.type = shape.taskItem.shapeType;
       }
       $shape.count = shape.sideCount;
       $shape.colorTag = shape.colorTag;
       shape.tags.forEach(function(it) {
         var tagItem = shape.tagsMap[it.tagItemId];
-        if(tagItem) {
-          if(tagItem.type === "DROPDOWNBOX") {
+        if (tagItem) {
+          if (tagItem.type === "DROPDOWNBOX") {
             $shape.tagDorpdownList[tagItem.tagId] = tagItem;
-          } else if(tagItem.type === "CHECKBOX") {
+          } else if (tagItem.type === "CHECKBOX") {
             $shape.tagCheckBoxList[tagItem.id] = true;
           }
         }
@@ -715,9 +737,9 @@ zongmu.factory('formatService', function() {
 
     getTags: function(shape) {
       var tags = [];
-      if(shape.tagCheckBoxList) {
+      if (shape.tagCheckBoxList) {
         Object.keys(shape.tagCheckBoxList).forEach(function(key) {
-          if(shape.tagCheckBoxList[key]) {
+          if (shape.tagCheckBoxList[key]) {
             tags.push({
               tagItemId: key
             });
@@ -725,7 +747,7 @@ zongmu.factory('formatService', function() {
         });
       }
 
-      if(shape.tagDorpdownList) {
+      if (shape.tagDorpdownList) {
         Object.keys(shape.tagDorpdownList).map(function(it) {
           return {
             tagItemId: shape.tagDorpdownList[it].id
@@ -748,7 +770,7 @@ zongmu.factory('formatService', function() {
           points: shape.$$timeline.data[it]
         };
 
-        if(shape.taskItemFile) {
+        if (shape.taskItemFile) {
           group.taskItemFileId = shape.taskItemFile.id;
         }
 
@@ -770,7 +792,7 @@ zongmu.factory('formatService', function() {
           groups: []
         };
 
-        if(shape.colorTag) {
+        if (shape.colorTag) {
           $shape.colorTagId = shape.colorTag.id;
         }
 
