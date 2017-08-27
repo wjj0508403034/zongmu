@@ -654,6 +654,8 @@ public class TaskServiceImpl implements TaskService {
 		taskItemFile.setFps(assetFile.getFps());
 		taskItemFile.setPath(ftpPath);
 		taskItemFile.setTaskId(taskItem.getTaskId());
+		taskItemFile.setHeight(assetFile.getHeight());
+		taskItemFile.setWidth(assetFile.getWidth());
 		this.taskItemFileRepo.save(taskItemFile);
 	}
 

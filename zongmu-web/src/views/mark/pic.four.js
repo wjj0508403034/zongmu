@@ -40,12 +40,12 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     });
 
     $scope.canContinueMark = function() {
-      if(!$scope.taskRecord) {
+      if (!$scope.taskRecord) {
         return false;
       }
-      if(["WAITTING", "REVIEWING","ACCEPTED"].indexOf($scope.taskRecord.status) !== -1) {
+      if (["WAITTING", "REVIEWING", "ACCEPTED"].indexOf($scope.taskRecord.status) !== -1) {
         var role = Cookies.get("role");
-        if(["NORMAL", "FINANCE","SUPER","UPLOAD"].indexOf(role) !== -1) {
+        if (["NORMAL", "FINANCE", "SUPER", "UPLOAD"].indexOf(role) !== -1) {
           return false;
         }
       }
@@ -56,7 +56,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var temp = [];
       [1, 2, 3, 4].forEach(function(it) {
         $scope["tempShapes" + it].forEach(function(shape) {
-          if(temp.indexOf(shape.shapeId) === -1) {
+          if (temp.indexOf(shape.shapeId) === -1) {
             temp.push(shape.shapeId);
           }
         });
@@ -69,8 +69,8 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function setNames(videoIndex, shape) {
       [1, 2, 3, 4].forEach(function(it) {
-        if(it !== videoIndex) {
-          if($scope["names" + it].indexOf(shape.shapeId) === -1) {
+        if (it !== videoIndex) {
+          if ($scope["names" + it].indexOf(shape.shapeId) === -1) {
             $scope["names" + it].push(shape.shapeId);
           }
         }
@@ -94,14 +94,14 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     $scope.onPreviousButtonClick = function(taskRecord) {
       var pageName = markUtil.getMarkPage(taskRecord);
-      if(pageName) {
+      if (pageName) {
         window.location.href = pageName + "?status=" + status + "&taskRecordNo=" + taskRecord.taskRecordNo + "#mark";
       }
     };
 
     $scope.onNextButtonClick = function(taskRecord) {
       var pageName = markUtil.getMarkPage(taskRecord);
-      if(pageName) {
+      if (pageName) {
         window.location.href = pageName + "?status=" + status + "&taskRecordNo=" + taskRecord.taskRecordNo + "#mark";
       }
     };
@@ -135,12 +135,12 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
           taskItem: $scope.taskRecord.taskItem
         },
         onConfirm: function(res) {
-          if(res.roadTag && res.roadTag.name) {
+          if (res.roadTag && res.roadTag.name) {
             $scope.taskRecord.taskItem.roadTag = res.roadTag;
             $scope.taskRecord.taskItem.roadTagId = res.roadTag.id;
           }
 
-          if(res.weatherTag && res.weatherTag.name) {
+          if (res.weatherTag && res.weatherTag.name) {
             $scope.taskRecord.taskItem.weatherTag = res.weatherTag;
             $scope.taskRecord.taskItem.weatherTagId = res.weatherTag.id;
           }
@@ -159,7 +159,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       }]);
 
       $scope.nameSelected = true;
-      if(!taskRecordNo) {
+      if (!taskRecordNo) {
         dialog.showError("参数错误");
         return false;
       }
@@ -170,7 +170,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       $scope.canReview = true;
       $scope.disableEdit = false;
       var role = Cookies.get("role");
-      if(["NORMAL", "FINANCE"].indexOf(role) !== -1) {
+      if (["NORMAL", "FINANCE"].indexOf(role) !== -1) {
         $scope.canReview = false;
       }
 
@@ -186,7 +186,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     function initMarkShapeMap(groups) {
       var taskItemFileMap = {};
       groups.forEach(function(it, index) {
-        if(!taskItemFileMap[it.taskItemFileId]) {
+        if (!taskItemFileMap[it.taskItemFileId]) {
           taskItemFileMap[it.taskItemFileId] = [];
         }
 
@@ -210,9 +210,9 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     }
 
     function getFileIndex(fileId) {
-      for(var index = 1; index <= 4; index++) {
+      for (var index = 1; index <= 4; index++) {
         var key = `taskItemFile${index}`;
-        if(fileId === $scope[key].id) {
+        if (fileId === $scope[key].id) {
           return index;
         }
       }
@@ -224,7 +224,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var frameIndexInfoMap = {};
       shape.shapeFrameIndexInfos.forEach(function(it) {
         var key = `${it.shapeName}@${it.fileId}`;
-        if(!frameIndexInfoMap[key]) {
+        if (!frameIndexInfoMap[key]) {
           frameIndexInfoMap[key] = [];
         }
         frameIndexInfoMap[key].push(it);
@@ -232,11 +232,11 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
       Object.keys(shapeMap).forEach(function(key, index) {
         var fileIndex = getFileIndex(+key);
-        if(fileIndex !== undefined) {
+        if (fileIndex !== undefined) {
           var frameIndexInfo = frameIndexInfoMap[`${shape.name}@${key}`];
           var temp = initNewShape(shape);
           temp.$$timeline = initTimeline(shapeMap[key], frameIndexInfo);
-          formatService.convertBackFour(temp,$scope.taskItemFile1.height, $scope.taskItemFile1.width);
+          formatService.convertBackPicFour(temp, $scope.taskItemFile1.height, $scope.taskItemFile1.width);
           shapes.push(temp);
           $scope[`tempShapes${fileIndex}`].push(temp);
         }
@@ -247,7 +247,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
       shape.tags.forEach(function(it) {
         var tagItem = $scope.tagsMap[it.tagItemId];
-        if(tagItem) {
+        if (tagItem) {
           tagDorpdownList[tagItem.tagId] = tagItem;
           tagCheckBoxList[tagItem.id] = true;
         }
@@ -264,23 +264,23 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var maxIndex = undefined;
       var endMap = {};
       frameIndexInfo.forEach(function(it) {
-        if(minIndex === null) {
+        if (minIndex === null) {
           minIndex = it.startIndex;
         } else {
-          if(minIndex > it.startIndex) {
+          if (minIndex > it.startIndex) {
             minIndex = it.startIndex;
           }
         }
 
-        if(maxIndex === undefined) {
+        if (maxIndex === undefined) {
           maxIndex = it.endIndex;
-        } else if(maxIndex != null) {
-          if(maxIndex < it.endIndex) {
+        } else if (maxIndex != null) {
+          if (maxIndex < it.endIndex) {
             maxIndex = it.endIndex;
           }
         }
 
-        if(it.endIndex) {
+        if (it.endIndex) {
           endMap[it.endIndex] = {
             isEnd: true
           }
@@ -298,7 +298,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
           var $point = huoyun.newObject("point", [point.x, point.y]);
           $timeline.data[group.frameIndex].push($point);
 
-          if(endMap[group.frameIndex] !== undefined) {
+          if (endMap[group.frameIndex] !== undefined) {
             $timeline.data[group.frameIndex].isEnd = true;
           }
         });
@@ -313,15 +313,15 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
         ])
         .then(function(res) {
           $scope.taskRecord = res[0];
-          if($scope.taskRecord.reviewRecordNo) {
+          if ($scope.taskRecord.reviewRecordNo) {
             getReviewRecord($scope.taskRecord.reviewRecordNo);
           }
 
-          if(onParamValid()) {
+          if (onParamValid()) {
             initTaskItemFiles();
             initVideo();
             initTags(res[1]);
-            if($scope.taskRecord.taskMarkRecords) {
+            if ($scope.taskRecord.taskMarkRecords) {
               initMarkRecords();
             }
           }
@@ -330,14 +330,14 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function onParamValid() {
       var result = true;
-      if($scope.taskRecord.taskItem && $scope.taskRecord.taskItem.taskItemFiles.length === 4) {
+      if ($scope.taskRecord.taskItem && $scope.taskRecord.taskItem.taskItemFiles.length === 4) {
         [1, 2, 3, 4].forEach(function(it, index) {
-          if(!$scope.taskRecord.taskItem.taskItemFiles[index].path) {
+          if (!$scope.taskRecord.taskItem.taskItemFiles[index].path) {
             result = false;
           }
         });
 
-        if(!result) {
+        if (!result) {
           dialog.showError("视频加载失败");
         }
 
@@ -353,13 +353,13 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       [1, 2, 3, 4].forEach(function(it, index) {
         var file = $scope.taskRecord.taskItem.taskItemFiles[index];
         var path = file.path;
-        if(path.indexOf("front.avi") !== -1) {
+        if (path.indexOf("front.avi") !== -1) {
           $scope["taskItemFile1"] = file;
           $scope["taskItemFile1"].path = mediaServiceUrl + path;
-        } else if(path.indexOf("left.avi") !== -1) {
+        } else if (path.indexOf("left.avi") !== -1) {
           $scope["taskItemFile2"] = file;
           $scope["taskItemFile2"].path = mediaServiceUrl + path;
-        } else if(path.indexOf("rear.avi") !== -1) {
+        } else if (path.indexOf("rear.avi") !== -1) {
           $scope["taskItemFile3"] = file;
           $scope["taskItemFile3"].path = mediaServiceUrl + path;
         } else {
@@ -387,10 +387,10 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     }
 
     function initViewTags() {
-      if($scope.taskRecord.taskItem.viewTags) {
+      if ($scope.taskRecord.taskItem.viewTags) {
         $scope.taskRecord.taskItem.viewTags.forEach(function(it) {
           it.viewTag.items.forEach(function(item) {
-            if(item.id === it.viewTagItemId) {
+            if (item.id === it.viewTagItemId) {
               it.viewTagItem = item;
             }
           })
@@ -431,7 +431,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function onShapeSelectionChanged(videoIndex, shape) {
       [1, 2, 3, 4].forEach(function(it) {
-        if(it !== videoIndex) {
+        if (it !== videoIndex) {
           setSelectedShapeInList(it, shape);
         }
       });
@@ -454,10 +454,10 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     };
 
     $scope.onColorSelectedChanged = function(colorTag) {
-      if($scope.currentSelected && colorTag) {
+      if ($scope.currentSelected && colorTag) {
         [1, 2, 3, 4].forEach(function(it) {
           $scope["tempShapes" + it].forEach(function(itShape, itIndex) {
-            if(itShape.shapeId === $scope.currentSelected.shapeId) {
+            if (itShape.shapeId === $scope.currentSelected.shapeId) {
               itShape.changeColor(colorTag.color);
             }
           });
@@ -469,10 +469,10 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var find = null;
 
       [1, 2, 3, 4].forEach(function(it, index) {
-        if(it != videoIndex) {
+        if (it != videoIndex) {
           $scope["tempShapes" + it].forEach(function(itShape, itIndex) {
-            if(itShape.shapeId === shape.shapeId) {
-              if(find === null) {
+            if (itShape.shapeId === shape.shapeId) {
+              if (find === null) {
                 find = itShape;
               }
               itShape.setSelected();
@@ -481,7 +481,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
         }
       });
 
-      if(find) {
+      if (find) {
         resetNames();
         shape.tagCheckBoxList = find.tagCheckBoxList;
         shape.tagDorpdownList = find.tagDorpdownList;
@@ -493,7 +493,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function setSelectedShapeInList(listIndex, shape) {
       $scope["tempShapes" + listIndex].forEach(function(it, index) {
-        if(it.shapeId === shape.shapeId) {
+        if (it.shapeId === shape.shapeId) {
           it.setSelected();
         } else {
           it.setUnSelected();
@@ -509,7 +509,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
         taskMarkRecords.push(map[key]);
       });
 
-      formatService.convertToFour(taskMarkRecords,$scope.taskItemFile1.height, $scope.taskItemFile1.width);
+      formatService.convertToPicFour(taskMarkRecords, $scope.taskItemFile1.height, $scope.taskItemFile1.width);
       return formatService.deleteUnMarkShape(taskMarkRecords);
     }
 
@@ -518,28 +518,28 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       [1, 2, 3, 4].forEach(function(it, index) {
         $scope["tempShapes" + it].forEach(function(shape) {
           var record = taskMarkRecordMap[shape.shapeId];
-          if(!record) {
+          if (!record) {
             record = getSaveTaskMarkRecord(shape);
             taskMarkRecordMap[shape.shapeId] = record;
           }
 
-          if(!record.shapeFrameIndexInfos) {
+          if (!record.shapeFrameIndexInfos) {
             record.shapeFrameIndexInfos = [];
           }
 
           var frameKeys = Object.keys(shape.$$timeline.data);
           var startIndex = null;
           var endIndex = null;
-          for(var fIndex = 0; fIndex < frameKeys.length; fIndex++) {
-            if(startIndex == null) {
+          for (var fIndex = 0; fIndex < frameKeys.length; fIndex++) {
+            if (startIndex == null) {
               startIndex = frameKeys[fIndex];
             }
 
-            if(shape.$$timeline.data[frameKeys[fIndex]].isEnd) {
+            if (shape.$$timeline.data[frameKeys[fIndex]].isEnd) {
               endIndex = frameKeys[fIndex];
             }
 
-            if(endIndex != null) {
+            if (endIndex != null) {
               record.shapeFrameIndexInfos.push({
                 startIndex: startIndex,
                 endIndex: endIndex,
@@ -550,7 +550,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
               startIndex = null;
               endIndex = null;
             } else {
-              if(fIndex === frameKeys.length - 1) {
+              if (fIndex === frameKeys.length - 1) {
                 record.shapeFrameIndexInfos.push({
                   startIndex: startIndex,
                   endIndex: endIndex,
@@ -582,7 +582,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       record.color = shape.color;
       record.startIndex = shape.$$timeline.startIndex;
       record.endIndex = shape.$$timeline.endIndex;
-      if(shape.colorTag) {
+      if (shape.colorTag) {
         record.colorTagId = shape.colorTag.id;
       }
       record.tags = getSaveTags(shape);
@@ -634,7 +634,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       return tags;
     }
 
-    $(document).on("keydown", function (event) {
+    $(document).on("keydown", function(event) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
           case 81: // Ctrl + Q
@@ -680,7 +680,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     };
 
     $scope.onStartReviewClick = function() {
-      if(!$scope.taskRecord.reviewRecordNo) {
+      if (!$scope.taskRecord.reviewRecordNo) {
         dialog.showError("参数错误");
         return;
       }
@@ -715,7 +715,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     };
 
     function disableMark() {
-      if($scope.video1 && $scope.video1.dom && $scope.video1.dom.pause) {
+      if ($scope.video1 && $scope.video1.dom && $scope.video1.dom.pause) {
         $scope.svgBarDisabled = false;
       } else {
         $scope.svgBarDisabled = true;
@@ -724,7 +724,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     }
 
     function enableMark() {
-      if($scope.taskRecord.status === "INPROGRESS") {
+      if ($scope.taskRecord.status === "INPROGRESS") {
         $scope.svgBarDisabled = false;
       } else {
         $scope.svgBarDisabled = true;

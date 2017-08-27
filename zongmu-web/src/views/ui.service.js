@@ -605,6 +605,26 @@ zongmu.factory('formatService', function() {
       });
     },
 
+    convertToPicFour: function(data, height, width) {
+      data.forEach(function(it) {
+        (it.groups || []).forEach(function(group) {
+          (group.points || []).forEach(function(point) {
+            point.x = ((point.x) * width) / (420);
+            point.y = ((point.y) * height) / (236);
+          });
+        });
+      });
+    },
+
+    convertBackPicFour: function(shape, height, width) {
+      Object.keys(shape.$$timeline.data).forEach(function(key) {
+        (shape.$$timeline.data[key] || []).forEach(function(point) {
+          point.x = (point.x * (420)) / width;
+          point.y = (point.y * (236)) / height;
+        });
+      });
+    },
+
     convertToFour: function(data, height, width) {
       data.forEach(function(it) {
         (it.groups || []).forEach(function(group) {

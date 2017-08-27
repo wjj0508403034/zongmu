@@ -175,7 +175,7 @@ public class NewVideoServiceImpl implements NewVideoService {
         arguments.add("-f");
         arguments.add("image2");
         arguments.add("-ss");
-        arguments.add(Integer.toString(taskItem.getTask().getTimeInterval()));
+        arguments.add(Integer.toString(taskItem.getTask().getTimeInterval() * taskItem.getOrderNo()));
         arguments.add("-vframes");
         arguments.add("1");
         arguments.add(taskItem.getTask().getTaskNo() + "\\" + targetFileName);

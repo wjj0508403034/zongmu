@@ -749,6 +749,51 @@ angular.module('huoyun-ui')
   });
 'use strict';
 
+angular.module('huoyun-ui').directive("widgetsNav", function() {
+  return {
+    restrict: "A",
+    templateUrl: "widgets/nav/nav.html",
+    replace: true,
+    scope: {
+      "current": "@"
+    },
+    controller: "navController",
+    link: function($scope, elem, attrs) {
+      $scope.$watch("contentWidth", function() {
+        elem.find("ul").css("width", $scope.contentWidth);
+      });
+    }
+  };
+});
+
+angular.module('huoyun-ui').controller("navController", ["$scope", "nav", "page", function($scope, navProvider, pageProvider) {
+  $scope.items = navProvider.getItems() || [];
+  angular.forEach($scope.items, function(item, index) {
+    item.className = item.name === $scope.current ? "active" : "";
+  });
+
+  $scope.contentWidth = pageProvider.getPageWidth();
+}]);
+
+angular.module('huoyun-ui').provider("nav", function() {
+  this.items = [];
+
+  this.setItems = function(items) {
+    if (angular.isArray(items)) {
+      this.items = items;
+    }
+  };
+
+  this.getItems = function() {
+    return this.items;
+  };
+
+  this.$get = function() {
+    return this;
+  };
+});
+'use strict';
+
 angular.module('huoyun-ui').directive("widgetsPicMarker", ["huoyunUtil", "$sce", "$log", function(huoyunUtil, $sce, $log) {
   return {
     restrict: "A",
@@ -1423,51 +1468,6 @@ angular.module('huoyun-ui').definedObject("videoObj", function(elem) {
   };
 
   return obj;
-});
-'use strict';
-
-angular.module('huoyun-ui').directive("widgetsNav", function() {
-  return {
-    restrict: "A",
-    templateUrl: "widgets/nav/nav.html",
-    replace: true,
-    scope: {
-      "current": "@"
-    },
-    controller: "navController",
-    link: function($scope, elem, attrs) {
-      $scope.$watch("contentWidth", function() {
-        elem.find("ul").css("width", $scope.contentWidth);
-      });
-    }
-  };
-});
-
-angular.module('huoyun-ui').controller("navController", ["$scope", "nav", "page", function($scope, navProvider, pageProvider) {
-  $scope.items = navProvider.getItems() || [];
-  angular.forEach($scope.items, function(item, index) {
-    item.className = item.name === $scope.current ? "active" : "";
-  });
-
-  $scope.contentWidth = pageProvider.getPageWidth();
-}]);
-
-angular.module('huoyun-ui').provider("nav", function() {
-  this.items = [];
-
-  this.setItems = function(items) {
-    if (angular.isArray(items)) {
-      this.items = items;
-    }
-  };
-
-  this.getItems = function() {
-    return this.items;
-  };
-
-  this.$get = function() {
-    return this;
-  };
 });
 'use strict';
 
@@ -3564,10 +3564,10 @@ $templateCache.put("widgets/form/form.html","<div class=\"widgets-form\"><div cl
 $templateCache.put("widgets/inputGroup/inputGroup.html","<div class=\"widgets-input-group\"><label>{{label}}</label><div class=\"input-group-box input-mode\" ng-switch=\"type\"><div ng-switch-when=\"text\"><input type=\"text\" ng-model=\"$parent.ngModel\" ng-disabled=\"{{disbaled}}\"></div><div ng-switch-when=\"number\"><input type=\"number\" ng-model=\"$parent.ngModel\"></div><div ng-switch-when=\"tel\"><input type=\"tel\" ng-model=\"$parent.ngModel\"></div><div ng-switch-when=\"email\"><input type=\"email\" ng-model=\"$parent.ngModel\"></div><div ng-switch-when=\"checkbox\"><div widgets-checkbox=\"\" ng-model=\"$parent.ngModel\"></div></div><div ng-switch-when=\"radio\"><div widgets-radio-button=\"\" ng-model=\"$parent.ngModel\"></div></div><div ng-switch-when=\"textarea\" class=\"textarea-container\"><textarea ng-model=\"$parent.ngModel\"></textarea></div><div ng-switch-default=\"\">不支持该类型({{type}})控件</div></div><div class=\"input-group-box readonly-mode\" ng-switch=\"type\"><div ng-switch-when=\"link\"><a ng-href=\"{{ngModel}}\">{{ngModel}}</a></div><div ng-switch-default=\"\">{{ngModel}}</div></div></div>");
 $templateCache.put("widgets/linkButton/linkButton.html","<div class=\"widgets-link-button\">{{text}}</div>");
 $templateCache.put("widgets/loading/loading.html","<div class=\"widgets-loading-container\"><div class=\"widgets-loading-overlay\"></div><div class=\"widgets-loading-content\"><i class=\"fa fa-spinner fa-pulse fa-fw\"></i> <span>{{text}}</span></div></div>");
+$templateCache.put("widgets/nav/nav.html","<nav class=\"widgets-nav\"><ul><li ng-repeat=\"item in items\" name=\"{{item.name}}\" huoyun-append-class=\"{{item.className}}\" ng-if=\"item.visibility !== false\"><a ng-href=\"{{item.href}}\">{{item.text}}</a></li></ul></nav>");
 $templateCache.put("widgets/marker/pic.marker.html","<div class=\"widgets-pic-marker\"><img ng-src=\"{{src}}\"><div widgets-svg-story-board=\"\" shapes=\"shapes\" frame-index=\"frameIndex\" task-item-file=\"taskItemFile\"></div></div>");
 $templateCache.put("widgets/marker/player.bar.html","<div class=\"widgets-player-bar\"><div widgets-progress=\"\" percent=\"{{controlBar.percent}}\"></div><div class=\"control-container\" play-rate=\"{{controlBar.playRate}}\"><div class=\"btn\" ng-click=\"controlBar.play()\" ng-show=\"controlBar.status !== \'play\'\"><i class=\"fa fa-play\"></i></div><div class=\"btn\" ng-click=\"controlBar.pause()\" ng-show=\"controlBar.status === \'play\'\"><i class=\"fa fa-pause\"></i></div><div class=\"btn\"><i class=\"fa fa-fast-backward\" ng-click=\"controlBar.back()\"></i></div><div class=\"btn\"><i class=\"fa fa-step-backward\" ng-click=\"controlBar.smallback()\"></i></div><div class=\"btn\"><i class=\"fa fa-step-forward\" ng-click=\"controlBar.smallforward()\"></i></div><div class=\"btn\"><i class=\"fa fa-fast-forward\" ng-click=\"controlBar.forward()\"></i></div><div class=\"btn rate\" rate=\"0.5\"><i class=\"fa\" ng-click=\"controlBar.setPlayRate(0.5)\">0.5倍</i></div><div class=\"btn rate\" rate=\"1\"><i class=\"fa\" ng-click=\"controlBar.setPlayRate(1)\">1倍</i></div><div class=\"btn rate\" rate=\"2\"><i class=\"fa\" ng-click=\"controlBar.setPlayRate(2)\">2倍</i></div><div class=\"time-info\"><span>{{controlBar.currentTime | hour}}</span> | <span>{{controlBar.duration | hour}}</span></div></div></div>");
 $templateCache.put("widgets/marker/video.marker.html","<div class=\"widgets-video-player\"><video preload=\"metadata\"><source type=\"video/mp4\"></video><div widgets-svg-story-board=\"\" shapes=\"shapes\" frame-index=\"frameIndex\"></div></div>");
-$templateCache.put("widgets/nav/nav.html","<nav class=\"widgets-nav\"><ul><li ng-repeat=\"item in items\" name=\"{{item.name}}\" huoyun-append-class=\"{{item.className}}\" ng-if=\"item.visibility !== false\"><a ng-href=\"{{item.href}}\">{{item.text}}</a></li></ul></nav>");
 $templateCache.put("widgets/page/page.html","<div class=\"widgets-page\"><div ng-transclude=\"\"></div></div>");
 $templateCache.put("widgets/progress/progress.html","<div class=\"widgets-progress\"><div class=\"background-container\"><div class=\"huoyun-progress-bar\"></div><div class=\"position-btn\"></div></div></div>");
 $templateCache.put("widgets/radiobutton/radiobutton.html","<div class=\"widgets-radio-button\" ng-click=\"onRadioButtonClicked()\"><div class=\"radio-button-icon\"><i class=\"fa fa-dot-circle-o\" aria-hidden=\"true\"></i></div><div class=\"radio-button-content\">{{content}}</div></div>");

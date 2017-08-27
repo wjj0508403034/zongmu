@@ -1400,7 +1400,7 @@ zongmu.factory('enumService', function() {
   return {
     getHours: function() {
       var hours = [];
-      for(var index = 0; index <= 24; index++) {
+      for (var index = 0; index <= 24; index++) {
         hours.push({
           name: index,
           text: index
@@ -1574,7 +1574,7 @@ zongmu.factory('enumService', function() {
 zongmu.filter("businessRole", function() {
 
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "ADMIN":
         return "管理员";
       case "FINANCE":
@@ -1595,7 +1595,7 @@ zongmu.filter("businessRole", function() {
 
 zongmu.filter("sex", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "MAN":
         return "男";
       case "FEMAN":
@@ -1614,7 +1614,7 @@ zongmu.filter("boolText", function() {
 
 zongmu.filter("tagCategory", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "ROAD":
         return "路况";
       case "WEATHER":
@@ -1627,7 +1627,7 @@ zongmu.filter("tagCategory", function() {
 
 zongmu.filter("tagControlType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "DROPDOWNBOX":
         return "下拉框";
       case "CHECKBOX":
@@ -1642,7 +1642,7 @@ zongmu.filter("tagControlType", function() {
 
 zongmu.filter("uploadType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "SINGLE":
         return "一路视频";
       case "FOUR":
@@ -1657,7 +1657,7 @@ zongmu.filter("uploadType", function() {
 
 zongmu.filter("taskPriority", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case 1:
         return "高";
       case 2:
@@ -1672,7 +1672,7 @@ zongmu.filter("taskPriority", function() {
 
 zongmu.filter("taskStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "CUTTING":
         return "正在创建...";
       case "CUTTINGFAILURE":
@@ -1687,7 +1687,7 @@ zongmu.filter("taskStatus", function() {
 
 zongmu.filter("payStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "PENDING":
         return "待支付";
       case "PAYED":
@@ -1700,7 +1700,7 @@ zongmu.filter("payStatus", function() {
 
 zongmu.filter("taskItemStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "NEW":
         return "新任务";
       case "INPROGRESS":
@@ -1721,7 +1721,7 @@ zongmu.filter("taskItemStatus", function() {
 
 zongmu.filter("taskRecordStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "INPROGRESS":
         return "标注进行中";
       case "WAITTING":
@@ -1740,7 +1740,7 @@ zongmu.filter("taskRecordStatus", function() {
 
 zongmu.filter("reviewRecordStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "WAITTING":
         return "待审核";
       case "INPROGRESS":
@@ -1757,7 +1757,7 @@ zongmu.filter("reviewRecordStatus", function() {
 
 zongmu.filter("uploadStatus", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "UPLOADING":
         return "上传中...";
       case "UPLOADFAILED":
@@ -1784,7 +1784,7 @@ zongmu.filter("uploadStatus", function() {
 
 zongmu.filter("taskType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "PICTURE":
         return "图片";
       case "VIDEO":
@@ -1797,7 +1797,7 @@ zongmu.filter("taskType", function() {
 
 zongmu.filter("shapeType", function() {
   return function(input) {
-    switch(input) {
+    switch (input) {
       case "RECT":
         return "矩形";
       case "POLYLINE":
@@ -1813,11 +1813,11 @@ zongmu.filter("shapeType", function() {
 zongmu.filter("timeText", function() {
 
   return function(input) {
-    if(input) {
-      if(input < 60) {
+    if (input) {
+      if (input < 60) {
         return input + " 分钟";
       } else {
-        return(input / 60).toFixed(2) + "小时";
+        return (input / 60).toFixed(2) + "小时";
       }
     }
 
@@ -1827,8 +1827,8 @@ zongmu.filter("timeText", function() {
 
 zongmu.filter("minsToHour", function() {
   return function(input) {
-    if(input) {
-      return(input / 60).toFixed(2);
+    if (input) {
+      return (input / 60).toFixed(2);
     } else {
       return 0;
     }
@@ -1837,25 +1837,25 @@ zongmu.filter("minsToHour", function() {
 
 zongmu.filter("timeString", function() {
   return function(val) {
-    if(val === undefined || val == null) {
+    if (val === undefined || val == null) {
       return "";
     }
-    if(val === 0) {
+    if (val === 0) {
       return val;
     }
 
-    if(val < 60) {
+    if (val < 60) {
       return `${val.toFixed(0)}秒`;
     }
 
     var sec = val % 60;
     var min = null;
-    if(sec === 0) {
+    if (sec === 0) {
       min = val / 60;
     } else {
       min = ((val - sec) / 60) % 60;
     }
-    if(val < 60 * 60) {
+    if (val < 60 * 60) {
       return `${min.toFixed(0)}分${sec.toFixed(0)}秒`;
     }
 
@@ -1892,12 +1892,12 @@ zongmu.filter("fileSize", function() {
 
   return function(input) {
     var kSize = input / 1024;
-    if(kSize < 1024) {
+    if (kSize < 1024) {
       return kSize.toFixed(2) + " KB";
     }
 
     var mSize = kSize / 1024;
-    if(mSize < 1024) {
+    if (mSize < 1024) {
       return mSize.toFixed(2) + " MB";
     }
 
@@ -1909,7 +1909,7 @@ zongmu.filter("fileSize", function() {
 zongmu.filter("joda", function() {
 
   return function(input) {
-    if(typeof input === "number") {
+    if (typeof input === "number") {
       return new Date(input);
     }
 
@@ -1932,7 +1932,7 @@ zongmu.filter("taskFullName", function() {
 
 zongmu.filter("suffix", function() {
   return function(input, suffix) {
-    if(input) {
+    if (input) {
       return input + suffix;
     }
 
@@ -1950,14 +1950,14 @@ zongmu.factory('formatService', function() {
     deleteUnMarkShape: function(data) {
       var res = [];
       data.forEach(function(it) {
-        if(it.groups && it.groups.length > 0) {
+        if (it.groups && it.groups.length > 0) {
           res.push(it);
         }
       })
       return res;
     },
 
-    convertToSingle: function(data,height,width) {
+    convertToSingle: function(data, height, width) {
       data.forEach(function(it) {
         (it.groups || []).forEach(function(group) {
           (group.points || []).forEach(function(point) {
@@ -1968,7 +1968,29 @@ zongmu.factory('formatService', function() {
       });
     },
 
-    convertBackSingle: function(data,height,width) {
+    convertToPicSingle: function(data, height, width) {
+      data.forEach(function(it) {
+        (it.groups || []).forEach(function(group) {
+          (group.points || []).forEach(function(point) {
+            point.x = ((point.x) * width) / (872);
+            point.y = ((point.y) * height) / (500);
+          });
+        });
+      });
+    },
+
+    convertBackPicSingle: function(data, height, width) {
+      (data || []).forEach(function(shape) {
+        Object.keys(shape.$$timeline.data).forEach(function(key) {
+          (shape.$$timeline.data[key] || []).forEach(function(point) {
+            point.x = (point.x * (872)) / width;
+            point.y = (point.y * (500)) / height;
+          });
+        });
+      });
+    },
+
+    convertBackSingle: function(data, height, width) {
       (data || []).forEach(function(shape) {
         Object.keys(shape.$$timeline.data).forEach(function(key) {
           (shape.$$timeline.data[key] || []).forEach(function(point) {
@@ -1979,7 +2001,27 @@ zongmu.factory('formatService', function() {
       });
     },
 
-    convertToFour: function(data,height,width) {
+    convertToPicFour: function(data, height, width) {
+      data.forEach(function(it) {
+        (it.groups || []).forEach(function(group) {
+          (group.points || []).forEach(function(point) {
+            point.x = ((point.x) * width) / (420);
+            point.y = ((point.y) * height) / (236);
+          });
+        });
+      });
+    },
+
+    convertBackPicFour: function(shape, height, width) {
+      Object.keys(shape.$$timeline.data).forEach(function(key) {
+        (shape.$$timeline.data[key] || []).forEach(function(point) {
+          point.x = (point.x * (420)) / width;
+          point.y = (point.y * (236)) / height;
+        });
+      });
+    },
+
+    convertToFour: function(data, height, width) {
       data.forEach(function(it) {
         (it.groups || []).forEach(function(group) {
           (group.points || []).forEach(function(point) {
@@ -1990,7 +2032,7 @@ zongmu.factory('formatService', function() {
       });
     },
 
-    convertBackFour: function(shape,height,width) {
+    convertBackFour: function(shape, height, width) {
       Object.keys(shape.$$timeline.data).forEach(function(key) {
         (shape.$$timeline.data[key] || []).forEach(function(point) {
           point.x = (point.x * (420)) / width;
@@ -2069,17 +2111,17 @@ zongmu.factory('formatService', function() {
       $shape.count = shape.sideCount;
       $shape.color = shape.color;
       $shape.$$timeline = this.toTimelineViewModel(shape);
-      if(shape.taskItem) {
+      if (shape.taskItem) {
         $shape.type = shape.taskItem.shapeType;
       }
       $shape.count = shape.sideCount;
       $shape.colorTag = shape.colorTag;
       shape.tags.forEach(function(it) {
         var tagItem = shape.tagsMap[it.tagItemId];
-        if(tagItem) {
-          if(tagItem.type === "DROPDOWNBOX") {
+        if (tagItem) {
+          if (tagItem.type === "DROPDOWNBOX") {
             $shape.tagDorpdownList[tagItem.tagId] = tagItem;
-          } else if(tagItem.type === "CHECKBOX") {
+          } else if (tagItem.type === "CHECKBOX") {
             $shape.tagCheckBoxList[tagItem.id] = true;
           }
         }
@@ -2111,9 +2153,9 @@ zongmu.factory('formatService', function() {
 
     getTags: function(shape) {
       var tags = [];
-      if(shape.tagCheckBoxList) {
+      if (shape.tagCheckBoxList) {
         Object.keys(shape.tagCheckBoxList).forEach(function(key) {
-          if(shape.tagCheckBoxList[key]) {
+          if (shape.tagCheckBoxList[key]) {
             tags.push({
               tagItemId: key
             });
@@ -2121,7 +2163,7 @@ zongmu.factory('formatService', function() {
         });
       }
 
-      if(shape.tagDorpdownList) {
+      if (shape.tagDorpdownList) {
         Object.keys(shape.tagDorpdownList).map(function(it) {
           return {
             tagItemId: shape.tagDorpdownList[it].id
@@ -2144,7 +2186,7 @@ zongmu.factory('formatService', function() {
           points: shape.$$timeline.data[it]
         };
 
-        if(shape.taskItemFile) {
+        if (shape.taskItemFile) {
           group.taskItemFileId = shape.taskItemFile.id;
         }
 
@@ -2166,7 +2208,7 @@ zongmu.factory('formatService', function() {
           groups: []
         };
 
-        if(shape.colorTag) {
+        if (shape.colorTag) {
           $shape.colorTagId = shape.colorTag.id;
         }
 
@@ -2755,12 +2797,12 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     });
 
     $scope.canContinueMark = function() {
-      if(!$scope.taskRecord) {
+      if (!$scope.taskRecord) {
         return false;
       }
-      if(["WAITTING", "REVIEWING","ACCEPTED"].indexOf($scope.taskRecord.status) !== -1) {
+      if (["WAITTING", "REVIEWING", "ACCEPTED"].indexOf($scope.taskRecord.status) !== -1) {
         var role = Cookies.get("role");
-        if(["NORMAL", "FINANCE","SUPER","UPLOAD"].indexOf(role) !== -1) {
+        if (["NORMAL", "FINANCE", "SUPER", "UPLOAD"].indexOf(role) !== -1) {
           return false;
         }
       }
@@ -2771,7 +2813,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var temp = [];
       [1, 2, 3, 4].forEach(function(it) {
         $scope["tempShapes" + it].forEach(function(shape) {
-          if(temp.indexOf(shape.shapeId) === -1) {
+          if (temp.indexOf(shape.shapeId) === -1) {
             temp.push(shape.shapeId);
           }
         });
@@ -2784,8 +2826,8 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function setNames(videoIndex, shape) {
       [1, 2, 3, 4].forEach(function(it) {
-        if(it !== videoIndex) {
-          if($scope["names" + it].indexOf(shape.shapeId) === -1) {
+        if (it !== videoIndex) {
+          if ($scope["names" + it].indexOf(shape.shapeId) === -1) {
             $scope["names" + it].push(shape.shapeId);
           }
         }
@@ -2809,14 +2851,14 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     $scope.onPreviousButtonClick = function(taskRecord) {
       var pageName = markUtil.getMarkPage(taskRecord);
-      if(pageName) {
+      if (pageName) {
         window.location.href = pageName + "?status=" + status + "&taskRecordNo=" + taskRecord.taskRecordNo + "#mark";
       }
     };
 
     $scope.onNextButtonClick = function(taskRecord) {
       var pageName = markUtil.getMarkPage(taskRecord);
-      if(pageName) {
+      if (pageName) {
         window.location.href = pageName + "?status=" + status + "&taskRecordNo=" + taskRecord.taskRecordNo + "#mark";
       }
     };
@@ -2850,12 +2892,12 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
           taskItem: $scope.taskRecord.taskItem
         },
         onConfirm: function(res) {
-          if(res.roadTag && res.roadTag.name) {
+          if (res.roadTag && res.roadTag.name) {
             $scope.taskRecord.taskItem.roadTag = res.roadTag;
             $scope.taskRecord.taskItem.roadTagId = res.roadTag.id;
           }
 
-          if(res.weatherTag && res.weatherTag.name) {
+          if (res.weatherTag && res.weatherTag.name) {
             $scope.taskRecord.taskItem.weatherTag = res.weatherTag;
             $scope.taskRecord.taskItem.weatherTagId = res.weatherTag.id;
           }
@@ -2874,7 +2916,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       }]);
 
       $scope.nameSelected = true;
-      if(!taskRecordNo) {
+      if (!taskRecordNo) {
         dialog.showError("参数错误");
         return false;
       }
@@ -2885,7 +2927,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       $scope.canReview = true;
       $scope.disableEdit = false;
       var role = Cookies.get("role");
-      if(["NORMAL", "FINANCE"].indexOf(role) !== -1) {
+      if (["NORMAL", "FINANCE"].indexOf(role) !== -1) {
         $scope.canReview = false;
       }
 
@@ -2901,7 +2943,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     function initMarkShapeMap(groups) {
       var taskItemFileMap = {};
       groups.forEach(function(it, index) {
-        if(!taskItemFileMap[it.taskItemFileId]) {
+        if (!taskItemFileMap[it.taskItemFileId]) {
           taskItemFileMap[it.taskItemFileId] = [];
         }
 
@@ -2925,9 +2967,9 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     }
 
     function getFileIndex(fileId) {
-      for(var index = 1; index <= 4; index++) {
+      for (var index = 1; index <= 4; index++) {
         var key = `taskItemFile${index}`;
-        if(fileId === $scope[key].id) {
+        if (fileId === $scope[key].id) {
           return index;
         }
       }
@@ -2939,7 +2981,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var frameIndexInfoMap = {};
       shape.shapeFrameIndexInfos.forEach(function(it) {
         var key = `${it.shapeName}@${it.fileId}`;
-        if(!frameIndexInfoMap[key]) {
+        if (!frameIndexInfoMap[key]) {
           frameIndexInfoMap[key] = [];
         }
         frameIndexInfoMap[key].push(it);
@@ -2947,11 +2989,11 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
       Object.keys(shapeMap).forEach(function(key, index) {
         var fileIndex = getFileIndex(+key);
-        if(fileIndex !== undefined) {
+        if (fileIndex !== undefined) {
           var frameIndexInfo = frameIndexInfoMap[`${shape.name}@${key}`];
           var temp = initNewShape(shape);
           temp.$$timeline = initTimeline(shapeMap[key], frameIndexInfo);
-          formatService.convertBackFour(temp,$scope.taskItemFile1.height, $scope.taskItemFile1.width);
+          formatService.convertBackPicFour(temp, $scope.taskItemFile1.height, $scope.taskItemFile1.width);
           shapes.push(temp);
           $scope[`tempShapes${fileIndex}`].push(temp);
         }
@@ -2962,7 +3004,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
       shape.tags.forEach(function(it) {
         var tagItem = $scope.tagsMap[it.tagItemId];
-        if(tagItem) {
+        if (tagItem) {
           tagDorpdownList[tagItem.tagId] = tagItem;
           tagCheckBoxList[tagItem.id] = true;
         }
@@ -2979,23 +3021,23 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var maxIndex = undefined;
       var endMap = {};
       frameIndexInfo.forEach(function(it) {
-        if(minIndex === null) {
+        if (minIndex === null) {
           minIndex = it.startIndex;
         } else {
-          if(minIndex > it.startIndex) {
+          if (minIndex > it.startIndex) {
             minIndex = it.startIndex;
           }
         }
 
-        if(maxIndex === undefined) {
+        if (maxIndex === undefined) {
           maxIndex = it.endIndex;
-        } else if(maxIndex != null) {
-          if(maxIndex < it.endIndex) {
+        } else if (maxIndex != null) {
+          if (maxIndex < it.endIndex) {
             maxIndex = it.endIndex;
           }
         }
 
-        if(it.endIndex) {
+        if (it.endIndex) {
           endMap[it.endIndex] = {
             isEnd: true
           }
@@ -3013,7 +3055,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
           var $point = huoyun.newObject("point", [point.x, point.y]);
           $timeline.data[group.frameIndex].push($point);
 
-          if(endMap[group.frameIndex] !== undefined) {
+          if (endMap[group.frameIndex] !== undefined) {
             $timeline.data[group.frameIndex].isEnd = true;
           }
         });
@@ -3028,15 +3070,15 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
         ])
         .then(function(res) {
           $scope.taskRecord = res[0];
-          if($scope.taskRecord.reviewRecordNo) {
+          if ($scope.taskRecord.reviewRecordNo) {
             getReviewRecord($scope.taskRecord.reviewRecordNo);
           }
 
-          if(onParamValid()) {
+          if (onParamValid()) {
             initTaskItemFiles();
             initVideo();
             initTags(res[1]);
-            if($scope.taskRecord.taskMarkRecords) {
+            if ($scope.taskRecord.taskMarkRecords) {
               initMarkRecords();
             }
           }
@@ -3045,14 +3087,14 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function onParamValid() {
       var result = true;
-      if($scope.taskRecord.taskItem && $scope.taskRecord.taskItem.taskItemFiles.length === 4) {
+      if ($scope.taskRecord.taskItem && $scope.taskRecord.taskItem.taskItemFiles.length === 4) {
         [1, 2, 3, 4].forEach(function(it, index) {
-          if(!$scope.taskRecord.taskItem.taskItemFiles[index].path) {
+          if (!$scope.taskRecord.taskItem.taskItemFiles[index].path) {
             result = false;
           }
         });
 
-        if(!result) {
+        if (!result) {
           dialog.showError("视频加载失败");
         }
 
@@ -3068,13 +3110,13 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       [1, 2, 3, 4].forEach(function(it, index) {
         var file = $scope.taskRecord.taskItem.taskItemFiles[index];
         var path = file.path;
-        if(path.indexOf("front.avi") !== -1) {
+        if (path.indexOf("front.avi") !== -1) {
           $scope["taskItemFile1"] = file;
           $scope["taskItemFile1"].path = mediaServiceUrl + path;
-        } else if(path.indexOf("left.avi") !== -1) {
+        } else if (path.indexOf("left.avi") !== -1) {
           $scope["taskItemFile2"] = file;
           $scope["taskItemFile2"].path = mediaServiceUrl + path;
-        } else if(path.indexOf("rear.avi") !== -1) {
+        } else if (path.indexOf("rear.avi") !== -1) {
           $scope["taskItemFile3"] = file;
           $scope["taskItemFile3"].path = mediaServiceUrl + path;
         } else {
@@ -3102,10 +3144,10 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     }
 
     function initViewTags() {
-      if($scope.taskRecord.taskItem.viewTags) {
+      if ($scope.taskRecord.taskItem.viewTags) {
         $scope.taskRecord.taskItem.viewTags.forEach(function(it) {
           it.viewTag.items.forEach(function(item) {
-            if(item.id === it.viewTagItemId) {
+            if (item.id === it.viewTagItemId) {
               it.viewTagItem = item;
             }
           })
@@ -3146,7 +3188,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function onShapeSelectionChanged(videoIndex, shape) {
       [1, 2, 3, 4].forEach(function(it) {
-        if(it !== videoIndex) {
+        if (it !== videoIndex) {
           setSelectedShapeInList(it, shape);
         }
       });
@@ -3169,10 +3211,10 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     };
 
     $scope.onColorSelectedChanged = function(colorTag) {
-      if($scope.currentSelected && colorTag) {
+      if ($scope.currentSelected && colorTag) {
         [1, 2, 3, 4].forEach(function(it) {
           $scope["tempShapes" + it].forEach(function(itShape, itIndex) {
-            if(itShape.shapeId === $scope.currentSelected.shapeId) {
+            if (itShape.shapeId === $scope.currentSelected.shapeId) {
               itShape.changeColor(colorTag.color);
             }
           });
@@ -3184,10 +3226,10 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       var find = null;
 
       [1, 2, 3, 4].forEach(function(it, index) {
-        if(it != videoIndex) {
+        if (it != videoIndex) {
           $scope["tempShapes" + it].forEach(function(itShape, itIndex) {
-            if(itShape.shapeId === shape.shapeId) {
-              if(find === null) {
+            if (itShape.shapeId === shape.shapeId) {
+              if (find === null) {
                 find = itShape;
               }
               itShape.setSelected();
@@ -3196,7 +3238,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
         }
       });
 
-      if(find) {
+      if (find) {
         resetNames();
         shape.tagCheckBoxList = find.tagCheckBoxList;
         shape.tagDorpdownList = find.tagDorpdownList;
@@ -3208,7 +3250,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 
     function setSelectedShapeInList(listIndex, shape) {
       $scope["tempShapes" + listIndex].forEach(function(it, index) {
-        if(it.shapeId === shape.shapeId) {
+        if (it.shapeId === shape.shapeId) {
           it.setSelected();
         } else {
           it.setUnSelected();
@@ -3224,7 +3266,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
         taskMarkRecords.push(map[key]);
       });
 
-      formatService.convertToFour(taskMarkRecords,$scope.taskItemFile1.height, $scope.taskItemFile1.width);
+      formatService.convertToPicFour(taskMarkRecords, $scope.taskItemFile1.height, $scope.taskItemFile1.width);
       return formatService.deleteUnMarkShape(taskMarkRecords);
     }
 
@@ -3233,28 +3275,28 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       [1, 2, 3, 4].forEach(function(it, index) {
         $scope["tempShapes" + it].forEach(function(shape) {
           var record = taskMarkRecordMap[shape.shapeId];
-          if(!record) {
+          if (!record) {
             record = getSaveTaskMarkRecord(shape);
             taskMarkRecordMap[shape.shapeId] = record;
           }
 
-          if(!record.shapeFrameIndexInfos) {
+          if (!record.shapeFrameIndexInfos) {
             record.shapeFrameIndexInfos = [];
           }
 
           var frameKeys = Object.keys(shape.$$timeline.data);
           var startIndex = null;
           var endIndex = null;
-          for(var fIndex = 0; fIndex < frameKeys.length; fIndex++) {
-            if(startIndex == null) {
+          for (var fIndex = 0; fIndex < frameKeys.length; fIndex++) {
+            if (startIndex == null) {
               startIndex = frameKeys[fIndex];
             }
 
-            if(shape.$$timeline.data[frameKeys[fIndex]].isEnd) {
+            if (shape.$$timeline.data[frameKeys[fIndex]].isEnd) {
               endIndex = frameKeys[fIndex];
             }
 
-            if(endIndex != null) {
+            if (endIndex != null) {
               record.shapeFrameIndexInfos.push({
                 startIndex: startIndex,
                 endIndex: endIndex,
@@ -3265,7 +3307,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
               startIndex = null;
               endIndex = null;
             } else {
-              if(fIndex === frameKeys.length - 1) {
+              if (fIndex === frameKeys.length - 1) {
                 record.shapeFrameIndexInfos.push({
                   startIndex: startIndex,
                   endIndex: endIndex,
@@ -3297,7 +3339,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       record.color = shape.color;
       record.startIndex = shape.$$timeline.startIndex;
       record.endIndex = shape.$$timeline.endIndex;
-      if(shape.colorTag) {
+      if (shape.colorTag) {
         record.colorTagId = shape.colorTag.id;
       }
       record.tags = getSaveTags(shape);
@@ -3349,7 +3391,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
       return tags;
     }
 
-    $(document).on("keydown", function (event) {
+    $(document).on("keydown", function(event) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
           case 81: // Ctrl + Q
@@ -3395,7 +3437,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     };
 
     $scope.onStartReviewClick = function() {
-      if(!$scope.taskRecord.reviewRecordNo) {
+      if (!$scope.taskRecord.reviewRecordNo) {
         dialog.showError("参数错误");
         return;
       }
@@ -3430,7 +3472,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     };
 
     function disableMark() {
-      if($scope.video1 && $scope.video1.dom && $scope.video1.dom.pause) {
+      if ($scope.video1 && $scope.video1.dom && $scope.video1.dom.pause) {
         $scope.svgBarDisabled = false;
       } else {
         $scope.svgBarDisabled = true;
@@ -3439,7 +3481,7 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
     }
 
     function enableMark() {
-      if($scope.taskRecord.status === "INPROGRESS") {
+      if ($scope.taskRecord.status === "INPROGRESS") {
         $scope.svgBarDisabled = false;
       } else {
         $scope.svgBarDisabled = true;
@@ -3487,26 +3529,26 @@ zongmu.controller("markFourPicController", ['$q', '$scope', 'dialog', 'taskRecor
 zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog', 'tagService',
   'taskRecordService', 'mediaServiceUrl', 'formatService', '$log', 'reviewRecordService',
   'colorTagService', 'breadCrumb', 'markUtil',
-  function ($q, $scope, taskService, dialog, tagService, taskRecordService, mediaServiceUrl,
+  function($q, $scope, taskService, dialog, tagService, taskRecordService, mediaServiceUrl,
     formatService, $log, reviewRecordService, colorTagService, breadCrumbProvider, markUtil) {
     var taskRecordNo = $.url().param("taskRecordNo");
     var status = $.url().param("status") || 0;
     var markData = null;
     initView() && initData();
 
-    $scope.onSaveButtonClick = function () {
+    $scope.onSaveButtonClick = function() {
       $scope.setLoadingText("正在保存，请稍等...");
       $scope.showLoading();
       taskRecordService.saveTaskMarks(taskRecordNo, getDataBeforeSave())
-        .then(function () {
+        .then(function() {
           $scope.hideLoading();
-          dialog.showInfo("保存成功").then(function () {
+          dialog.showInfo("保存成功").then(function() {
             window.location.reload();
           });
         });
     };
 
-    $scope.canContinueMark = function () {
+    $scope.canContinueMark = function() {
       if (!$scope.taskRecord) {
         return false;
       }
@@ -3519,7 +3561,7 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
       return true;
     };
 
-    $scope.onViewTagButtonClick = function () {
+    $scope.onViewTagButtonClick = function() {
       dialog.showCustom({
         templateUrl: 'view.tag.update.dialog.html',
         controller: "viewTagUpdateDialogController",
@@ -3527,50 +3569,50 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
           algorithm: $scope.algorithm,
           taskItem: $scope.taskRecord.taskItem
         },
-        onConfirm: function (res) {
+        onConfirm: function(res) {
           $scope.onSaveButtonClick();
           //window.location.reload();
         }
       });
     };
 
-    $scope.onSubmitClick = function () {
+    $scope.onSubmitClick = function() {
 
       dialog.showConfirm({
         title: "提示",
         message: "确认要提交标记结果么，提交后标记结果将由管理员进行审核，在此期间将不能对改任务进行标记。确认要继续么？",
-        onConfirm: function () {
+        onConfirm: function() {
           $scope.setLoadingText("正在保存，请稍等...");
           $scope.showLoading();
           taskRecordService.saveTaskMarks(taskRecordNo, getDataBeforeSave())
-            .then(function () {
+            .then(function() {
               sumbitTask();
             });
         }
       });
     };
 
-    $scope.onStartReviewClick = function () {
+    $scope.onStartReviewClick = function() {
       if (!$scope.taskRecord.reviewRecordNo) {
         dialog.showError("参数错误");
         return;
       }
       reviewRecordService.startReview($scope.taskRecord.reviewRecordNo)
-        .then(function () {
+        .then(function() {
           window.location.reload();
         });
     };
 
-    $scope.onReviewPassClick = function () {
+    $scope.onReviewPassClick = function() {
       taskRecordService.reviewPass(taskRecordNo)
-        .then(function () {
-          dialog.showInfo("保存成功").then(function () {
+        .then(function() {
+          dialog.showInfo("保存成功").then(function() {
             initData();
           });
         });
     };
 
-    $scope.onReviewFailClick = function () {
+    $scope.onReviewFailClick = function() {
       dialog.showCustom({
         templateUrl: '../task/reviews.failed.dialog.html',
         controller: "reviewFailedDialogController",
@@ -3579,7 +3621,7 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
             taskRecordNo: taskRecordNo
           }
         },
-        onConfirm: function () {
+        onConfirm: function() {
           initData();
         }
       });
@@ -3587,9 +3629,9 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
 
     function sumbitTask() {
       taskRecordService.finishMark(taskRecordNo)
-        .then(function () {
+        .then(function() {
           $scope.hideLoading();
-          dialog.showInfo("提交成功").then(function () {
+          dialog.showInfo("提交成功").then(function() {
             window.location.reload();
           });
         });
@@ -3597,10 +3639,11 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
 
     function getDataBeforeSave() {
       var tempData = formatService.toMarkDataModel($scope.tempShapes);
+      formatService.convertToPicSingle(tempData, $scope.taskItemFile.height, $scope.taskItemFile.width);
       return formatService.deleteUnMarkShape(tempData);;
     }
 
-    $(document).on("keydown", function (event) {
+    $(document).on("keydown", function(event) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
           case 81:
@@ -3617,22 +3660,22 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
       }
     });
 
-    $scope.onCursorChecked = function () {
+    $scope.onCursorChecked = function() {
       $scope.showCursor = true;
     };
 
-    $scope.onCursorUnChecked = function () {
+    $scope.onCursorUnChecked = function() {
       $scope.showCursor = false;
     };
 
-    $scope.onPreviousButtonClick = function (taskRecord) {
+    $scope.onPreviousButtonClick = function(taskRecord) {
       var pageName = markUtil.getMarkPage(taskRecord);
       if (pageName) {
         window.location.href = pageName + "?status=" + status + "&taskRecordNo=" + taskRecord.taskRecordNo + "#mark";
       }
     };
 
-    $scope.onNextButtonClick = function (taskRecord) {
+    $scope.onNextButtonClick = function(taskRecord) {
       var pageName = markUtil.getMarkPage(taskRecord);
       if (pageName) {
         window.location.href = pageName + "?status=" + status + "&taskRecordNo=" + taskRecord.taskRecordNo + "#mark";
@@ -3641,8 +3684,8 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
 
     function initViewTags() {
       if ($scope.taskRecord.taskItem.viewTags) {
-        $scope.taskRecord.taskItem.viewTags.forEach(function (it) {
-          it.viewTag.items.forEach(function (item) {
+        $scope.taskRecord.taskItem.viewTags.forEach(function(it) {
+          it.viewTag.items.forEach(function(item) {
             if (item.id === it.viewTagItemId) {
               it.viewTagItem = item;
             }
@@ -3651,14 +3694,14 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
       }
     }
 
-    $scope.onAssetTagButtonClick = function () {
+    $scope.onAssetTagButtonClick = function() {
       dialog.showCustom({
         templateUrl: '../task/asset.tag.dialog.html',
         controller: "assetTagUpdateController",
         params: {
           taskItem: $scope.taskRecord.taskItem
         },
-        onConfirm: function (res) {
+        onConfirm: function(res) {
           console.log(res)
           if (res.viewTags) {
             console.log(res.viewTags)
@@ -3700,8 +3743,8 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
     function initTags(algorithm) {
       $scope.algorithm = algorithm;
       $scope.tags = algorithm.tags;
-      $scope.tagsMap = $scope.tags.reduce(function (map, it, index) {
-        it.items.forEach(function (item, itemIndex) {
+      $scope.tagsMap = $scope.tags.reduce(function(map, it, index) {
+        it.items.forEach(function(item, itemIndex) {
           map[item.id] = item;
           map[item.id].type = it.type;
         });
@@ -3714,7 +3757,7 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
 
     function getReviewRecord(reviewRecordNo) {
       reviewRecordService.getReviewRecord(reviewRecordNo)
-        .then(function (data) {
+        .then(function(data) {
           $scope.reviewRecord = data;
         });
     }
@@ -3723,9 +3766,9 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
       $scope.showLoading();
       $scope.setLoadingText("正在加载数据，请稍后...");
       $q.all([taskRecordService.getTaskMarks(taskRecordNo, status),
-      taskRecordService.getAlgorithm(taskRecordNo)
-      ])
-        .then(function (res) {
+          taskRecordService.getAlgorithm(taskRecordNo)
+        ])
+        .then(function(res) {
           $scope.hideLoading();
           $scope.taskRecord = res[0];
           if ($scope.taskRecord.reviewRecordNo) {
@@ -3740,8 +3783,8 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
             return false;
           }
 
-          var tagsMap = $scope.tags.reduce(function (map, it, index) {
-            it.items.forEach(function (item, itemIndex) {
+          var tagsMap = $scope.tags.reduce(function(map, it, index) {
+            it.items.forEach(function(item, itemIndex) {
               map[item.id] = item;
               map[item.id].type = it.type;
             });
@@ -3756,13 +3799,14 @@ zongmu.controller("markPicController", ['$q', '$scope', 'taskService', 'dialog',
           }
 
           if ($scope.taskRecord.taskMarkRecords) {
-            $scope.taskRecord.taskMarkRecords.forEach(function (it, index) {
+            $scope.taskRecord.taskMarkRecords.forEach(function(it, index) {
               it.tagsMap = tagsMap;
               it.sideCount = $scope.taskRecord.taskItem.sideCount;
               it.taskItem = $scope.taskRecord.taskItem;
             });
 
             var $shapes = formatService.toMarkViewModel($scope.taskRecord.taskMarkRecords);
+            formatService.convertBackPicSingle($shapes, $scope.taskItemFile.height, $scope.taskItemFile.width);
             if ($shapes.length > 0) {
               $scope.tempShapes = $shapes;
             }
