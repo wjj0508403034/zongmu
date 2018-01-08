@@ -268,7 +268,7 @@ public class NewExportServiceImpl {
 					tagObj.setViewTagId(tag.getViewTagId());
 					tagObj.setViewTagName(tag.getViewTag().getName());
 					for (ViewTagItem tagItem : tag.getViewTag().getItems()) {
-						if (tagItem.getId() == tag.getViewTagItemId()) {
+						if (this.longValueEquals(tagItem.getId(), tag.getViewTagItemId())) {
 							tagObj.setViewTagItem(tagItem);
 							break;
 						}
@@ -284,6 +284,22 @@ public class NewExportServiceImpl {
 		}
 
 		return taskObj;
+	}
+	
+	private boolean longValueEquals(Long value1,Long value2){
+		if(value1 == null){
+			if(value2 == null){
+				return true;
+			}
+			
+			return false;
+		}
+		
+		if(value2 == null){
+			return false;
+		}
+		
+		return value1.longValue() == value2.longValue();
 	}
 
 	private ETaskItemFileObject generalTaskItemFile(TaskItemFile taskItemFile) {
