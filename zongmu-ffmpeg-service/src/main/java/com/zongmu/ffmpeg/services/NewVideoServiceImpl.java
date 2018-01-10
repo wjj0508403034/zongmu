@@ -239,7 +239,7 @@ public class NewVideoServiceImpl implements NewVideoService {
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             logger.debug("Exec Result:");
             while ((line = inputReader.readLine()) != null) {
-                logger.info(line);
+                //logger.info(line);
                 sb.append(line);
             }
             result.setSuccess(p.waitFor() == 0);

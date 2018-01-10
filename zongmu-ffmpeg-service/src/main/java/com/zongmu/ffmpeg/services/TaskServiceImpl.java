@@ -174,7 +174,7 @@ public class TaskServiceImpl implements TaskService {
         if (commandResult.isSuccess()) {
             if (taskItem.getAssetType() == AssetType.FOUR) {
                 Long count = this.taskItemFileRepo.getTaskItemFileSuccessCount(taskItem.getTaskItemNo());
-                if (count == 3) {
+                if (count >= 3) {
                     taskItem.setStatus(TaskItemStatus.NEW);
                 }
             } else {
@@ -187,19 +187,40 @@ public class TaskServiceImpl implements TaskService {
         taskItem.setUpdateTime(DateTime.now());
         this.taskItemRepo.save(commandResult.getTaskItem());
 
+        TaskItemFileStatus status = commandResult.isSuccess() ? TaskItemFileStatus.SUCCESS : TaskItemFileStatus.FAILURE;
         String ftpPath = String.format("%s/Datalog/compress/%s/%s", taskItem.getAssetNo(), taskItem.getTask().getTaskNo(), commandResult.getFileName());
-        AssetFile assetFile = commandResult.getAssetFile();
-        TaskItemFile taskItemFile = new TaskItemFile();
-        taskItemFile.setTaskItemFileNo(this.generateNo());
-        taskItemFile.setTaskItemNo(taskItem.getTaskItemNo());
-        taskItemFile.setTaskId(taskItem.getTaskId());
-        taskItemFile.setFps(assetFile.getFps());
-        taskItemFile.setHeight(assetFile.getHeight());
-        taskItemFile.setWidth(assetFile.getWidth());
-        taskItemFile.setAssetFileNo(assetFile.getAssetFileNo());
-        taskItemFile.setPath(ftpPath);
-        taskItemFile.setStatus(commandResult.isSuccess() ? TaskItemFileStatus.SUCCESS : TaskItemFileStatus.FAILURE);
-        this.taskItemFileRepo.save(taskItemFile);
+        AssetFile assetFile = commandResult.getAssetFile();        
+        this.createOrUpdateTaskItemFile(assetFile, taskItem, ftpPath, status);
+    }
+    
+    private void createOrUpdateTaskItemFile(AssetFile assetFile, TaskItem taskItem, String ftpPath, TaskItemFileStatus status){
+    	List<TaskItemFile> taskItemFiles = this.taskItemFileRepo.findTaskItemFilesByPath(taskItem.getTaskItemNo(), assetFile.getAssetFileNo(), ftpPath);
+    	if(taskItemFiles.size() > 0){
+    		for(TaskItemFile taskItemFile: taskItemFiles){
+    			this.updateTaskItemFile(taskItemFile, status);
+    		}
+    	}else{
+    		this.createTaskItemFile(assetFile, taskItem, ftpPath, status);
+    	}
+    }
+    
+    private void updateTaskItemFile(TaskItemFile taskItemFile, TaskItemFileStatus status){
+    	 taskItemFile.setStatus(status);
+         this.taskItemFileRepo.save(taskItemFile);
+    }
+    
+    private void createTaskItemFile( AssetFile assetFile, TaskItem taskItem, String ftpPath, TaskItemFileStatus status){
+          TaskItemFile taskItemFile = new TaskItemFile();
+          taskItemFile.setTaskItemFileNo(this.generateNo());
+          taskItemFile.setTaskItemNo(taskItem.getTaskItemNo());
+          taskItemFile.setTaskId(taskItem.getTaskId());
+          taskItemFile.setFps(assetFile.getFps());
+          taskItemFile.setHeight(assetFile.getHeight());
+          taskItemFile.setWidth(assetFile.getWidth());
+          taskItemFile.setAssetFileNo(assetFile.getAssetFileNo());
+          taskItemFile.setPath(ftpPath);
+          taskItemFile.setStatus(status);
+          this.taskItemFileRepo.save(taskItemFile);
     }
 
     public String generateNo() {
