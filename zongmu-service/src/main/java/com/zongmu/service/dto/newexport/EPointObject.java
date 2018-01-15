@@ -54,6 +54,13 @@ public class EPointObject extends AbstractXML {
 		root.appendChild(this.createElement(doc, "y", String.valueOf(this.getY())));
 		return root;
 	}
+	
+	public EPointObject zoom(float rate){
+		EPointObject newPoint = new EPointObject();
+		newPoint.setX(this.getX() * rate);
+		newPoint.setY(this.getY() * rate);
+		return newPoint;
+	}
 
 	@Override
 	public Element toXml(Document doc) {
