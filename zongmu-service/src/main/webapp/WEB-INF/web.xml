@@ -31,16 +31,16 @@
 	<welcome-file-list>
 		<welcome-file></welcome-file>
 	</welcome-file-list>
-	<listener>
+<!-- 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>
 	<context-param>
 		<param-name>log4jConfigLocation</param-name>
 		<param-value>/WEB-INF/log.properties</param-value>
-	</context-param>
+	</context-param> -->
 	<error-page>
 		<error-code>401</error-code>
-		<location>/page/user/login.html</location>
+		<location>/service/page/user/login.html</location>
 	</error-page>
 	
 	<session-config>

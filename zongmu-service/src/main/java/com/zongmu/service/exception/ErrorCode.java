@@ -3,6 +3,7 @@ package com.zongmu.service.exception;
 public class ErrorCode {
 
 	public final static String General_Error = "00001";
+	public final static String Socket_Connection_Error = "00006";
 	public final static String TASK_NULL = "10000";
 
 	public final static String TAG_ITEM_NULL = "20001";

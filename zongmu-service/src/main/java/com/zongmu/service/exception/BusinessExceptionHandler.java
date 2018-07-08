@@ -1,5 +1,7 @@
 package com.zongmu.service.exception;
 
+import java.net.SocketException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,13 @@ public class BusinessExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error(exception);
         logger.error(ExceptionUtils.getStackTrace(exception));
         return this.BusinessError(new BusinessException(ErrorCode.General_Error));
+    }
+    
+    @ExceptionHandler(SocketException.class)
+    public ResponseEntity<Object> socketExceptionError(SocketException exception) {
+        logger.error(exception);
+        logger.error(ExceptionUtils.getStackTrace(exception));
+        return this.BusinessError(new BusinessException(ErrorCode.Socket_Connection_Error));
     }
     
     
