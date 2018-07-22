@@ -82,9 +82,9 @@
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" 
-			value="jdbc:mysql://192.168.90.26:3306/zongmu_20180708?useSSL=false&amp;autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+			value="jdbc:mysql://localhost:3306/zongmu?useSSL=false&amp;autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root"/>
-		<property name="password" value="P!Q4hfim" />
+		<property name="password" value="Initial1" />
 
 		<!-- 配置初始化大小、最小、最大 -->
 		<property name="initialSize" value="50" />

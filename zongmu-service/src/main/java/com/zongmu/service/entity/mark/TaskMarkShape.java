@@ -1,5 +1,6 @@
 package com.zongmu.service.entity.mark;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Table
-public class TaskMarkShape {
+public class TaskMarkShape implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 941918761446740383L;
 
 	@Id
 	@SequenceGenerator(name = "TaskMarkShape_SEQUENCE", sequenceName = "TaskMarkShape_SEQUENCE")

@@ -1,5 +1,7 @@
 package com.zongmu.service.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,16 +12,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class ViewTagItem {
+public class ViewTagItem implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5185801511417945041L;
 
 	@Id
 	@SequenceGenerator(name = "ViewTagItem_SEQUENCE", sequenceName = "ViewTagItem_SEQUENCE")
 	@GeneratedValue(generator = "ViewTagItem_SEQUENCE", strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column
 	private Long viewTagId;
-	
+
 	@Column
 	private String name;
 
@@ -46,7 +53,5 @@ public class ViewTagItem {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	
+
 }

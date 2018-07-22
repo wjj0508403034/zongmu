@@ -1,5 +1,7 @@
 package com.zongmu.service.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +12,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Table
-public class TaskItemXViewTag {
+public class TaskItemXViewTag implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7285086454346208799L;
+
 	@Id
 	@SequenceGenerator(name = "TaskItemXViewTag_SEQUENCE", sequenceName = "TaskItemXViewTag_SEQUENCE")
 	@GeneratedValue(generator = "TaskItemXViewTag_SEQUENCE", strategy = GenerationType.AUTO)

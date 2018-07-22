@@ -25,7 +25,7 @@ public interface TaskRecordService {
 
 	void saveTaskMarks(String taskRecordNo, TaskMark taskMark) throws BusinessException;
 
-	void saveTaskMarks(String taskRecordNo, TaskRecord taskRecord) throws BusinessException;
+	void saveTaskMarks(TaskRecord taskRecord) throws BusinessException;
 
 	TaskRecord getTaskMarks(String taskRecordNo,int state) throws BusinessException;
 

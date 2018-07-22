@@ -44,7 +44,8 @@ public class TaskRecordController {
 	@ResponseBody
 	public void saveTaskMarks(@PathVariable("taskRecordNo") String taskRecordNo, @RequestBody TaskRecord taskRecord)
 			throws BusinessException {
-		this.taskRecordService.saveTaskMarks(taskRecordNo, taskRecord);
+		taskRecord.setTaskRecordNo(taskRecordNo);
+		this.taskRecordService.saveTaskMarks(taskRecord);
 	}
 
 	@RequestMapping(value = "/{taskRecordNo}", method = RequestMethod.GET)

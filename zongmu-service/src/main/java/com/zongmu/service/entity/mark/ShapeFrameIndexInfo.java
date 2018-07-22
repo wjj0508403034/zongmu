@@ -1,5 +1,7 @@
 package com.zongmu.service.entity.mark;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +12,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class ShapeFrameIndexInfo {
+public class ShapeFrameIndexInfo implements Serializable  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7702749555328627080L;
 
 	@Id
 	@SequenceGenerator(name = "ShapeFrameIndexInfo_SEQUENCE", sequenceName = "ShapeFrameIndexInfo_SEQUENCE")

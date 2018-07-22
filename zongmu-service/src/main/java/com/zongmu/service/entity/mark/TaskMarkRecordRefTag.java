@@ -1,5 +1,7 @@
 package com.zongmu.service.entity.mark;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,12 @@ import com.zongmu.service.entity.TagItem;
 
 @Entity
 @Table
-public class TaskMarkRecordRefTag {
+public class TaskMarkRecordRefTag implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -433676630234631518L;
 
 	@Id
 	@SequenceGenerator(name = "TaskMarkRecordRefTag_SEQUENCE", sequenceName = "TaskMarkRecordRefTag_SEQUENCE")

@@ -12,6 +12,8 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring3.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+
+
 @Configuration
 public class ApplicationConfiguration {
 

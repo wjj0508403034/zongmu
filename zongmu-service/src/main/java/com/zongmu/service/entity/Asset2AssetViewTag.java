@@ -1,5 +1,7 @@
 package com.zongmu.service.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +13,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Table
-public class Asset2AssetViewTag {
+public class Asset2AssetViewTag implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7824771877576549682L;
 
 	@Id
 	@SequenceGenerator(name = "Asset2AssetViewTag_SEQUENCE", sequenceName = "Asset2AssetViewTag_SEQUENCE")

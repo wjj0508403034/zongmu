@@ -6,8 +6,11 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +76,10 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
+
 
 	@Override
 	public Page<TaskRecord> search(Pageable pageable, TaskRecordSearchParam taskRecordSearchParam) {
@@ -87,6 +94,7 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		return taskRecords;
 	}
 
+	
 	@Override
 	public Page<TaskRecord> getTaskRecords(Pageable pageable, int status) {
 		User user = this.boFacade.currentUser();
@@ -289,6 +297,7 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 	/*
 	 * #state = 0,我的任务 #state = 1,审核任务
 	 */
+	@Cacheable(value="taskMarkCache",key="#taskRecordNo")
 	@Override
 	public TaskRecord getTaskMarks(String taskRecordNo, int state) throws BusinessException {
 		User user = this.boFacade.currentUser();
@@ -350,10 +359,11 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		return this.algorithmService.getAlgorithmDetail(task.getAlgorithmId());
 	}
 
+	@CachePut(value = "taskMarkCache", key = "#taskRecord.getTaskRecordNo()")
 	@Transactional
 	@Override
-	public void saveTaskMarks(String taskRecordNo, TaskRecord taskRecord) throws BusinessException {
-		TaskRecord oldTaskRecord = this.getTaskRecord(taskRecordNo);
+	public void saveTaskMarks(TaskRecord taskRecord) throws BusinessException {
+		TaskRecord oldTaskRecord = this.getTaskRecord(taskRecord.getTaskRecordNo());
 		oldTaskRecord.setUpdateTime(DateTime.now());
 		this.taskRecordRepo.save(oldTaskRecord);
 

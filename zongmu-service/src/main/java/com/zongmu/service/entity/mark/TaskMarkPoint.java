@@ -1,5 +1,7 @@
 package com.zongmu.service.entity.mark;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +12,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class TaskMarkPoint {
+public class TaskMarkPoint implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4859230998790634420L;
 
 	@Id
 	@SequenceGenerator(name = "TaskMarkPoint_SEQUENCE", sequenceName = "TaskMarkPoint_SEQUENCE")

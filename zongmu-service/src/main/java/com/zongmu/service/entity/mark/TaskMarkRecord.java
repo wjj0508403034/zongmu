@@ -1,5 +1,6 @@
 package com.zongmu.service.entity.mark;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,12 @@ import com.zongmu.service.entity.ColorTag;
 
 @Entity
 @Table
-public class TaskMarkRecord {
+public class TaskMarkRecord implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2576001854803631815L;
 
 	@Id
 	@SequenceGenerator(name = "TASKMARKRECORD_SEQUENCE", sequenceName = "TASKMARKRECORD_SEQUENCE")
