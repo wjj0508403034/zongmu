@@ -6,14 +6,16 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class EGeometryObject extends AbstractXML implements Comparable<EGeometryObject>{
+import com.zongmu.service.dto.mark.ShapeType;
+
+public class EGeometryObject extends AbstractXML implements Comparable<EGeometryObject> {
 
 	private long frameIndex;
 	private int geometryType;
 	private int tag;
 
 	private List<EPointObject> points = new ArrayList<>();
-	
+
 	public boolean isSame(EGeometryObject pObject) {
 		if (pObject.getPoints().size() != this.getPoints().size()) {
 			return false;
@@ -31,13 +33,13 @@ public class EGeometryObject extends AbstractXML implements Comparable<EGeometry
 						}
 					}
 				}
-				
-				if(!isMatch){
+
+				if (!isMatch) {
 					return false;
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -85,21 +87,36 @@ public class EGeometryObject extends AbstractXML implements Comparable<EGeometry
 		root.appendChild(this.createElement(doc, "geometryType", String.valueOf(this.calcGeometryType(frameInfos))));
 		Element points = doc.createElement("points");
 		root.appendChild(points);
-		for (int pointIndex = 0; pointIndex < this.getPoints().size(); pointIndex++) {
-			points.appendChild(this.getPoints().get(pointIndex).toXml(pointIndex, doc, asset));
+		List<EPointObject> newPoints = this.removeDuplicatePoints(this.getPoints(), asset);
+		for (int pointIndex = 0; pointIndex < newPoints.size(); pointIndex++) {
+			points.appendChild(newPoints.get(pointIndex).toXml(pointIndex, doc, asset));
 		}
 		return root;
 	}
 
-//	private int calcFrameIndex(EAssetObject asset) {
-//		try {
-//			Float ss = new Float(asset.getFps().floatValue() * this.getStartTime());
-//			return ss.intValue() + this.getFrameIndex();
-//		} catch (Exception ex) {
-//			return this.getFrameIndex();
-//		}
-//
-//	}
+	private List<EPointObject> removeDuplicatePoints(List<EPointObject> originalPoints, EAssetObject asset) {
+		if (originalPoints.size() <= 2) {
+			return originalPoints;
+		}
+
+		if (asset.getTask().getShapeType() == ShapeType.RECT) {
+			return originalPoints.subList(0, 2);
+		}
+
+		int index = originalPoints.size() - 1;
+		while (index >= 2) {
+			EPointObject lastPoint = originalPoints.get(index);
+			EPointObject perviousPoint = originalPoints.get(index - 1);
+			if (lastPoint.isEquals(perviousPoint)) {
+				originalPoints.remove(index);
+				index--;
+			} else {
+				break;
+			}
+		}
+
+		return originalPoints;
+	}
 
 	private int calcGeometryType(List<EFrameInfoObject> frameInfos) {
 		for (EFrameInfoObject info : frameInfos) {
@@ -121,14 +138,14 @@ public class EGeometryObject extends AbstractXML implements Comparable<EGeometry
 
 	@Override
 	public int compareTo(EGeometryObject obj) {
-		if(this.frameIndex < obj.frameIndex){
+		if (this.frameIndex < obj.frameIndex) {
 			return -1;
 		}
-		
-		if(this.frameIndex == obj.frameIndex){
+
+		if (this.frameIndex == obj.frameIndex) {
 			return 0;
 		}
-		
+
 		return 1;
 	}
 }

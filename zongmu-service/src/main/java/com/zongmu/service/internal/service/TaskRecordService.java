@@ -25,7 +25,7 @@ public interface TaskRecordService {
 
 	void saveTaskMarks(String taskRecordNo, TaskMark taskMark) throws BusinessException;
 
-	void saveTaskMarks(TaskRecord taskRecord) throws BusinessException;
+	TaskRecord saveTaskMarks(TaskRecord taskRecord) throws BusinessException;
 
 	TaskRecord getTaskMarks(String taskRecordNo,int state) throws BusinessException;
 
@@ -39,9 +39,9 @@ public interface TaskRecordService {
 
 	TaskRecord createNewTaskRecord(TaskItem taskItem);
 
-	void reviewFail(String taskRecordNo, RejectReasonObject rejectReasonObject) throws BusinessException;
+	TaskRecord reviewFail(String taskRecordNo, RejectReasonObject rejectReasonObject) throws BusinessException;
 
-	void reviewPass(String taskRecordNo, String memo) throws BusinessException;
+	TaskRecord reviewPass(String taskRecordNo, String memo) throws BusinessException;
 
 	Algorithm getAlgorithm(String taskRecordNo) throws BusinessException;
 	

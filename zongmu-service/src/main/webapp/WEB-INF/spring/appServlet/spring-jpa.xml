@@ -19,15 +19,9 @@
 	<context:component-scan base-package="com.zongmu" />
 
 	<!-- spring启动时扫描项目路径下的properties文件,后续用${key }方式取出对应值,这样可以代码解耦和，后续只需修改properties文件即可 -->
-<!-- 	<bean id="propertyPlaceholderConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				dataSourse连接池相关属性，代码不在此贴出，会放在打包好的项目里面
-				<value>classpath:db.properties</value>
-			</list>
-		</property>
-	</bean> -->
+	<!-- <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+		<property name="locations"> <list> dataSourse连接池相关属性，代码不在此贴出，会放在打包好的项目里面 
+		<value>classpath:db.properties</value> </list> </property> </bean> -->
 
 	<!-- 定义实体管理器工厂 Jpa配置 LocalContainerEntityManagerFactoryBean这个选项Spring扮演了容器的角色。完全掌管JPA -->
 	<bean id="entityManagerFactory"
@@ -46,14 +40,14 @@
 		<property name="jpaProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
-				<!-- <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop> -->
+				<!-- <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop> 
+					<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop> -->
 				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.format_sql">false</prop>
 				<!-- <prop key="jadira.usertype.autoRegisterUserTypes">true</prop> -->
 				<prop key="jadira.usertype.autoRegisterUserTypes">true</prop>
-                <prop key="jadira.usertype.databaseZone">jvm</prop>
-                <prop key="jadira.usertype.javaZone">jvm</prop>
+				<prop key="jadira.usertype.databaseZone">jvm</prop>
+				<prop key="jadira.usertype.javaZone">jvm</prop>
 				<!-- <prop key="hibernate.hbm2ddl.auto">create-drop</prop> -->
 			</props>
 		</property>
@@ -81,10 +75,14 @@
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" 
-			value="jdbc:mysql://localhost:3306/zongmu?useSSL=false&amp;autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
-		<property name="username" value="root"/>
-		<property name="password" value="Initial1" />
+		<!-- <property name="url" value="jdbc:mysql://localhost:3306/zongmu?useSSL=false&amp;autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" 
+			/> <property name="username" value="root"/> <property name="password" value="Initial1" 
+			/> -->
+
+		<property name="url"
+			value="jdbc:mysql://192.168.90.26:3306/zongmu_20180708?useSSL=false&amp;autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="root" />
+		<property name="password" value="P!Q4hfim" />
 
 		<!-- 配置初始化大小、最小、最大 -->
 		<property name="initialSize" value="50" />
@@ -104,8 +102,8 @@
 		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
 		<!-- <property name="poolPreparedStatements" value="${db.poolPreparedStatements}" 
 			/> -->
-		<!-- <property name="maxPoolPreparedStatementPerConnectionSize"
-			value="20" /> -->
+		<!-- <property name="maxPoolPreparedStatementPerConnectionSize" value="20" 
+			/> -->
 	</bean>
 
 	<!-- 启动对@AspectJ（面向切面）注解的支持 -->

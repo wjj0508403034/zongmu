@@ -1,7 +1,5 @@
 package com.zongmu.service.controller;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zongmu.service.dto.newexport.EAssetObject;
-import com.zongmu.service.entity.TaskItem;
 import com.zongmu.service.exception.BusinessException;
 import com.zongmu.service.internal.service.ExportService;
 import com.zongmu.service.internal.service.TaskService;

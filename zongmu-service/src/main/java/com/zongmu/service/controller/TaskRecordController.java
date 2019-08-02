@@ -31,7 +31,7 @@ public class TaskRecordController {
 	@ResponseBody
 	public TaskRecord getTaskMarks(@PathVariable("taskRecordNo") String taskRecordNo,
 			@RequestParam(value = "status", required = false, defaultValue = "0") int status) throws BusinessException {
-		return this.taskRecordService.getTaskMarks(taskRecordNo,status);
+		return this.taskRecordService.getTaskMarks(taskRecordNo, status);
 	}
 
 	@RequestMapping(value = "/{taskRecordNo}/algorithm", method = RequestMethod.GET)
@@ -63,7 +63,7 @@ public class TaskRecordController {
 		Pageable pageable = new PageRequest(pageIndex, pageSize);
 		return this.taskRecordService.getTaskRecords(pageable, status);
 	}
-	
+
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	@ResponseBody
 	public Page<TaskRecord> search(

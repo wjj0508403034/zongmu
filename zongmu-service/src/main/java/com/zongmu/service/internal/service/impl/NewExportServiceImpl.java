@@ -330,7 +330,7 @@ public class NewExportServiceImpl {
 			for (Tag tagx : taskObj.getMarkTags()) {
 				boolean find = false;
 				for (TagItem tagxItem : tagx.getItems()) {
-					if (tagxItem.getId() == tag.getTagItemId()) {
+					if (tagxItem.getId().equals(tag.getTagItemId())) {
 						find = true;
 						tagObj.setTagId(tagx.getId());
 						tagObj.setTagName(tagx.getName());

@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,9 +75,6 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private RedisTemplate<String, String> redisTemplate;
 
 
 	@Override
@@ -153,8 +149,9 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		this.taskRecordRepo.save(taskRecord);
 	}
 
+	//@CachePut(value = "taskMarkCache", key = "#taskRecordNo")
 	@Override
-	public void reviewPass(String taskRecordNo, String memo) throws BusinessException {
+	public TaskRecord reviewPass(String taskRecordNo, String memo) throws BusinessException {
 		TaskRecord taskRecord = this.getTaskRecord(taskRecordNo);
 
 		TaskItem taskItem = this.taskService.getTaskItem(taskRecord.getTaskItemNo());
@@ -172,10 +169,12 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		taskRecord.setPoint(taskItem.getPoint());
 		this.taskRecordRepo.save(taskRecord);
 		this.reviewRecordService.setReviewResult(taskRecord, true, null);
+		return this.getTaskMarks(taskRecord.getTaskRecordNo(), 0);
 	}
 
+	//@CachePut(value = "taskMarkCache", key = "#taskRecordNo")
 	@Override
-	public void reviewFail(String taskRecordNo, RejectReasonObject rejectReasonObject) throws BusinessException {
+	public TaskRecord reviewFail(String taskRecordNo, RejectReasonObject rejectReasonObject) throws BusinessException {
 		TaskRecord taskRecord = this.getTaskRecord(taskRecordNo);
 		
 		TaskItem taskItem = this.taskService.getTaskItem(taskRecord.getTaskItemNo());
@@ -192,6 +191,7 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		taskRecord.setEndTime(DateTime.now());
 		this.taskRecordRepo.save(taskRecord);
 		this.reviewRecordService.setReviewResult(taskRecord, false, rejectReasonObject);
+		return this.getTaskMarks(taskRecord.getTaskRecordNo(), 0);
 	}
 
 	@Override
@@ -297,7 +297,7 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 	/*
 	 * #state = 0,我的任务 #state = 1,审核任务
 	 */
-	@Cacheable(value="taskMarkCache",key="#taskRecordNo")
+	//@Cacheable(value="taskMarkCache",key="#taskRecordNo")
 	@Override
 	public TaskRecord getTaskMarks(String taskRecordNo, int state) throws BusinessException {
 		User user = this.boFacade.currentUser();
@@ -359,15 +359,16 @@ public class TaskRecordServiceImpl implements TaskRecordService {
 		return this.algorithmService.getAlgorithmDetail(task.getAlgorithmId());
 	}
 
-	@CachePut(value = "taskMarkCache", key = "#taskRecord.getTaskRecordNo()")
+	//@CachePut(value = "taskMarkCache", key = "#taskRecord.getTaskRecordNo()")
 	@Transactional
 	@Override
-	public void saveTaskMarks(TaskRecord taskRecord) throws BusinessException {
+	public TaskRecord saveTaskMarks(TaskRecord taskRecord) throws BusinessException {
 		TaskRecord oldTaskRecord = this.getTaskRecord(taskRecord.getTaskRecordNo());
 		oldTaskRecord.setUpdateTime(DateTime.now());
 		this.taskRecordRepo.save(oldTaskRecord);
 
 		this.taskMarkRecordService.saveRecord(oldTaskRecord.getId(), taskRecord.getTaskMarkRecords());
+		return this.getTaskMarks(taskRecord.getTaskRecordNo(), 0);
 	}
 
 	private void cancelTask(TaskRecord record) throws BusinessException {
